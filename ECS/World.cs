@@ -2,17 +2,29 @@
 using System.Collections.Generic;
 using System.Text;
 using MainGame.Util;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Threading.Channels;
 
 namespace MainGame.ECS {
 	class World {
 		private readonly Dictionary<Type,Dictionary<ulong,List<ulong>>> _componentStore;
 		private readonly Dictionary<ulong, HashSet<Type>> _entityComponentTypes;
 		private readonly Dictionary<ulong, Component> _components;
+		//private readonly Dictionary<Type, >
 
-		public World() {
+		public World(IEnumerable<System> systems) {
 			_componentStore = new Dictionary<Type, Dictionary<ulong,List<ulong>>>();
 			_entityComponentTypes = new Dictionary<ulong, HashSet<Type>>();
 			_components = new Dictionary<ulong, Component>();
+
+			foreach(System system in systems) {
+				RegisterSystem(system);
+			}
+		}
+
+		public void EnableSystem<S>() {
+			string s = typeof(S).Name;
 		}
 
 		public ulong MakeEntity() {
@@ -40,7 +52,7 @@ namespace MainGame.ECS {
 				}
 				_entityComponentTypes.Remove(entityID);
 			}
-			_eidManager.ReturnID(entityID);
+			//_eidManager.ReturnID(entityID);
 		}
 
 		public void AddComponent(ulong entityID, Component component) {
@@ -60,6 +72,24 @@ namespace MainGame.ECS {
 		
 		public void RemoveComponent(ulong entityID, ulong componentID) {
 
+		}
+
+		public void Simulate(float deltaTime) {
+
+		}
+		
+		private void RegisterSystem(System system) {
+			Type t = system.GetType();
+			if(Attribute.GetCustomAttribute(t, typeof(ModifiesComponentsAttribute)) is ModifiesComponentsAttribute ma) {
+				foreach(Type component in ma.Modifies) {
+
+				}
+			}
+			if(Attribute.GetCustomAttribute(t, typeof(ReadsComponentsAttribute)) is ReadsComponentsAttribute ra) {
+				foreach(Type component in ra.Reads) {
+
+				}
+			}
 		}
 	}
 }
