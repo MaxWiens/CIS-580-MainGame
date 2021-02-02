@@ -3,19 +3,25 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace MainGame {
+	using ECS;
+	using Components;
+	using Systems;
+
 	public class MainGame : Game {
 		private GraphicsDeviceManager _graphics;
 		private SpriteBatch _spriteBatch;
+		//private World _world;
 
 		public MainGame() {
 			_graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
+			Window.Title = "Minecraft 2";
 		}
 
 		protected override void Initialize() {
 			// TODO: Add your initialization logic here
-
+			
 			base.Initialize();
 		}
 

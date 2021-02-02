@@ -3,18 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace MainGame.ECS {
-	public abstract class System {
-		protected readonly World world;
-	
-		public System(World world) {
-			this.world = world;
-		}
+	public abstract class UpdateSystem : System {
+		public UpdateSystem(World world) : base(world) { }
+
+		public abstract void Update(float deltaTime);
 
 		// Messages
 		// void OnEnd();
 		// void OnEnable();
 		// void OnDisable();
-		// void OnInit();
-		// void OnContentLoad();
 	}
 }

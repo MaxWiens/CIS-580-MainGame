@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Scene>
+  <Entitites>
+    <Entity>
+      <Component Type="Position2D">
+        <Vector2 Name="Position"><X>40</X><Y>60</Y></Vector2>
+      </Component>
+    </Entity>
+  </Entitites>
+</Scene>

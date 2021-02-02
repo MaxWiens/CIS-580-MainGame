@@ -1,0 +1,17 @@
+﻿{
+  "Entitites": [
+    {
+      "Position2D": {"Position": {"X": 50, "Y": 50}},
+      "Sprite": {"TextureName": "ball"}
+    },
+    {
+      "Position2D": {"Position": {"X": 200, "Y": 50}},
+      "Sprite": {"TextureName": "ball"}
+    },
+    {
+      "Position2D": {"Position": {"X": 0, "Y": 50}},
+      "Sprite": {"TextureName": "ball"}
+    }
+  ]
+}
+
