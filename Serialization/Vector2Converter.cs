@@ -4,26 +4,16 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Xna.Framework;
 
-namespace MainGame.JsonConverters {
+namespace MainGame.Serialization {
 	class Vector2Converter : JsonConverter<Vector2> {
 		public override Vector2 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 			Vector2 v = new Vector2();
-			string propertyName = string.Empty;
-			while(reader.Read()) {
-				if(reader.TokenType == JsonTokenType.EndObject) {
+			if(JsonDocument.TryParseValue(ref reader, out JsonDocument document)) {
+				JsonElement root = document.RootElement;
+				JsonElement elm;
+				if(root.TryGetProperty("X", out elm) && elm.TryGetSingle(out v.X) && root.TryGetProperty("Y", out elm) && elm.TryGetSingle(out v.Y)) {
+					document.Dispose();
 					return v;
-				}
-				if(reader.TokenType == JsonTokenType.PropertyName) {
-					propertyName = reader.GetString();
-					reader.Read();
-					switch(propertyName) {
-						case "X":
-							v.X = reader.GetSingle();
-							break;
-						case "Y":
-							v.Y = reader.GetSingle();
-							break;
-					}
 				}
 			}
 			throw new JsonException();

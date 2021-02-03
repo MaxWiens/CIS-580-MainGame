@@ -2,15 +2,24 @@
   "Entitites": [
     {
       "Position2D": {"Position": {"X": 50, "Y": 50}},
-      "Sprite": {"TextureName": "ball"}
+      "Sprite": {"TextureName": "ball"},
+      "Color": {"Value": "White"}
     },
     {
       "Position2D": {"Position": {"X": 200, "Y": 50}},
-      "Sprite": {"TextureName": "ball"}
+      "Sprite": {"TextureName": "ball"},
+      "Color": {"Value": [24,255,25]},
+      "PlayerControl": {}
     },
     {
       "Position2D": {"Position": {"X": 0, "Y": 50}},
-      "Sprite": {"TextureName": "ball"}
+      "Sprite": {"TextureName": "ball"},
+      "Color": {"Value": [26,26,255,126]}
+    },
+    {
+      "Position2D": {"Position": {"X": 500, "Y": 200}},
+      "Sprite": {"TextureName": "ball"},
+      "Color": {"Value": [255,126,126,255]}
     }
   ]
 }

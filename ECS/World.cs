@@ -16,8 +16,9 @@ using System.IO;
 namespace MainGame.ECS {
 	using Components;
 	using Systems;
+	using Input;
 	public class World : Game {
-		private readonly JsonSerializerOptions _serializerOptions;
+		
 		private readonly Dictionary<Type, Dictionary<ulong,Component>> _componentStore;
 		private readonly Dictionary<ulong, HashSet<Type>> _entities;
 		private readonly Dictionary<Type, UpdateSystem> _updateSystems;
@@ -30,11 +31,14 @@ namespace MainGame.ECS {
 
 		private GraphicsDeviceManager _graphics;
 
+		public readonly InputManager InputManager;
+
 		public World() {
 			_graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
 			Window.Title = "Minecraft 2";
+			InputManager = new InputManager();
 
 			_entities = new Dictionary<ulong, HashSet<Type>>();
 			_componentStore = new Dictionary<Type, Dictionary<ulong, Component>>();
@@ -43,15 +47,6 @@ namespace MainGame.ECS {
 			_enabledUpdateSystems = new Dictionary<Type, UpdateSystem>();
 			_drawSystems = new Dictionary<Type, DrawSystem>();
 			_enabledDrawSystems = new Dictionary<Type, DrawSystem>();
-			
-			_serializerOptions = new JsonSerializerOptions {
-				IgnoreNullValues = false,
-				
-				Converters = {
-					new JsonConverters.Vector2Converter(),
-					new JsonConverters.Vector3Converter()
-				}
-			};
 
 			_systems = GetSystems();
 			foreach(System system in _systems)
@@ -59,7 +54,8 @@ namespace MainGame.ECS {
 		}
 
 		private System[] GetSystems() => new System[]{
-			new SpriteDraw(this)
+			new PlayerController(this),
+			new SpriteDraw(this), 
 		};
 
 		protected override void Initialize() {
@@ -168,13 +164,14 @@ namespace MainGame.ECS {
 
 		protected override void Update(GameTime gameTime) {
 			float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+			InputManager.Update(deltaTime);
 			foreach(UpdateSystem system in _enabledUpdateSystems.Values) {
 				system.Update(deltaTime);
 			}
 		}
 
 		protected override void Draw(GameTime gameTime) {
-			GraphicsDevice.Clear(Color.CornflowerBlue);
+			GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
 			float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 			foreach(DrawSystem system in _enabledDrawSystems.Values) {
 				system.Draw();
@@ -183,7 +180,6 @@ namespace MainGame.ECS {
 		}
 
 		protected override void OnExiting(object sender, EventArgs args) {
-			Console.WriteLine("cool");
 			End();
 		}
 
@@ -222,11 +218,11 @@ namespace MainGame.ECS {
 			using(FileStream stream = File.OpenRead(filePath)) {
 				JsonDocument doc = JsonDocument.Parse(stream);
 
-				foreach(var jsonEntity in doc.RootElement.GetProperty("Entitites").EnumerateArray()) {
+				foreach(JsonElement jsonEntity in doc.RootElement.GetProperty("Entitites").EnumerateArray()) {
 					List<Component> components = new List<Component>();
-					foreach(var jsonComponent in jsonEntity.EnumerateObject()) {
+					foreach(JsonProperty jsonComponent in jsonEntity.EnumerateObject()) {
 						Type componentType = Type.GetType("MainGame.Components." + jsonComponent.Name);
-						Component c = JsonSerializer.Deserialize(jsonComponent.Value.GetRawText(), componentType, _serializerOptions) as Component;
+						Component c = JsonSerializer.Deserialize(jsonComponent.Value.GetRawText(), componentType, Serialization.JsonDefaults.Options) as Component;
 						components.Add(c);
 					}
 					MakeEntity(components);

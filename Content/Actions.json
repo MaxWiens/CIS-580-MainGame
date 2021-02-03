@@ -1,0 +1,16 @@
+﻿{
+  "Actions": [
+    {
+      "Name": "Move",
+      "Type": "Vector2"
+    },
+    {
+      "Name": "Interact",
+      "Type": "Button"
+    }
+  ],
+  "Bindings":{
+    
+  }
+}
+

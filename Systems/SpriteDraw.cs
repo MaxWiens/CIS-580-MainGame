@@ -26,9 +26,14 @@ namespace MainGame.Systems {
 		public override void Draw() {
 			spriteBatch.Begin();
 			var entityComponents = world.GetEntitiesWithComponent<Sprite>();
+			Position2D pos;
+			Color colorComponent;
+			Microsoft.Xna.Framework.Color color;
 			foreach(KeyValuePair<ulong,Component> kvp in entityComponents) {
-				Position2D pc = world.GetComponent<Position2D>(kvp.Key);
-				spriteBatch.Draw((kvp.Value as Sprite).Texture, pc.Position, Color.White);
+				pos = world.GetComponent<Position2D>(kvp.Key);
+				;
+				color = (colorComponent = world.GetComponent<Color>(kvp.Key)) != null ? colorComponent.Value : Microsoft.Xna.Framework.Color.White;
+				spriteBatch.Draw((kvp.Value as Sprite).Texture, pos.Position, color);
 			}
 			spriteBatch.End();
 		}

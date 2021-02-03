@@ -1,0 +1,12 @@
+﻿{
+  "Move": [
+    ["Keys.Up","Keys.Down","Keys.Left","Keys.Right"],
+    {"Up": "Keys.W", "Left": "Keys.A", "Right": "Keys.D", "Down": "Keys.S"},
+    "GamePad.LeftStick",
+    "GamePad.DPad"
+  ],
+  "Interact": [
+    "Keys.Space",
+    "GamePad.A"
+  ]
+}

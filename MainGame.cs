@@ -41,7 +41,7 @@ namespace MainGame {
 		}
 
 		protected override void Draw(GameTime gameTime) {
-			GraphicsDevice.Clear(Color.CornflowerBlue);
+			GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
 
 			// TODO: Add your drawing code here
 
