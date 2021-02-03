@@ -17,8 +17,8 @@ namespace MainGame.ECS {
 	using Components;
 	using Systems;
 	using Input;
-	public class World : Game {
-		
+
+	public class ZaWarudo : Game {
 		private readonly Dictionary<Type, Dictionary<ulong,Component>> _componentStore;
 		private readonly Dictionary<ulong, HashSet<Type>> _entities;
 		private readonly Dictionary<Type, UpdateSystem> _updateSystems;
@@ -33,7 +33,7 @@ namespace MainGame.ECS {
 
 		public readonly InputManager InputManager;
 
-		public World() {
+		public ZaWarudo() {
 			_graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;

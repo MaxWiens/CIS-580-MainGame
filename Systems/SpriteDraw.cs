@@ -9,7 +9,7 @@ namespace MainGame.Systems {
 	using Components;
 	public class SpriteDraw : DrawSystem {
 		SpriteBatch spriteBatch;
-		public SpriteDraw(World world) : base(world) { }
+		public SpriteDraw(ZaWarudo world) : base(world) { }
 
 		private void OnInit() {
 			spriteBatch = new SpriteBatch(world.GraphicsDevice);

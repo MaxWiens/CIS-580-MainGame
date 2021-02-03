@@ -10,7 +10,7 @@ namespace MainGame.Systems {
 		private Vector2 _moveValue;
 		private float _sprintValue;
 
-		public PlayerController(World world) : base(world) {
+		public PlayerController(ZaWarudo world) : base(world) {
 			_moveValue = Vector2.Zero;
 			_sprintValue = 1f;
 		}

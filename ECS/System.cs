@@ -4,9 +4,9 @@ using System.Text;
 
 namespace MainGame.ECS {
 	public abstract class System {
-		protected readonly World world;
+		protected readonly ZaWarudo world;
 	
-		public System(World world) {
+		public System(ZaWarudo world) {
 			this.world = world;
 		}
 

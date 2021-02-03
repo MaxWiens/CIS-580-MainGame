@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MainGame.ECS {
 	public abstract class UpdateSystem : System {
-		public UpdateSystem(World world) : base(world) { }
+		public UpdateSystem(ZaWarudo world) : base(world) { }
 
 		public abstract void Update(float deltaTime);
 

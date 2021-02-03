@@ -6,7 +6,7 @@ namespace MainGame {
 	public static class Program {
 		[STAThread]
 		static void Main() {
-			using(var game = new World())
+			using(var game = new ZaWarudo())
 				game.Run();
 		}
 	}

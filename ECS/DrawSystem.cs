@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MainGame.ECS {
 	public abstract class DrawSystem : System {
-		public DrawSystem(World world) : base(world) { }
+		public DrawSystem(ZaWarudo world) : base(world) { }
 
 		public abstract void Draw();
 

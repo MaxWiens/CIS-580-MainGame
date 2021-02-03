@@ -45,13 +45,13 @@ namespace MainGame.Serialization {
 					}
 					switch(directionsFound) {
 						case Directions.Up:
-							return new CompositeBinding(bindingNames, upClosure);
+							return new CompositeBinding(bindingNames, (state)=>new Vector2(0f, upClosure(state).Y));
 						case Directions.Down:
-							return new CompositeBinding(bindingNames, (state)=>-downClosure(state));
+							return new CompositeBinding(bindingNames, (state)=>new Vector2(0f, -downClosure(state).Y));
 						case Directions.Left:
-							return new CompositeBinding(bindingNames, (state)=>-leftClosure(state));
+							return new CompositeBinding(bindingNames, (state)=>new Vector2(-leftClosure(state).X, 0f));
 						case Directions.Right:
-							return new CompositeBinding(bindingNames, rightClosure);
+							return new CompositeBinding(bindingNames, (state)=>new Vector2(rightClosure(state).X, 0f));
 						case Directions.Up | Directions.Down:
 							return new CompositeBinding(bindingNames, (state)=>new Vector2(0f, upClosure(state).Y - downClosure(state).Y));
 						case Directions.Up | Directions.Left:

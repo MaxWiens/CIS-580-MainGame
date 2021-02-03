@@ -5,7 +5,7 @@ using System.Text;
 namespace MainGame.Systems {
 	using ECS;
 	class Gravity : UpdateSystem {
-		public Gravity(World world) : base(world) {
+		public Gravity(ZaWarudo world) : base(world) {
 			
 		}
 
