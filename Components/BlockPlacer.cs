@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using System.Text.Json.Serialization;
 namespace MainGame.Components {
-	public struct BallThrower {
-		public bool ShouldThrowBall;
+	public struct BlockPlacer {
+		public bool ShouldPlaceBlock;
 		[JsonInclude]
 		public string BallPrefab;
 	}
