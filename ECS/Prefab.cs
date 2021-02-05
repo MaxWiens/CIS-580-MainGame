@@ -6,10 +6,17 @@ using System.Text.Json.Serialization;
 
 namespace MainGame.ECS {
 	public class Prefab {
-		private string Json;
-		public IEnumerable<object> GetComponents() { 
-			
-			return
+		public readonly string Json;
+		
+		public Prefab(string json) {
+			Json = json;
 		}
+
+		//public IEnumerable<object> GetComponents() {
+		//	JsonDocument document = JsonDocument.Parse(Json);
+			
+		//	document.Dispose();
+		//	;
+		//}
 	}
 }

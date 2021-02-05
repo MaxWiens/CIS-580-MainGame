@@ -249,9 +249,7 @@ namespace MainGame.ECS {
 
 			if(entityJson.TryGetProperty("Components", out JsonElement componentsElement)){
 				foreach(JsonProperty componentJson in componentsElement.EnumerateObject()) {
-					Type componentType = Type.GetType("MainGame.Components." + componentJson.Name);
-					object c = JsonSerializer.Deserialize(componentJson.Value.GetRawText(), componentType, Serialization.JsonDefaults.Options);
-					components.Add(c);
+					components.Add(Component.Parse(componentJson));
 				}
 			}
 			MakeEntity(eid, components);
