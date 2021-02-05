@@ -7,10 +7,6 @@ namespace MainGame.ECS {
 	class ModifiesComponentsAttribute : Attribute {
 		public readonly Type[] Modifies;
 		public ModifiesComponentsAttribute(params Type[] components) {
-			foreach(Type t in components) {
-				if(!typeof(Component).IsAssignableFrom(t))
-					throw new ArgumentException("Type {t} does not inharet Component!");
-			}
 			Modifies = components;
 		}
 	}

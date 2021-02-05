@@ -4,8 +4,10 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Xna.Framework;
 
+
 namespace MainGame.Components {
-	public struct Position2D {
-		[JsonInclude] public Vector2 Position;
+	public struct Physics {
+		[JsonInclude] public Vector2 Velocity;
+		[JsonInclude] public Vector2 Forces;
 	}
 }

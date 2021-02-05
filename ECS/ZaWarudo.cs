@@ -14,13 +14,12 @@ using System.Text.Json.Serialization;
 using System.IO;
 
 namespace MainGame.ECS {
-	using Components;
 	using Systems;
 	using Input;
-
+	using Collections;
 	public class ZaWarudo : Game {
-		private readonly Dictionary<Type, Dictionary<ulong,Component>> _componentStore;
-		private readonly Dictionary<ulong, HashSet<Type>> _entities;
+		private readonly Dictionary<Type, IKeyBag<Guid>> _componentStore;
+		private readonly Dictionary<Guid, HashSet<Type>> _entities;
 		private readonly Dictionary<Type, UpdateSystem> _updateSystems;
 
 		private readonly Dictionary<Type, UpdateSystem> _enabledUpdateSystems;
@@ -40,8 +39,8 @@ namespace MainGame.ECS {
 			Window.Title = "Minecraft 2";
 			InputManager = new InputManager();
 
-			_entities = new Dictionary<ulong, HashSet<Type>>();
-			_componentStore = new Dictionary<Type, Dictionary<ulong, Component>>();
+			_entities = new Dictionary<Guid, HashSet<Type>>();
+			_componentStore = new Dictionary<Type, IKeyBag<Guid>>();
 			
 			_updateSystems = new Dictionary<Type, UpdateSystem>();
 			_enabledUpdateSystems = new Dictionary<Type, UpdateSystem>();
@@ -73,44 +72,58 @@ namespace MainGame.ECS {
 			}
 		}
 
-		public ulong MakeEntity() {
-			ulong eid = IDManager.NextID();
+		public Guid MakeEntity() => MakeEntity(Guid.NewGuid());
+
+		public Guid MakeEntity(params object[] components) => MakeEntity(Guid.NewGuid(), components);
+
+		public Guid MakeEntity(Guid eid) {
 			_entities.Add(eid, new HashSet<Type>());
 			return eid;
 		}
 
-		public ulong MakeEntity(params Component[] components) {
-			ulong eid = MakeEntity();
-			foreach(Component c in components) {
+		public Guid MakeEntity(IEnumerable<object> components) => MakeEntity(Guid.NewGuid(), components);
+
+		public Guid MakeEntity(Guid eid, IEnumerable<object> components) {
+			_entities.Add(eid, new HashSet<Type>());
+			foreach(object c in components) {
 				AddComponent(eid, c);
 			}
 			return eid;
 		}
 		
-		public ulong MakeEntity(IEnumerable<Component> components) {
-			ulong eid = MakeEntity();
-			foreach(Component c in components) {
-				AddComponent(eid, c);
-			}
-			return eid;
-		}
-
-		public void DestroyEntity(ulong entityID) {
+		public void DestroyEntity(Guid entityID) {
 			if(_entities.Remove(entityID, out HashSet<Type> componentTypes)) {
 				foreach(Type t in componentTypes) {
 					_componentStore[t].Remove(entityID);
 				}
-				IDManager.ReturnID(entityID);
 			}
 		}
 
-		public Dictionary<ulong,Component> GetEntitiesWithComponent<T>() where T : Component {
+		public Bag<Guid,T> GetEntitiesWithComponent<T>() where T : struct {
 			_componentStore.TryGetValue(typeof(T), out var entities);
-			return entities;
+			return entities as Bag<Guid, T>;
 		}
 
-		public void AddComponent(ulong entityID, Component component) {
+		public void AddComponent(Guid entityID, object component) {
 			Type componentType = component.GetType();
+			if(_entities.TryGetValue(entityID, out var components)) {
+				components.Add(componentType);
+			} else {
+				// entity does'nt exist
+				return;
+			}
+			if(_componentStore.TryGetValue(componentType, out IKeyBag<Guid> entities)) {
+				entities.Add(entityID, component);
+			} else {
+				Type bagtype = typeof(Bag<,>).MakeGenericType(typeof(Guid), componentType);
+				IKeyBag<Guid> bag = Activator.CreateInstance(bagtype) as IKeyBag<Guid>;
+				bag.Add(entityID, component);
+				_componentStore.Add(componentType, bag);
+			}
+		}
+
+		public void AddComponent<T>(Guid entityID, T component) where T : struct{
+			Type componentType = typeof(T);
 			if(_entities.TryGetValue(entityID, out var components)) {
 				components.Add(componentType);
 			} else {
@@ -121,25 +134,21 @@ namespace MainGame.ECS {
 			if(_componentStore.TryGetValue(componentType, out var entities)) {
 				entities.Add(entityID, component);
 			} else {
-				entities = new Dictionary<ulong, Component> {
-					{ entityID, component }
-				};
+				entities = new Bag<Guid, T>();
+				entities.Add(entityID, component);
 				_componentStore.Add(componentType, entities);
 			}
 		}
 
-		public void RemoveComponent<T>(ulong entityID) where T : Component {
+		public void RemoveComponent<T>(Guid entityID) {
 			if(_entities.TryGetValue(entityID, out var componentTypes)) {
 				componentTypes.Remove(typeof(T));
 				_componentStore[typeof(T)].Remove(entityID);
 			}
 		}
 
-		public T GetComponent<T>(ulong entityID) where T : Component {
-			if(_componentStore.TryGetValue(typeof(T), out var entities) && entities.TryGetValue(entityID, out Component component)) {
-				return component as T;
-			}
-			return null;
+		public ref T GetComponent<T>(Guid entityID) where T : struct {
+			return ref (_componentStore[typeof(T)] as Bag<Guid, T>)[entityID];
 		}
 
 		public void EnableSystem<T>() where T : System {
@@ -171,7 +180,7 @@ namespace MainGame.ECS {
 		}
 
 		protected override void Draw(GameTime gameTime) {
-			GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
+			GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.DarkGreen);
 			float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 			foreach(DrawSystem system in _enabledDrawSystems.Values) {
 				system.Draw();
@@ -218,19 +227,38 @@ namespace MainGame.ECS {
 			using(FileStream stream = File.OpenRead(filePath)) {
 				JsonDocument doc = JsonDocument.Parse(stream);
 
-				foreach(JsonElement jsonEntity in doc.RootElement.GetProperty("Entitites").EnumerateArray()) {
-					List<Component> components = new List<Component>();
-					foreach(JsonProperty jsonComponent in jsonEntity.EnumerateObject()) {
-						Type componentType = Type.GetType("MainGame.Components." + jsonComponent.Name);
-						Component c = JsonSerializer.Deserialize(jsonComponent.Value.GetRawText(), componentType, Serialization.JsonDefaults.Options) as Component;
-						components.Add(c);
-					}
-					MakeEntity(components);
+				foreach(JsonElement entityJson in doc.RootElement.GetProperty("Entitites").EnumerateArray()) {
+					LoadEntity(entityJson.GetRawText());
 				}
 			}
 		}
+
+		public void LoadEntity(string entityJson) {
+			using(JsonDocument document = JsonDocument.Parse(entityJson))
+				LoadEntity(document.RootElement);
+		}
+
+		public void LoadEntity(JsonElement entityJson) {
+			List<object> components = new List<object>();
+			Guid eid;
+			if(entityJson.TryGetProperty("ID", out JsonElement idElement)){
+				eid = idElement.GetGuid();
+			} else {
+				eid = Guid.NewGuid();
+			}
+
+			if(entityJson.TryGetProperty("Components", out JsonElement componentsElement)){
+				foreach(JsonProperty componentJson in componentsElement.EnumerateObject()) {
+					Type componentType = Type.GetType("MainGame.Components." + componentJson.Name);
+					object c = JsonSerializer.Deserialize(componentJson.Value.GetRawText(), componentType, Serialization.JsonDefaults.Options);
+					components.Add(c);
+				}
+			}
+			MakeEntity(eid, components);
+		}
 		
 		private void LoadSystems(string filePath) {
+
 		}
 	}
 }

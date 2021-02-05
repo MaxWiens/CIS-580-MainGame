@@ -25,8 +25,3 @@
 /processorParam:TextureFormat=Color
 /build:ball.png
 
-#begin File.xml
-/importer:XmlImporter
-/processor:PassThroughProcessor
-/build:File.xml;Systems.xml
-

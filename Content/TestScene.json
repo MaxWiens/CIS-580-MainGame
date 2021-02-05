@@ -1,25 +1,34 @@
 ﻿{
   "Entitites": [
     {
-      "Position2D": {"Position": {"X": 50, "Y": 50}},
-      "Sprite": {"TextureName": "ball"},
-      "Color": {"Value": "White"}
+      "ID": "E2DE37A9-3FF6-4619-BB66-069E3D5EF175",
+      "Components": {
+        "Position2D": {"Position": {"X": 50, "Y": 50}},
+        "Sprite": {"TextureName": "ball", "Albedo": "White"},
+        "Health": {"Value": 10}
+      }
     },
     {
-      "Position2D": {"Position": {"X": 200, "Y": 50}},
-      "Sprite": {"TextureName": "ball"},
-      "Color": {"Value": [24,255,25]},
-      "PlayerControl": {}
+      "Components": {
+        "Position2D": {"Position": {"X": 200, "Y": 50}},
+        "Sprite": {"TextureName": "ball", "Albedo": [24,255,25]},
+        "PlayerControl": {},
+        "Health": {"Value": 10}
+      }
     },
     {
-      "Position2D": {"Position": {"X": 0, "Y": 50}},
-      "Sprite": {"TextureName": "ball"},
-      "Color": {"Value": [26,26,255,126]}
+      "Components": {
+        "Position2D": {"Position": {"X": 0, "Y": 50}},
+        "Sprite": {"TextureName": "ball", "Albedo": [26,26,255,126]},
+        "Health": {"Value": 10}
+      }
     },
     {
-      "Position2D": {"Position": {"X": 500, "Y": 200}},
-      "Sprite": {"TextureName": "ball"},
-      "Color": {"Value": [255,126,126,255]}
+      "Components": {
+        "Position2D": {"Position": {"X": 500, "Y": 200}},
+        "Sprite": {"TextureName": "ball", "Albedo": [255,126,126,255]},
+        "Health": {"Value": 10}
+      }
     }
   ]
 }

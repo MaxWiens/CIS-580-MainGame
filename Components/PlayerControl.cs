@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace MainGame.Components {
-	class PlayerControl : ECS.Component {
+	public struct PlayerControl {
 
 	}
 }
