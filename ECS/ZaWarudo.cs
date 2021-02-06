@@ -40,7 +40,7 @@ namespace MainGame.ECS {
 			_graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
-			Window.Title = "Minecraft 2";
+			Window.Title = "Block Frog";
 
 			InputManager = new InputManager();
 
