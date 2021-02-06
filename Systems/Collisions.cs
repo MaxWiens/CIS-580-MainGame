@@ -70,9 +70,9 @@ namespace MainGame.Systems {
 		
 		private static bool IsColliding(ref RectCollider a, ref Transform2D apos, ref RectCollider b, ref Transform2D bpos) {
 			if(a.Equals(b)) return a.CollidesWithSelf;
-			Vector2 a_topLeft = apos.Position;
+			Vector2 a_topLeft = apos.Position + a.Offset;
 			Vector2 a_botRight = a_topLeft + a.Dimentions;
-			Vector2 b_topLeft = bpos.Position;
+			Vector2 b_topLeft = bpos.Position + b.Offset;
 			Vector2 b_botRight = b_topLeft + b.Dimentions;
 			return !(a_botRight.X <= b_topLeft.X || a_topLeft.X >= b_botRight.X || a_topLeft.Y >= b_botRight.Y || a_botRight.Y <= b_topLeft.Y); ;
 		}

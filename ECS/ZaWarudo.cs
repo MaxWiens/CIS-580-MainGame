@@ -29,6 +29,7 @@ namespace MainGame.ECS {
 		private readonly Dictionary<Type, DrawSystem> _drawSystems;
 		private readonly Dictionary<Type, DrawSystem> _enabledDrawSystems;
 		private readonly IEnumerable<System> _systems;
+		private readonly Dictionary<Type, System> _systemDictionary;
 		private const BindingFlags MESSAGE_FLAGS = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.InvokeMethod | BindingFlags.Instance;
 
 		private GraphicsDeviceManager _graphics;
@@ -51,6 +52,8 @@ namespace MainGame.ECS {
 			_drawSystems = new Dictionary<Type, DrawSystem>();
 			_enabledDrawSystems = new Dictionary<Type, DrawSystem>();
 
+			_systemDictionary = new Dictionary<Type, System>();
+
 			_systems = GetSystems();
 			foreach(System system in _systems)
 				RegisterSystem(system);
@@ -60,10 +63,14 @@ namespace MainGame.ECS {
 			new PlayerController(this),
 			new SpriteDraw(this),
 			new Collisions(this),
+			new Grid(this),
 
 			// debug
 			new CollisionDraw(this),
 		};
+
+		public T GetSystem<T>() where T : System
+			=> _systemDictionary.TryGetValue(typeof(T), out System s) && s is T t ? t : null;
 
 		protected override void Initialize() {
 			_graphics.PreferredBackBufferWidth = 1280;
@@ -87,6 +94,12 @@ namespace MainGame.ECS {
 			Content.Load<Texture2D>(@"Textures\fire_pit");
 			Content.Load<Texture2D>(@"Textures\pixel");
 			Content.Load<Texture2D>(@"Textures\wood_block");
+
+			Content.Load<Texture2D>(@"Textures\Frog\frog_back");
+			Content.Load<Texture2D>(@"Textures\Frog\frog_front");
+			Content.Load<Texture2D>(@"Textures\Frog\frog_walk_back");
+			Content.Load<Texture2D>(@"Textures\Frog\frog_walk_front");
+
 			//foreach(string texturename in Directory.GetFiles(@"Assets\Textures\")) {
 			//	texturenames = texturename.Split('\\', '.');
 			//	Content.Load<Texture2D>(texturenames[texturenames.Length-2]);
@@ -176,6 +189,9 @@ namespace MainGame.ECS {
 			return ref (_componentStore[typeof(T)] as Bag<Guid, T>)[entityID];
 		}
 
+		public bool TryGetComponent<T>(Guid entityID, ref T component) where T : struct
+			=> _componentStore.TryGetValue(typeof(T), out var bag) && (bag as Bag<Guid, T>).TryGetValue(entityID, ref component);
+
 		public void EnableSystem<T>() where T : System {
 			if(typeof(T).IsAssignableFrom(typeof(UpdateSystem)) && _updateSystems.TryGetValue(typeof(T), out UpdateSystem updateSystem)) {
 				_enabledUpdateSystems.Add(typeof(T), updateSystem);
@@ -245,6 +261,7 @@ namespace MainGame.ECS {
 
 		private void RegisterSystem(System system) {
 			Type t = system.GetType();
+			_systemDictionary.Add(t, system);
 			if(system is UpdateSystem updateSystem) {
 				_updateSystems.Add(t, updateSystem);
 				_enabledUpdateSystems.Add(t, updateSystem);

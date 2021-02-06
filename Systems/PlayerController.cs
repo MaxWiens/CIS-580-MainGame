@@ -12,6 +12,8 @@ namespace MainGame.Systems {
 		private float _sprintValue;
 		private bool _interacted;
 
+		private Grid _grid;
+
 		public PlayerController(ZaWarudo world) : base(world) {
 			_moveValue = Vector2.Zero;
 			_sprintValue = 1f;
@@ -31,12 +33,12 @@ namespace MainGame.Systems {
 
 		public override void Update(float deltaTime) {
 			var eids = world.GetEntitiesWithComponent<PlayerControl>().Keys;
-
+			if(_grid==null) _grid = world.GetSystem<Grid>();
 			foreach(var eid in eids) {
 				ref Transform2D pos = ref world.GetComponent<Transform2D>(eid);
 				pos.Position += _moveValue * 100f * deltaTime * _sprintValue;
 				ref BlockPlacer blockPlacer = ref world.GetComponent<BlockPlacer>(eid);
-				if(_interacted) {
+				if(_interacted && !_grid.IsCellFilled(Grid.ToGridPosition(pos.Position))) {
 					Guid blockeid = world.LoadEntities(blockPlacer.BallPrefabPath)[0];
 					ref Transform2D blocktransform = ref world.GetComponent<Transform2D>(blockeid);
 					ref Sprite sprite = ref world.GetComponent<Sprite>(blockeid);

@@ -7,6 +7,12 @@
   ],
   "Interact": [
     "Keys.Space",
+    "Keys.Z",
+    "GamePad.A"
+  ],
+  "Break": [
+    "Keys.E",
+    "Keys.X",
     "GamePad.B"
   ],
   "Sprint": [

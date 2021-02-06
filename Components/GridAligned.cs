@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Text.Json.Serialization;
 namespace MainGame.Components {
 	public struct GridAligned {
-		public Point GridPosition;
+		[JsonInclude] public Point GridPosition;
 	}
 }

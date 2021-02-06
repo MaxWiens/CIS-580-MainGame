@@ -5,7 +5,8 @@
         "Transform2D": {},
         "Sprite": {"TextureName": "wood_block", "Albedo": "White"},
         "Health": {"Value": 10},
-        "RectCollider": { "Offset": [0,0], "Dimentions": [16,16], "CollidesWithSelf": false }
+        "RectCollider": { "Offset": [0,0], "Dimentions": [16,16], "CollidesWithSelf": false },
+        "GridAligned": {}
       }
     }
   ]

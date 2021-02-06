@@ -19,6 +19,16 @@ namespace MainGame.Collections {
 
 		public ref TValue this[TKey id] => ref _values[_dict[id]];
 
+		public bool TryGetValue(TKey id, ref TValue value) {
+			if(_dict.TryGetValue(id, out int idx)) {
+				ref TValue v = ref _values[idx];
+				value = v;
+				return true;
+			}
+			return false;
+		}
+			
+
 		public Bag() {
 			_values = _emptyValues;
 		}
