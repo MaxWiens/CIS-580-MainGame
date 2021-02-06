@@ -130,7 +130,7 @@ namespace MainGame.ECS {
 		}
 		
 		public void DestroyEntity(Guid entityID) {
-			if(_entities.Remove(entityID, out HashSet<Type> componentTypes)) {
+		if(_entities.Remove(entityID, out HashSet<Type> componentTypes)) {
 				foreach(Type t in componentTypes) {
 					_componentStore[t].Remove(entityID);
 				}

@@ -11,6 +11,7 @@ namespace MainGame.Systems {
 		private Vector2 _moveValue;
 		private float _sprintValue;
 		private bool _interacted;
+		private bool _breakActivated;
 
 		private Grid _grid;
 
@@ -23,12 +24,14 @@ namespace MainGame.Systems {
 			world.InputManager.AddListener("Move", OnMove);
 			world.InputManager.AddListener("Interact", OnInteract);
 			world.InputManager.AddListener("Sprint", OnSprint);
+			world.InputManager.AddListener("Break", OnBreak);
 		}
 
 		private void OnDisable() {
 			world.InputManager.RemoveListener("Move", OnMove);
 			world.InputManager.RemoveListener("Interact", OnInteract);
 			world.InputManager.RemoveListener("Sprint", OnSprint);
+			world.InputManager.RemoveListener("Break", OnBreak);
 		}
 
 		public override void Update(float deltaTime) {
@@ -45,6 +48,9 @@ namespace MainGame.Systems {
 					sprite.Texture = world.Content.Load<Texture2D>(@"Textures\"+sprite.TextureName);
 					blocktransform.Position = Grid.NearestGridPosition(pos.Position);
 					_interacted = false;
+				} else if(_breakActivated && _grid.IsCellFilled(Grid.ToGridPosition(pos.Position))) {
+					_grid.PointsToDestroy.Push(Grid.ToGridPosition(pos.Position));
+					_breakActivated = false;
 				}
 				
 			}
@@ -64,6 +70,10 @@ namespace MainGame.Systems {
 
 		private void OnInteract(Vector2 value) {
 			_interacted = value.AsBool();
+		}
+
+		private void OnBreak(Vector2 value) {
+			_breakActivated = value.AsBool();
 		}
 	}
 }

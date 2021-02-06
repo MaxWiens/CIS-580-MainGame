@@ -9,16 +9,29 @@ namespace MainGame.Systems {
 	public class Grid : UpdateSystem {
 		public const int GRID_SIZE = 16;
 		private bool[,] _filled = new bool[16,9];
-		
+		private Guid[,] _entities = new Guid[16, 9];
+
 		public Grid(ZaWarudo world) : base(world) { }
 		private Transform2D _t;
+
+		public Stack<Point> PointsToDestroy = new Stack<Point>();
+
 		public override void Update(float deltaTime) {
+			while(PointsToDestroy.TryPop(out Point p)) {
+				if(p.X >= 0 && p.X < 16 && p.Y >= 0 && p.Y < 9 && _filled[p.X, p.Y]) {
+					world.DestroyEntity(_entities[p.X, p.Y]);
+				}
+			}
+
 			var entities = world.GetEntitiesWithComponent<GridAligned>();
 			ref Transform2D transform2D = ref _t;
+
 			if(entities!= null) {
 				var eids = entities.Keys;
 				_filled = new bool[16, 9];
-				
+				_entities = new Guid[16, 9];
+
+
 
 				foreach(var eid in eids) {
 					ref GridAligned g = ref world.GetComponent<GridAligned>(eid);
@@ -29,8 +42,11 @@ namespace MainGame.Systems {
 						p = g.GridPosition;
 					}
 
-					if(p.X >= 0 && p.X < 16 && p.Y >= 0 && p.Y < 9)
+					if(p.X >= 0 && p.X < 16 && p.Y >= 0 && p.Y < 9 && !_filled[p.X,p.Y]) {
 						_filled[p.X, p.Y] = true;
+						_entities[p.X, p.Y] = eid;
+					}
+						
 				}
 			}
 		}
