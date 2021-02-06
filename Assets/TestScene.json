@@ -13,7 +13,7 @@
         "Transform2D": {"Position": {"X": 200, "Y": 50}},
         "Sprite": {"TextureName": "ball", "Albedo": [24,255,25]},
         "PlayerControl": {},
-        "BlockPlacer": {"BallPrefabPath": "Content\\Prefabs\\WoodBlock.json"},
+        "BlockPlacer": {"BallPrefabPath": "Assets\\Prefabs\\WoodBlock.json"},
         "Health": {"Value": 10},
         "RectCollider": { "Offset": [0,0], "Dimentions": [64,64], "CollidesWithSelf": false }
       }

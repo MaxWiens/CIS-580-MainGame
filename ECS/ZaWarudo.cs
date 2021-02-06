@@ -18,6 +18,9 @@ namespace MainGame.ECS {
 	using Input;
 	using Collections;
 	public class ZaWarudo : Game {
+		public SpriteBatch SpriteBatch;
+		private SpriteBatch _targetBatch;
+		public RenderTarget2D Target;
 		private readonly Dictionary<Type, IKeyBag<Guid>> _componentStore;
 		private readonly Dictionary<Guid, HashSet<Type>> _entities;
 		private readonly Dictionary<Type, UpdateSystem> _updateSystems;
@@ -37,6 +40,7 @@ namespace MainGame.ECS {
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
 			Window.Title = "Minecraft 2";
+
 			InputManager = new InputManager();
 
 			_entities = new Dictionary<Guid, HashSet<Type>>();
@@ -55,26 +59,39 @@ namespace MainGame.ECS {
 		private System[] GetSystems() => new System[]{
 			new PlayerController(this),
 			new SpriteDraw(this),
+			new Collisions(this),
+
+			// debug
 			new CollisionDraw(this),
-			new Collisions(this)
 		};
 
 		protected override void Initialize() {
-			LoadEntities(@"Content\TestScene.json");
+			_graphics.PreferredBackBufferWidth = 1280;
+			_graphics.PreferredBackBufferHeight = 720;
+			_graphics.ApplyChanges();
+			LoadEntities(@"Assets\TestScene.json");
 
 			foreach(System system in _systems) {
 				system.GetType().GetMethod("OnInit", MESSAGE_FLAGS)?.Invoke(system, null);
 			}
+
+			_targetBatch = new SpriteBatch(GraphicsDevice);
+			SpriteBatch = new SpriteBatch(GraphicsDevice);
+			Target = new RenderTarget2D(GraphicsDevice, 256, 144);
 			base.Initialize();
 		}
 
 		protected override void LoadContent() {
-			string[] texturenames;
-			foreach(string texturename in Directory.GetFiles(@"Content\Textures\")) {
-				texturenames = texturename.Split('\\', '.');
-				Content.Load<Texture2D>(texturenames[texturenames.Length-2]);
-			}
-			
+			//string[] texturenames;
+			Content.Load<Texture2D>(@"Textures\ball");
+			Content.Load<Texture2D>(@"Textures\fire_pit");
+			Content.Load<Texture2D>(@"Textures\pixel");
+			Content.Load<Texture2D>(@"Textures\wood_block");
+			//foreach(string texturename in Directory.GetFiles(@"Assets\Textures\")) {
+			//	texturenames = texturename.Split('\\', '.');
+			//	Content.Load<Texture2D>(texturenames[texturenames.Length-2]);
+			//}
+
 			foreach(System system in _systems) {
 				system.GetType().GetMethod("OnContentLoad", MESSAGE_FLAGS)?.Invoke(system, null);
 			}
@@ -188,11 +205,19 @@ namespace MainGame.ECS {
 		}
 
 		protected override void Draw(GameTime gameTime) {
-			GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.DarkGreen);
+			GraphicsDevice.SetRenderTarget(Target);
+			GraphicsDevice.Clear(new Color(0x30, 0x9d, 0x6c));
+			SpriteBatch.Begin(blendState: BlendState.AlphaBlend, samplerState: SamplerState.PointClamp);
 			float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 			foreach(DrawSystem system in _enabledDrawSystems.Values) {
 				system.Draw();
 			}
+			SpriteBatch.End();
+
+			GraphicsDevice.SetRenderTarget(null);
+			_targetBatch.Begin(blendState: BlendState.AlphaBlend, samplerState: SamplerState.PointClamp);
+			_targetBatch.Draw(Target, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
+			_targetBatch.End();
 			base.Draw(gameTime);
 		}
 

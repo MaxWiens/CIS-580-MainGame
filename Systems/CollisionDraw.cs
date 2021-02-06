@@ -15,11 +15,10 @@ namespace MainGame.Systems {
 			spriteBatch = new SpriteBatch(world.GraphicsDevice);
 		}
 		private void OnContentLoad() {
-			_pixelTexture = world.Content.Load<Texture2D>("pixel");
+			_pixelTexture = world.Content.Load<Texture2D>(@"Textures\pixel");
 		}
 
 		public override void Draw() {
-			spriteBatch.Begin();
 			var entitites = world.GetEntitiesWithComponent<RectCollider>();
 			var eids = entitites.Keys;
 			foreach(var eid in eids) {
@@ -31,9 +30,8 @@ namespace MainGame.Systems {
 				} else {
 					c = new Color(30, 30, 30, 2);
 				}
-				spriteBatch.Draw(_pixelTexture, new Rectangle(pos.ToPoint(), s.Dimentions.ToPoint()), new Rectangle(0,0,1,1), c);
+				world.SpriteBatch.Draw(_pixelTexture, new Rectangle(pos.ToPoint(), s.Dimentions.ToPoint()), new Rectangle(0,0,1,1), c);
 			}
-			spriteBatch.End();
 		}
 	}
 }

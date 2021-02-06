@@ -74,14 +74,7 @@ namespace MainGame.Systems {
 			Vector2 a_botRight = a_topLeft + a.Dimentions;
 			Vector2 b_topLeft = bpos.Position;
 			Vector2 b_botRight = b_topLeft + b.Dimentions;
-			return !(a_botRight.X < b_topLeft.X || a_topLeft.X > b_botRight.X || a_topLeft.Y > b_botRight.Y || a_botRight.Y < b_topLeft.Y); ;
-
-			//return 
-			//!(a_botRight.X < b_topLeft.X || 
-			//	a_topLeft.X > b_botRight.X || 
-
-			//	a_topLeft.Y < b_botRight.Y || 
-			//	a_botRight.Y < b_botRight.Y);
+			return !(a_botRight.X <= b_topLeft.X || a_topLeft.X >= b_botRight.X || a_topLeft.Y >= b_botRight.Y || a_botRight.Y <= b_topLeft.Y); ;
 		}
 	}
 }

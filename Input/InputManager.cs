@@ -13,7 +13,7 @@ namespace MainGame.Input {
 
 		public InputManager() {
 			_actions = new Dictionary<string, InputAction>();
-			LoadBindings(@"Content\Controlls.json");
+			LoadBindings(@"Assets\Controlls.json");
 		}
 
 		public void AddListener(string actionName, Action<Vector2> inputAction) {

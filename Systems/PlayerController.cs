@@ -38,10 +38,10 @@ namespace MainGame.Systems {
 				ref BlockPlacer blockPlacer = ref world.GetComponent<BlockPlacer>(eid);
 				if(_interacted) {
 					Guid blockeid = world.LoadEntities(blockPlacer.BallPrefabPath)[0];
-					ref Transform2D blockpos = ref world.GetComponent<Transform2D>(blockeid);
+					ref Transform2D blocktransform = ref world.GetComponent<Transform2D>(blockeid);
 					ref Sprite sprite = ref world.GetComponent<Sprite>(blockeid);
-					sprite.Texture = world.Content.Load<Texture2D>(sprite.TextureName);
-					blockpos = pos;
+					sprite.Texture = world.Content.Load<Texture2D>(@"Textures\"+sprite.TextureName);
+					blocktransform.Position = Grid.NearestGridPosition(pos.Position);
 					_interacted = false;
 				}
 				
