@@ -10,22 +10,29 @@ namespace MainGame.Serialization {
 			Vector2 v = new Vector2();
 			if(JsonDocument.TryParseValue(ref reader, out JsonDocument document)) {
 				JsonElement root = document.RootElement;
-				JsonElement elm;
-				if(root.TryGetProperty("X", out elm) && elm.TryGetSingle(out v.X) && root.TryGetProperty("Y", out elm) && elm.TryGetSingle(out v.Y)) {
-					document.Dispose();
-					return v;
+				switch(root.ValueKind) {
+					case JsonValueKind.Array:
+						v.X = root[0].GetSingle();
+						v.Y = root[1].GetSingle();
+						document.Dispose();
+						return v;
+					case JsonValueKind.Object:
+						JsonElement elm;
+						if(root.TryGetProperty("X", out elm) && elm.TryGetSingle(out v.X) && root.TryGetProperty("Y", out elm) && elm.TryGetSingle(out v.Y)) {
+							document.Dispose();
+							return v;
+						}
+						break;
 				}
 			}
 			throw new JsonException();
 		}
 
 		public override void Write(Utf8JsonWriter writer, Vector2 value, JsonSerializerOptions options) {
-			writer.WriteStartObject();
-			writer.WritePropertyName("X");
+			writer.WriteStartArray();
 			writer.WriteNumberValue(value.X);
-			writer.WritePropertyName("Y");
 			writer.WriteNumberValue(value.Y);
-			writer.WriteEndObject();
+			writer.WriteEndArray();
 		}
 	}
 }

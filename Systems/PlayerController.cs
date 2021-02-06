@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MainGame.Systems {
 	using ECS;
@@ -8,38 +9,42 @@ namespace MainGame.Systems {
 	using Input;
 	public class PlayerController : UpdateSystem {
 		private Vector2 _moveValue;
-		private Vector2 _jumpValue;
 		private float _sprintValue;
+		private bool _interacted;
 
 		public PlayerController(ZaWarudo world) : base(world) {
 			_moveValue = Vector2.Zero;
-			_jumpValue = Vector2.Zero;
 			_sprintValue = 1f;
 		}
 
 		private void OnEnable() {
 			world.InputManager.AddListener("Move", OnMove);
 			world.InputManager.AddListener("Interact", OnInteract);
-			world.InputManager.AddListener("Jump", OnJump);
+			world.InputManager.AddListener("Sprint", OnSprint);
 		}
 
 		private void OnDisable() {
 			world.InputManager.RemoveListener("Move", OnMove);
 			world.InputManager.RemoveListener("Interact", OnInteract);
-			world.InputManager.RemoveListener("Jump", OnJump);
+			world.InputManager.RemoveListener("Sprint", OnSprint);
 		}
 
 		public override void Update(float deltaTime) {
 			var eids = world.GetEntitiesWithComponent<PlayerControl>().Keys;
 
 			foreach(var eid in eids) {
-				ref Position2D pos = ref world.GetComponent<Position2D>(eid);
-				;
+				ref Transform2D pos = ref world.GetComponent<Transform2D>(eid);
 				pos.Position += _moveValue * 100f * deltaTime * _sprintValue;
-				if(_jumpValue != Vector2.Zero) {
-					pos.Position += _jumpValue;
-					_jumpValue = Vector2.Zero;
+				ref BlockPlacer blockPlacer = ref world.GetComponent<BlockPlacer>(eid);
+				if(_interacted) {
+					Guid blockeid = world.LoadEntities(blockPlacer.BallPrefabPath)[0];
+					ref Transform2D blockpos = ref world.GetComponent<Transform2D>(blockeid);
+					ref Sprite sprite = ref world.GetComponent<Sprite>(blockeid);
+					sprite.Texture = world.Content.Load<Texture2D>(sprite.TextureName);
+					blockpos = pos;
+					_interacted = false;
 				}
+				
 			}
 		}
 
@@ -47,15 +52,16 @@ namespace MainGame.Systems {
 			_moveValue = new Vector2(value.X, -value.Y);
 		}
 
-		private void OnJump(Vector2 value) {
-			_jumpValue = new Vector2(0f, -value.Y) * 10f;
+		private void OnSprint(Vector2 value) {
+			if(value.AsBool())
+				_sprintValue = 2f;
+			else {
+				_sprintValue = 1f;
+			}
 		}
 
 		private void OnInteract(Vector2 value) {
-			if(value != Vector2.Zero)
-				_sprintValue = 2f;
-			else
-				_sprintValue = 1f;
+			_interacted = value.AsBool();
 		}
 	}
 }

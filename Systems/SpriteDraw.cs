@@ -31,7 +31,7 @@ namespace MainGame.Systems {
 			foreach(var eid in eids) {
 				ref Sprite s = ref spriteEntitites[eid];
 				s2 = spriteEntitites[eid];
-				spriteBatch.Draw(s.Texture, world.GetComponent<Position2D>(eid).Position, s.Albedo);
+				spriteBatch.Draw(s.Texture, world.GetComponent<Transform2D>(eid).Position, s.Albedo);
 			}
 			spriteBatch.End();
 		}

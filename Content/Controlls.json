@@ -9,8 +9,7 @@
     "Keys.Space",
     "GamePad.B"
   ],
-  "Jump": [
-    "Keys.Enter",
-    "GamePad.A"
+  "Sprint": [
+    "Keys.LeftShift"
   ]
 }

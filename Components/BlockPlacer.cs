@@ -4,6 +4,6 @@ namespace MainGame.Components {
 	public struct BlockPlacer {
 		public bool ShouldPlaceBlock;
 		[JsonInclude]
-		public string BallPrefab;
+		public string BallPrefabPath;
 	}
 }

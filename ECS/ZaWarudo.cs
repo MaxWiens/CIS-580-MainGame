@@ -54,7 +54,9 @@ namespace MainGame.ECS {
 
 		private System[] GetSystems() => new System[]{
 			new PlayerController(this),
-			new SpriteDraw(this), 
+			new SpriteDraw(this),
+			new CollisionDraw(this),
+			new Collisions(this)
 		};
 
 		protected override void Initialize() {
@@ -67,6 +69,12 @@ namespace MainGame.ECS {
 		}
 
 		protected override void LoadContent() {
+			string[] texturenames;
+			foreach(string texturename in Directory.GetFiles(@"Content\Textures\")) {
+				texturenames = texturename.Split('\\', '.');
+				Content.Load<Texture2D>(texturenames[texturenames.Length-2]);
+			}
+			
 			foreach(System system in _systems) {
 				system.GetType().GetMethod("OnContentLoad", MESSAGE_FLAGS)?.Invoke(system, null);
 			}
@@ -223,22 +231,23 @@ namespace MainGame.ECS {
 			}
 		}
 
-		public void LoadEntities(string filePath) {
+		public List<Guid> LoadEntities(string filePath) {
 			using(FileStream stream = File.OpenRead(filePath)) {
 				JsonDocument doc = JsonDocument.Parse(stream);
-
+				List<Guid> eids = new List<Guid>();
 				foreach(JsonElement entityJson in doc.RootElement.GetProperty("Entitites").EnumerateArray()) {
-					LoadEntity(entityJson.GetRawText());
+					eids.Add(LoadEntity(entityJson.GetRawText()));
 				}
+				return eids;
 			}
 		}
 
-		public void LoadEntity(string entityJson) {
+		public Guid LoadEntity(string entityJson) {
 			using(JsonDocument document = JsonDocument.Parse(entityJson))
-				LoadEntity(document.RootElement);
+				return LoadEntity(document.RootElement);
 		}
 
-		public void LoadEntity(JsonElement entityJson) {
+		public Guid LoadEntity(JsonElement entityJson) {
 			List<object> components = new List<object>();
 			Guid eid;
 			if(entityJson.TryGetProperty("ID", out JsonElement idElement)){
@@ -253,6 +262,7 @@ namespace MainGame.ECS {
 				}
 			}
 			MakeEntity(eid, components);
+			return eid;
 		}
 		
 		private void LoadSystems(string filePath) {

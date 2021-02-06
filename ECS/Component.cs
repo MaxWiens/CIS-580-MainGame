@@ -25,4 +25,5 @@ namespace MainGame.ECS {
 		public static T Parse<T>(JsonElement json) where T : struct
 			=> (T)JsonSerializer.Deserialize(json.GetRawText(), typeof(T), Serialization.JsonDefaults.Options);
 	}
+
 }
