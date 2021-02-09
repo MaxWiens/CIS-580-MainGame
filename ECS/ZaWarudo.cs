@@ -21,7 +21,7 @@ namespace MainGame.ECS {
 		public SpriteBatch SpriteBatch;
 		private SpriteBatch _targetBatch;
 		public RenderTarget2D Target;
-		private readonly Dictionary<Type, IKeyBag<Guid>> _componentStore;
+		private readonly Dictionary<Type, IKeyRefMap<Guid>> _componentStore;
 		private readonly Dictionary<Guid, HashSet<Type>> _entities;
 		private readonly Dictionary<Type, UpdateSystem> _updateSystems;
 
@@ -45,7 +45,7 @@ namespace MainGame.ECS {
 			InputManager = new InputManager();
 
 			_entities = new Dictionary<Guid, HashSet<Type>>();
-			_componentStore = new Dictionary<Type, IKeyBag<Guid>>();
+			_componentStore = new Dictionary<Type, IKeyRefMap<Guid>>();
 			
 			_updateSystems = new Dictionary<Type, UpdateSystem>();
 			_enabledUpdateSystems = new Dictionary<Type, UpdateSystem>();
@@ -137,9 +137,9 @@ namespace MainGame.ECS {
 			}
 		}
 
-		public Bag<Guid,T> GetEntitiesWithComponent<T>() where T : struct {
+		public RefMap<Guid,T> GetEntitiesWithComponent<T>() where T : struct {
 			_componentStore.TryGetValue(typeof(T), out var entities);
-			return entities as Bag<Guid, T>;
+			return entities as RefMap<Guid, T>;
 		}
 
 		public void AddComponent(Guid entityID, object component) {
@@ -150,11 +150,11 @@ namespace MainGame.ECS {
 				// entity does'nt exist
 				return;
 			}
-			if(_componentStore.TryGetValue(componentType, out IKeyBag<Guid> entities)) {
+			if(_componentStore.TryGetValue(componentType, out IKeyRefMap<Guid> entities)) {
 				entities.Add(entityID, component);
 			} else {
-				Type bagtype = typeof(Bag<,>).MakeGenericType(typeof(Guid), componentType);
-				IKeyBag<Guid> bag = Activator.CreateInstance(bagtype) as IKeyBag<Guid>;
+				Type bagtype = typeof(RefMap<,>).MakeGenericType(typeof(Guid), componentType);
+				IKeyRefMap<Guid> bag = Activator.CreateInstance(bagtype) as IKeyRefMap<Guid>;
 				bag.Add(entityID, component);
 				_componentStore.Add(componentType, bag);
 			}
@@ -172,7 +172,7 @@ namespace MainGame.ECS {
 			if(_componentStore.TryGetValue(componentType, out var entities)) {
 				entities.Add(entityID, component);
 			} else {
-				entities = new Bag<Guid, T>();
+				entities = new RefMap<Guid, T>();
 				entities.Add(entityID, component);
 				_componentStore.Add(componentType, entities);
 			}
@@ -186,11 +186,11 @@ namespace MainGame.ECS {
 		}
 
 		public ref T GetComponent<T>(Guid entityID) where T : struct {
-			return ref (_componentStore[typeof(T)] as Bag<Guid, T>)[entityID];
+			return ref (_componentStore[typeof(T)] as RefMap<Guid, T>)[entityID];
 		}
 
 		public bool TryGetComponent<T>(Guid entityID, ref T component) where T : struct
-			=> _componentStore.TryGetValue(typeof(T), out var bag) && (bag as Bag<Guid, T>).TryGetValue(entityID, ref component);
+			=> _componentStore.TryGetValue(typeof(T), out var bag) && (bag as RefMap<Guid, T>).TryGetValue(entityID, ref component);
 
 		public void EnableSystem<T>() where T : System {
 			if(typeof(T).IsAssignableFrom(typeof(UpdateSystem)) && _updateSystems.TryGetValue(typeof(T), out UpdateSystem updateSystem)) {

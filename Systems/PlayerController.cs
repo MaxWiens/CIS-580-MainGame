@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using diagonstics = System.Diagnostics;
+
 namespace MainGame.Systems {
 	using ECS;
 	using Components;
