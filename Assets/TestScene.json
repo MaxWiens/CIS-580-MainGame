@@ -1,13 +1,29 @@
 ﻿{
   "Entitites": [
     {
+      "ID": "A85B9DC2-1A89-478B-953C-3A88B7F394F0",
       "Components": {
-        "Transform2D": {"Position": {"X": 200, "Y": 50}},
-        "Sprite": {"TextureName": "Frog\\frog_front", "Albedo": [24,255,25]},
+        "Transform2D": {"Position": [0, 0]},
+        "Camera": {},
+        "Follower": {"Strength": 10, "SnapDistance": 1.5, "Target": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409"}
+      }
+    },
+    {
+      "ID": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409",
+      "Components": {
+        "Transform2D": {"Position": [0,0]},
+        "Sprite": {"TextureName": "Textures\\Frog\\frog_front", "Albedo": [255,255,255], "Offset": [8,8]},
         "PlayerControl": {},
         "BlockPlacer": {"BallPrefabPath": "Assets\\Prefabs\\WoodBlock.json"},
         "Health": {"Value": 10},
-        "RectCollider": { "Offset": [4,9], "Dimentions": [10,6], "CollidesWithSelf": false }
+        "RectBounds": { "Offset": [5,-1], "Dimentions": [10,6]}
+      }
+    },
+    {
+      "Components": {
+        "Transform2D": {"Position": [20, 100]},
+        "Sprite": {"TextureName": "Textures\\ball", "Albedo": [24,255,25]},
+        "Follower": {"Strength": 1, "SnapDistance": 1.5, "Target": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409"}
       }
     }
   ]

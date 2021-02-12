@@ -17,6 +17,8 @@ namespace MainGame.Systems {
 
 		private Grid _grid;
 
+		private Health _fallbackHealth;
+
 		public PlayerController(ZaWarudo world) : base(world) {
 			_moveValue = Vector2.Zero;
 			_sprintValue = 1f;
@@ -43,18 +45,22 @@ namespace MainGame.Systems {
 				ref Transform2D pos = ref world.GetComponent<Transform2D>(eid);
 				pos.Position += _moveValue * 100f * deltaTime * _sprintValue;
 				ref BlockPlacer blockPlacer = ref world.GetComponent<BlockPlacer>(eid);
+				
+				
 				if(_interacted && !_grid.IsCellFilled(Grid.ToGridPosition(pos.Position))) {
 					Guid blockeid = world.LoadEntities(blockPlacer.BallPrefabPath)[0];
 					ref Transform2D blocktransform = ref world.GetComponent<Transform2D>(blockeid);
 					ref Sprite sprite = ref world.GetComponent<Sprite>(blockeid);
-					sprite.Texture = world.Content.Load<Texture2D>(@"Textures\"+sprite.TextureName);
 					blocktransform.Position = Grid.NearestGridPosition(pos.Position);
 					_interacted = false;
-				} else if(_breakActivated && _grid.IsCellFilled(Grid.ToGridPosition(pos.Position))) {
-					_grid.PointsToDestroy.Push(Grid.ToGridPosition(pos.Position));
-					_breakActivated = false;
+				} else if(_breakActivated && _grid.GetEntityAt(Grid.ToGridPosition(pos.Position), out Guid blockeid)) {
+					ref Health h = ref world.TryGetComponent(blockeid, ref _fallbackHealth, out bool isSuccessful);
+					if(isSuccessful) {
+						//_grid.PointsToDestroy.Push(Grid.ToGridPosition(pos.Position));
+						h.Value = 0;
+						_breakActivated = false;
+					}
 				}
-				
 			}
 		}
 

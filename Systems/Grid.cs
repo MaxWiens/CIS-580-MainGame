@@ -12,7 +12,7 @@ namespace MainGame.Systems {
 		private Guid[,] _entities = new Guid[16, 9];
 
 		public Grid(ZaWarudo world) : base(world) { }
-		private Transform2D _t;
+		private Transform2D _fallbackT2D;
 
 		public Stack<Point> PointsToDestroy = new Stack<Point>();
 
@@ -24,7 +24,6 @@ namespace MainGame.Systems {
 			}
 
 			var entities = world.GetEntitiesWithComponent<GridAligned>();
-			ref Transform2D transform2D = ref _t;
 
 			if(entities!= null) {
 				var eids = entities.Keys;
@@ -36,8 +35,9 @@ namespace MainGame.Systems {
 				foreach(var eid in eids) {
 					ref GridAligned g = ref world.GetComponent<GridAligned>(eid);
 					Point p;
-					if(world.TryGetComponent<Transform2D>(eid, ref transform2D)) {
-						p = g.GridPosition = ToGridPosition(transform2D.Position);
+					Transform2D transform = world.TryGetComponent(eid, ref _fallbackT2D, out bool isSuccessful);
+					if(isSuccessful) {
+						p = g.GridPosition = ToGridPosition(transform.Position);
 					} else {
 						p = g.GridPosition;
 					}
@@ -50,6 +50,15 @@ namespace MainGame.Systems {
 				}
 			}
 		}
+		public bool GetEntityAt(int x, int y, out Guid eid) {
+			if(x >= 0 && x < 16 && y >= 0 && y < 9 && _filled[x, y]) {
+				eid = _entities[x, y];
+				return true;
+			}
+			eid = Guid.Empty;
+			return false;
+		}
+		public bool GetEntityAt(Point p, out Guid eid) => GetEntityAt(p.X ,p.Y, out eid);
 
 		public bool IsCellFilled(int x, int y) {
 			if(x >= 0 && x < 16 && y >= 0 && y < 9)

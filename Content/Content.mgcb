@@ -85,6 +85,18 @@
 /processorParam:TextureFormat=Color
 /build:../Assets/Textures/Frog/frog_walk_front.png;Textures/Frog/frog_walk_front.png
 
+#begin ../Assets/Textures/Items/log.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Assets/Textures/Items/log.png;Textures/Items/log.png
+
 #begin ../Assets/Textures/pixel.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -19,18 +19,20 @@ namespace MainGame.Systems {
 		}
 
 		public override void Draw() {
-			var entitites = world.GetEntitiesWithComponent<RectCollider>();
+			Transform2D cam = world.GetComponent<Transform2D>(world.MainCamera);
+			var entitites = world.GetEntitiesWithComponent<RectBounds>();
 			var eids = entitites.Keys;
+			Vector2 camCenter = (cam.Position - (world.Resolution.ToVector2() * 0.5f));
 			foreach(var eid in eids) {
-				ref RectCollider s = ref entitites[eid];
-				Vector2 pos = world.GetComponent<Transform2D>(eid).Position+s.Offset;
+				ref RectBounds s = ref entitites[eid];
+				Vector2 adjustedpos = world.GetComponent<Transform2D>(eid).Position-s.Offset;
 				Color c;
 				if(s.collisions != null && s.collisions.Count > 0){
 					c = new Color(255, 100, 100, 150);
 				} else {
 					c = new Color(30, 30, 30, 2);
 				}
-				world.SpriteBatch.Draw(_pixelTexture, new Rectangle(pos.ToPoint(), s.Dimentions.ToPoint()), new Rectangle(0,0,1,1), c);
+				world.SpriteBatch.Draw(_pixelTexture, new Rectangle((adjustedpos - camCenter).ToPoint(), s.Dimentions.ToPoint()), new Rectangle(0,0,1,1), c);
 			}
 		}
 	}

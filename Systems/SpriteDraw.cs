@@ -15,23 +15,23 @@ namespace MainGame.Systems {
 		}
 
 		private void OnContentLoad() {
-			var spriteEntitites = world.GetEntitiesWithComponent<Sprite>();
-			var entitites = spriteEntitites.Keys;
-			foreach(var eid in entitites){
-				ref Sprite s = ref spriteEntitites[eid];
-				s.Texture = world.Content.Load<Texture2D>(@"Textures\"+s.TextureName);
-			}
+			//var spriteEntitites = world.GetEntitiesWithComponent<Sprite>();
+			//var entitites = spriteEntitites.Keys;
+			//foreach(var eid in entitites){
+			//	ref Sprite s = ref spriteEntitites[eid];
+			//	s.Texture = world.Content.Load<Texture2D>(@"Textures\"+s.TextureName);
+			//}
 		}
 
 		public override void Draw() {
+			Transform2D cam = world.GetComponent<Transform2D>(world.MainCamera);
 			var spriteEntitites = world.GetEntitiesWithComponent<Sprite>();
 			var eids = spriteEntitites.Keys;
-			Sprite s2;
+			Sprite s;
+			Vector2 camCenter = cam.Position - (world.Resolution.ToVector2() * 0.5f);
 			foreach(var eid in eids) {
-				ref Sprite s = ref spriteEntitites[eid];
-				s2 = spriteEntitites[eid];
-				if(s.Texture != null) // fix this
-					world.SpriteBatch.Draw(s.Texture, world.GetComponent<Transform2D>(eid).Position, s.Albedo);
+				s = spriteEntitites[eid];
+				world.SpriteBatch.Draw(s.Texture, world.GetComponent<Transform2D>(eid).Position-s.Offset-camCenter, s.Albedo);
 			}
 		}
 	}

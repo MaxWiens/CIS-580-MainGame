@@ -10,8 +10,9 @@ using System.IO;
 namespace MainGame.Input {
 	public class InputManager {
 		private Dictionary<string, InputAction> _actions;
-
-		public InputManager() {
+		private readonly JsonSerializerOptions _options;
+		public InputManager(JsonSerializerOptions options) {
+			_options = options;
 			_actions = new Dictionary<string, InputAction>();
 			LoadBindings(@"Assets\Controlls.json");
 		}
@@ -47,12 +48,12 @@ namespace MainGame.Input {
 						switch(bindingJson.ValueKind) {
 							case JsonValueKind.String:
 								// single binding
-								bindings.Add(JsonSerializer.Deserialize<SoloBinding>(bindingJson.GetRawText(), Serialization.JsonDefaults.Options));
+								bindings.Add(JsonSerializer.Deserialize<SoloBinding>(bindingJson.GetRawText(), _options));
 								break;
 							case JsonValueKind.Object:
 							case JsonValueKind.Array:
 								// composite type
-								bindings.Add(JsonSerializer.Deserialize<CompositeBinding>(bindingJson.GetRawText(), Serialization.JsonDefaults.Options));
+								bindings.Add(JsonSerializer.Deserialize<CompositeBinding>(bindingJson.GetRawText(), _options));
 								break;
 							default:
 								throw new JsonException();

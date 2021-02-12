@@ -21,6 +21,7 @@ namespace MainGame.ECS {
 		public SpriteBatch SpriteBatch;
 		private SpriteBatch _targetBatch;
 		public RenderTarget2D Target;
+		public Point Resolution = new Point(256, 144);
 		private readonly Dictionary<Type, IKeyRefMap<Guid>> _componentStore;
 		private readonly Dictionary<Guid, HashSet<Type>> _entities;
 		private readonly Dictionary<Type, UpdateSystem> _updateSystems;
@@ -36,13 +37,33 @@ namespace MainGame.ECS {
 
 		public readonly InputManager InputManager;
 
+		public Guid MainCamera;
+
+		public readonly ComponentParser ComponentParser;
+		private readonly JsonSerializerOptions _jsonSerializerOptions;
 		public ZaWarudo() {
+			_jsonSerializerOptions = new JsonSerializerOptions() {
+				IgnoreNullValues = false,
+				Converters = {
+						new Serialization.PointConverter(),
+						new Serialization.Vector2Converter(),
+						new Serialization.Vector3Converter(),
+						new Serialization.ColorConverter(),
+						new Serialization.SoloBindingConverter(),
+						new Serialization.CompositeBindingConverter(),
+						new Serialization.SpriteConverter(Content),
+					}
+			};
 			_graphics = new GraphicsDeviceManager(this);
+			ComponentParser = new ComponentParser(_jsonSerializerOptions);
+			InputManager = new InputManager(_jsonSerializerOptions);
+			
+			
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
 			Window.Title = "Block Frog";
 
-			InputManager = new InputManager();
+			
 
 			_entities = new Dictionary<Guid, HashSet<Type>>();
 			_componentStore = new Dictionary<Type, IKeyRefMap<Guid>>();
@@ -62,12 +83,17 @@ namespace MainGame.ECS {
 		private System[] GetSystems() => new System[]{
 			new PlayerController(this),
 			new SpriteDraw(this),
-			new Collisions(this),
+			new Physics(this),
 			new Grid(this),
+			new Following(this),
+			new Destruction(this),
 
 			// debug
 			new CollisionDraw(this),
+			new PositionDraw(this),
 		};
+
+
 
 		public T GetSystem<T>() where T : System
 			=> _systemDictionary.TryGetValue(typeof(T), out System s) && s is T t ? t : null;
@@ -76,7 +102,19 @@ namespace MainGame.ECS {
 			_graphics.PreferredBackBufferWidth = 1280;
 			_graphics.PreferredBackBufferHeight = 720;
 			_graphics.ApplyChanges();
+
 			LoadEntities(@"Assets\TestScene.json");
+			var eids = GetEntitiesWithComponent<Components.Camera>();
+			if(eids.Count == 0) {
+				global::System.Diagnostics.Debug.Fail("no camera in startin scene");
+				Exit();
+				return;
+			} else {
+				var enumerator = eids.Keys.GetEnumerator();
+				enumerator.MoveNext();
+				MainCamera = enumerator.Current;
+			}
+
 
 			foreach(System system in _systems) {
 				system.GetType().GetMethod("OnInit", MESSAGE_FLAGS)?.Invoke(system, null);
@@ -84,27 +122,11 @@ namespace MainGame.ECS {
 
 			_targetBatch = new SpriteBatch(GraphicsDevice);
 			SpriteBatch = new SpriteBatch(GraphicsDevice);
-			Target = new RenderTarget2D(GraphicsDevice, 256, 144);
+			Target = new RenderTarget2D(GraphicsDevice, Resolution.X, Resolution.Y);
 			base.Initialize();
 		}
 
 		protected override void LoadContent() {
-			//string[] texturenames;
-			Content.Load<Texture2D>(@"Textures\ball");
-			Content.Load<Texture2D>(@"Textures\fire_pit");
-			Content.Load<Texture2D>(@"Textures\pixel");
-			Content.Load<Texture2D>(@"Textures\wood_block");
-
-			Content.Load<Texture2D>(@"Textures\Frog\frog_back");
-			Content.Load<Texture2D>(@"Textures\Frog\frog_front");
-			Content.Load<Texture2D>(@"Textures\Frog\frog_walk_back");
-			Content.Load<Texture2D>(@"Textures\Frog\frog_walk_front");
-
-			//foreach(string texturename in Directory.GetFiles(@"Assets\Textures\")) {
-			//	texturenames = texturename.Split('\\', '.');
-			//	Content.Load<Texture2D>(texturenames[texturenames.Length-2]);
-			//}
-
 			foreach(System system in _systems) {
 				system.GetType().GetMethod("OnContentLoad", MESSAGE_FLAGS)?.Invoke(system, null);
 			}
@@ -122,7 +144,8 @@ namespace MainGame.ECS {
 		public Guid MakeEntity(IEnumerable<object> components) => MakeEntity(Guid.NewGuid(), components);
 
 		public Guid MakeEntity(Guid eid, IEnumerable<object> components) {
-			_entities.Add(eid, new HashSet<Type>());
+			if(!_entities.TryAdd(eid, new HashSet<Type>()))
+				return MakeEntity(Guid.NewGuid(), components);
 			foreach(object c in components) {
 				AddComponent(eid, c);
 			}
@@ -189,8 +212,13 @@ namespace MainGame.ECS {
 			return ref (_componentStore[typeof(T)] as RefMap<Guid, T>)[entityID];
 		}
 
-		public bool TryGetComponent<T>(Guid entityID, ref T component) where T : struct
-			=> _componentStore.TryGetValue(typeof(T), out var bag) && (bag as RefMap<Guid, T>).TryGetValue(entityID, ref component);
+		public ref T TryGetComponent<T>(Guid entityID, ref T fallbackValue, out bool isSuccessful) where T : struct {
+			if(_componentStore.TryGetValue(typeof(T), out var bag)) {
+				return ref (bag as RefMap<Guid, T>).TryGetValue(entityID, ref fallbackValue, out isSuccessful);
+			}
+			isSuccessful = false;
+			return ref fallbackValue;
+		}
 
 		public void EnableSystem<T>() where T : System {
 			if(typeof(T).IsAssignableFrom(typeof(UpdateSystem)) && _updateSystems.TryGetValue(typeof(T), out UpdateSystem updateSystem)) {
@@ -222,7 +250,7 @@ namespace MainGame.ECS {
 
 		protected override void Draw(GameTime gameTime) {
 			GraphicsDevice.SetRenderTarget(Target);
-			GraphicsDevice.Clear(new Color(0x30, 0x9d, 0x6c));
+			GraphicsDevice.Clear(new Color(0x2d,0x9c,0x42));// new Color(0x40, 0x9c, 0x2b) newer // new Color(0x30, 0x9d, 0x6c) old
 			SpriteBatch.Begin(blendState: BlendState.AlphaBlend, samplerState: SamplerState.PointClamp);
 			float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 			foreach(DrawSystem system in _enabledDrawSystems.Values) {
@@ -300,7 +328,7 @@ namespace MainGame.ECS {
 
 			if(entityJson.TryGetProperty("Components", out JsonElement componentsElement)){
 				foreach(JsonProperty componentJson in componentsElement.EnumerateObject()) {
-					components.Add(Component.Parse(componentJson));
+					components.Add(ComponentParser.Parse(componentJson));
 				}
 			}
 			MakeEntity(eid, components);

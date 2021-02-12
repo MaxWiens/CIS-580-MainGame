@@ -11,21 +11,20 @@ namespace MainGame.Collections {
 		private const int DEFAULT_SIZE = 4;
 		private static readonly TValue[] _emptyValues = new TValue[0];
 		public int Count => _count;
-
 		private readonly SortedSet<int> _continiousEndIdxs = new SortedSet<int>();
-		private readonly SortedSet<int> _continiousStartIdxs = new SortedSet<int>();
+		private readonly HashSet<int> _continiousStartIdxs = new HashSet<int>();
 
 		public IEnumerable<TKey> Keys => _keyIdxMap.Keys;
 
 		public ref TValue this[TKey id] => ref _values[_keyIdxMap[id]];
 
-		public bool TryGetValue(TKey id, ref TValue value) {
+		public ref TValue TryGetValue(TKey id, ref TValue fallbackValue, out bool isSuccessful) {
 			if(_keyIdxMap.TryGetValue(id, out int idx)) {
-				ref TValue v = ref _values[idx];
-				value = v;
-				return true;
+				isSuccessful = true;
+				return ref _values[idx];
 			}
-			return false;
+			isSuccessful = false;
+			return ref fallbackValue;
 		}
 
 		public RefMap() {
@@ -61,6 +60,10 @@ namespace MainGame.Collections {
 					//didn't connect two continious portions	
 					_continiousEndIdxs.Add(availableIdx + 1);
 				}
+				/* cool buggy code that inables the foobag glitch
+				if(_continiousStartIdxs.Remove(availableIdx + 1)) {
+					_continiousStartIdxs.Add(availableIdx);
+				}*/
 
 				_keyIdxMap.Add(key, availableIdx);
 				_values[availableIdx] = value;

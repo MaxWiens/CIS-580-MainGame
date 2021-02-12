@@ -3,10 +3,11 @@
     {
       "Components": {
         "Transform2D": {},
-        "Sprite": {"TextureName": "wood_block", "Albedo": "White"},
+        "Sprite": {"TextureName": "Textures\\wood_block", "Albedo": "White", "Offset": [0,0]},
         "Health": {"Value": 10},
-        "RectCollider": { "Offset": [0,0], "Dimentions": [16,16], "CollidesWithSelf": false },
-        "GridAligned": {}
+        "RectBounds": { "Offset": [0,0], "Dimentions": [16,16]},
+        "GridAligned": {},
+        "Drops": {"Items": ["Assets\\Prefabs\\WoodBlockItem.json"]}
       }
     }
   ]

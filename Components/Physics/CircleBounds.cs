@@ -5,10 +5,9 @@ using System.Text;
 using System.Text.Json.Serialization;
 
 namespace MainGame.Components {
-	public struct RectCollider {
-		[JsonInclude] public bool CollidesWithSelf;
+	public struct CircleBounds {
 		[JsonInclude] public Vector2 Offset;
-		[JsonInclude] public Vector2 Dimentions;
+		[JsonInclude] public float radius;
 		public ICollection<Guid> collisions;
 	}	
 }
