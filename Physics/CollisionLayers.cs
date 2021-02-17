@@ -1,30 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Runtime.CompilerServices;
+namespace MainGame.Physics {
+	[Flags]
+	public enum Layer : ushort {
+		None        = 0,
+		General     = 0b0000_0000_0000_0001,
+		Creature    = 0b0000_0000_0000_0010,
+		Enviornment = 0b0000_0000_0000_0100,
+		Item        = 0b0000_0000_0000_1000,
+	}
 
-namespace MainGame {
 	public static class CollisionLayers {
-		public static Layers[] CollidesWith = LayerConverter(new Dictionary<string, Layers> {
-			{"General",     (Layers)0b1111_1111_1111_1111},
-			{"Creature",    (Layers)0b1111_1111_1111_1111},
-			{"Envionrment", (Layers)0b0000_0000_0000_0011},
-			{"Item",        (Layers)0b0000_0000_0000_0111},
-		});
-		[Flags]
-		public enum Layers : ushort {
-			General     = 0b0000_0000_0000_0001,
-			Creature    = 0b0000_0000_0000_0010,
-			Enviornment = 0b0000_0000_0000_0100,
-			Item        = 0b0000_0000_0000_1000,
-		}
+		private static readonly Dictionary<Layer, Layer> _collisionMap = new Dictionary<Layer, Layer>() {
+			{Layer.None, Layer.None},
+			{Layer.General,     (Layer)0b1111_1111_1111_1111},
+			{Layer.Creature,    (Layer)0b1111_1111_1111_1111},
+			{Layer.Enviornment, (Layer)0b0000_0000_0000_0011},
+			{Layer.Item,        (Layer)0b0000_0000_0000_0011},
+		};
 
-		private static Layers[] LayerConverter(Dictionary<string, Layers> dict) {
-			Layers[] layers = new Layers[16];
-			List<string> enumValueNames = new List<string>(Enum.GetNames(typeof(Layers)));
-			if(enumValueNames.Count > 16) throw new Exception("Too many layers");
-			foreach(var kvp in dict)
-				layers[enumValueNames.IndexOf(kvp.Key)] = (Layers)kvp.Value;
-			return layers;
-		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool CanCollide(this Layer layer, Layer other)
+			=> Layer.None != (_collisionMap[layer] & other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool CantCollide(this Layer layer, Layer other)
+			=> Layer.None == (_collisionMap[layer] & other);
 	}
 }

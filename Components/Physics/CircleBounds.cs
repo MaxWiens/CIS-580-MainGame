@@ -7,7 +7,6 @@ using System.Text.Json.Serialization;
 namespace MainGame.Components {
 	public struct CircleBounds {
 		[JsonInclude] public Vector2 Offset;
-		[JsonInclude] public float radius;
-		public ICollection<Guid> collisions;
+		[JsonInclude] public float Radius;
 	}	
 }

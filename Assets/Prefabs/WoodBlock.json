@@ -2,9 +2,10 @@
   "Entitites":[
     {
       "Components": {
-        "Transform2D": {},
-        "Sprite": {"TextureName": "Textures\\wood_block", "Albedo": "White", "Offset": [0,0]},
+        "Transform2D": {"Scale": 1},
+        "Sprite": {"TextureName": "Textures\\wood_block", "Albedo": "White", "Offset": [0,0], "Scale": 1},
         "Health": {"Value": 10},
+        "StaticBody": { "Layer": "Enviornment", "IsTrigger": false},
         "RectBounds": { "Offset": [0,0], "Dimentions": [16,16]},
         "GridAligned": {},
         "Drops": {"Items": ["Assets\\Prefabs\\WoodBlockItem.json"]}

@@ -2,8 +2,9 @@
   "Entitites":[
     {
       "Components": {
-        "Transform2D": {},
-        "Sprite": {"TextureName": "Textures\\Items\\log", "Albedo": "White", "Offset": [4,4]},
+        "Transform2D": {"Scale": 1},
+        "Sprite": {"TextureName": "Textures\\Items\\log", "Albedo": "White", "Offset": [4,4], "Scale": 1},
+        "RigidBody": { "Layer": "Item", "IsTrigger": true},
         "RectBounds": { "Offset": [4,4], "Dimentions": [8,8]},
         "Follower": {"Strength": 2, "SnapDistance": 1.5, "Target": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409"}
       }

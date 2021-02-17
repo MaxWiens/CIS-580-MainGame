@@ -3,7 +3,7 @@
     {
       "ID": "A85B9DC2-1A89-478B-953C-3A88B7F394F0",
       "Components": {
-        "Transform2D": {"Position": [0, 0]},
+        "Transform2D": {"Scale": 1, "Position": [0, 0]},
         "Camera": {},
         "Follower": {"Strength": 10, "SnapDistance": 1.5, "Target": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409"}
       }
@@ -11,19 +11,31 @@
     {
       "ID": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409",
       "Components": {
-        "Transform2D": {"Position": [0,0]},
-        "Sprite": {"TextureName": "Textures\\Frog\\frog_front", "Albedo": [255,255,255], "Offset": [8,8]},
+        "Transform2D": {"Scale": 1, "Position": [0,0]},
+        "Sprite": {"TextureName": "Textures\\Frog\\frog_front", "Albedo": [255,255,255], "Offset": [8,8], "Scale": 1},
         "PlayerControl": {},
         "BlockPlacer": {"BallPrefabPath": "Assets\\Prefabs\\WoodBlock.json"},
         "Health": {"Value": 10},
+        "RigidBody": { "Layer": "Creature", "IsTrigger": false},
         "RectBounds": { "Offset": [5,-1], "Dimentions": [10,6]}
       }
     },
     {
       "Components": {
-        "Transform2D": {"Position": [20, 100]},
-        "Sprite": {"TextureName": "Textures\\ball", "Albedo": [24,255,25]},
-        "Follower": {"Strength": 1, "SnapDistance": 1.5, "Target": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409"}
+        "Transform2D": {"Scale": 1, "Position": [20, 100]},
+        "Sprite": {"TextureName": "Textures\\circle", "Albedo": [24,255,25], "Offset": [32,32], "Scale": 0.0625},
+        "Follower": {"Strength": 1, "SnapDistance": 1.5, "Target": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409"},
+        "RigidBody": { "IsTrigger": false, "Layer": "General"},
+        "CircleBounds": { "Radius": 32, "Offset": [32,32]}
+      }
+    },
+    {
+      "Components": {
+        "Transform2D": {"Scale": 1, "Position": [200, 0]},
+        "Sprite": {"TextureName": "Textures\\circle", "Albedo": "Purple", "Offset": [0,0], "Scale": 0.0625},
+        "Follower": {"Strength": 1, "SnapDistance": 1.5, "Target": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409"},
+        "RigidBody": { "IsTrigger": false, "Layer": "General"},
+        "CircleBounds": { "Radius": 32, "Offset": [0,0]}
       }
     }
   ]

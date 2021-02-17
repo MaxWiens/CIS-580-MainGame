@@ -12,5 +12,6 @@ namespace MainGame.Components {
 		[JsonInclude] public Vector2 Offset;
 		[JsonInclude] public string TextureName;
 		[JsonInclude] public Color Albedo;
+		[JsonInclude] public Vector2 Scale;
 	}
 }

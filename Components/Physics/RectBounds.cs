@@ -8,6 +8,5 @@ namespace MainGame.Components {
 	public struct RectBounds {
 		[JsonInclude] public Vector2 Offset;
 		[JsonInclude] public Vector2 Dimentions;
-		public ICollection<Guid> collisions;
 	}
 }

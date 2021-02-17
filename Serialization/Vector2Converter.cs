@@ -23,6 +23,8 @@ namespace MainGame.Serialization {
 							return v;
 						}
 						break;
+					case JsonValueKind.Number:
+						return new Vector2(root.GetSingle());
 				}
 			}
 			throw new JsonException();

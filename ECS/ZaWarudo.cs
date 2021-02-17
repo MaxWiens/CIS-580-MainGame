@@ -52,6 +52,7 @@ namespace MainGame.ECS {
 						new Serialization.SoloBindingConverter(),
 						new Serialization.CompositeBindingConverter(),
 						new Serialization.SpriteConverter(Content),
+						new Serialization.LayerConverter(),
 					}
 			};
 			_graphics = new GraphicsDeviceManager(this);

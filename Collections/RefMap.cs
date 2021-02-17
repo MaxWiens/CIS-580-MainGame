@@ -60,8 +60,8 @@ namespace MainGame.Collections {
 					//didn't connect two continious portions	
 					_continiousEndIdxs.Add(availableIdx + 1);
 				}
-				/* cool buggy code that inables the foobag glitch
-				if(_continiousStartIdxs.Remove(availableIdx + 1)) {
+				/*cool buggy code that inables the foobag glitch
+				else if(_continiousStartIdxs.Remove(availableIdx + 1)) {
 					_continiousStartIdxs.Add(availableIdx);
 				}*/
 
