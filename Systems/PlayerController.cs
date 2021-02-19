@@ -48,7 +48,7 @@ namespace MainGame.Systems {
 				
 				
 				if(_interacted && !_grid.IsCellFilled(Grid.ToGridPosition(pos.Position))) {
-					Guid blockeid = world.LoadEntities(blockPlacer.BallPrefabPath)[0];
+					Guid blockeid = world.LoadEntities(blockPlacer.BlockPrefabPath)[0];
 					ref Transform2D blocktransform = ref world.GetComponent<Transform2D>(blockeid);
 					ref Sprite sprite = ref world.GetComponent<Sprite>(blockeid);
 					blocktransform.Position = Grid.NearestGridPosition(pos.Position);
@@ -56,7 +56,6 @@ namespace MainGame.Systems {
 				} else if(_breakActivated && _grid.GetEntityAt(Grid.ToGridPosition(pos.Position), out Guid blockeid)) {
 					ref Health h = ref world.TryGetComponent(blockeid, ref _fallbackHealth, out bool isSuccessful);
 					if(isSuccessful) {
-						//_grid.PointsToDestroy.Push(Grid.ToGridPosition(pos.Position));
 						h.Value = 0;
 						_breakActivated = false;
 					}

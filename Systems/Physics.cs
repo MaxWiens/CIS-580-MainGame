@@ -12,22 +12,6 @@ namespace MainGame.Systems {
 		public Physics(ZaWarudo world) : base(world) {}
 
 		private RectBounds _fallbackRectBounds;
-		//private CircleBounds _fallbackCircleBounds;
-		//public void foo(Guid eid2,  RefMap<Guid,RectBounds> rectBoundsMap, ICollection<(Guid, Vector2)> collisions1, ICollection<(Guid, Vector2)> collisions2, ) {
-		//	ref RectBounds rect2 = ref rectBoundsMap.TryGetValue(eid2, ref _fallbackRectBounds, out bool isRectBounds);
-		//	if(isRectBounds) {
-		//		if(IsColliding(ref rect1, ref trans1, ref rect2, ref trans2, out Vector2 normal)) {
-		//			collisions1.Add((eid2, normal));
-		//			collisions2.Add((eid1, -normal));
-		//		}
-		//	} else {
-		//		ref CircleBounds circ2 = ref circleBoundsMap[eid2];
-		//		if(IsColliding(ref rect1, ref trans1, ref rect2, ref trans2, out Vector2 normal)) {
-		//			collisions1.Add((eid2, normal));
-		//			collisions2.Add((eid1, -normal));
-		//		}
-		//	}
-		//}
 		public override void Update(float deltaTime) {
 			var rbMap = world.GetEntitiesWithComponent<RigidBody>();
 			var rbEIDs = rbMap?.Keys.ToArray() ?? new Guid[0];
@@ -38,7 +22,6 @@ namespace MainGame.Systems {
 			var circleBoundsMap = world.GetEntitiesWithComponent<CircleBounds>();
 
 			var transformMap = world.GetEntitiesWithComponent<Transform2D>();
-			
 			
 			#region Move Rigid Bodies;
 			foreach(Guid eid in rbEIDs) {
@@ -54,14 +37,14 @@ namespace MainGame.Systems {
 			Guid eid1;
 			Guid eid2;
 			Vector2 normal;
-			bool isRectBounds;
+			bool isRectBounds = false;
 
 			if(rbEIDs.Length > 0) {
 				eid1 = rbEIDs[0];
 				ref RigidBody rb1 = ref rbMap[eid1];
 				rb1.Collisions = new List<(Guid, Vector2)>();
 				ref Transform2D trans1 = ref transformMap[eid1];
-				ref RectBounds rect1 = ref rectBoundsMap.TryGetValue(eid1, ref _fallbackRectBounds, out isRectBounds);
+				RectBounds rect1 = rectBoundsMap.TryGetValue(eid1, ref _fallbackRectBounds, out isRectBounds); ;
 				if(isRectBounds) {
 					// go through rigid bodies
 					for(j = 1; j < rbEIDs.Length; j++) {
@@ -120,7 +103,7 @@ namespace MainGame.Systems {
 						rb2.Collisions = new List<(Guid, Vector2)>();
 						if(rb1.Layer.CantCollide(rb2.Layer)) continue;
 						ref Transform2D trans2 = ref transformMap[eid2];
-						ref RectBounds rect2 = ref rectBoundsMap.TryGetValue(eid2, ref _fallbackRectBounds, out isRectBounds);
+						RectBounds rect2 = rectBoundsMap.TryGetValue(eid2, ref _fallbackRectBounds, out isRectBounds);
 						if(isRectBounds) {
 							if(IsColliding(ref rect2, ref trans2, ref circ1, ref trans1, out normal)) {
 								if(!rb2.IsTrigger) trans1.Position -= normal;
@@ -166,7 +149,7 @@ namespace MainGame.Systems {
 					eid1 = rbEIDs[i];
 					rb1 = ref rbMap[eid1];
 					trans1 = ref transformMap[eid1];
-					rect1 = ref rectBoundsMap.TryGetValue(eid1, ref _fallbackRectBounds, out isRectBounds);
+					rect1 = rectBoundsMap.TryGetValue(eid1, ref _fallbackRectBounds, out isRectBounds);
 					if(isRectBounds) {
 						// go through rigid bodies
 						for(j = 1; j < rbEIDs.Length; j++) {
@@ -268,17 +251,21 @@ namespace MainGame.Systems {
 		}
 
 		private static bool IsIntersecting(ref RectBounds a, ref Transform2D apos, ref RectBounds b, ref Transform2D bpos) {
+			/*
 			Vector2 a_topLeft = apos.Position - a.Offset;
 			Vector2 a_botRight = a_topLeft + a.Dimentions;
 			Vector2 b_topLeft = bpos.Position - b.Offset;
 			Vector2 b_botRight = b_topLeft + b.Dimentions;
+			
 			return !(a_botRight.X < b_topLeft.X || a_topLeft.X > b_botRight.X || a_topLeft.Y > b_botRight.Y || a_botRight.Y <= b_topLeft.Y);
+			*/
+			return false;
 		}
 
-		private static bool IsColliding(ref RectBounds a, ref Transform2D apos, ref RectBounds b, ref Transform2D bpos, out Vector2 normal) {
-			Vector2 a_topLeft = apos.Position - a.Offset;
+		private static bool IsColliding(ref RectBounds a, ref Transform2D atrans, ref RectBounds b, ref Transform2D btrans, out Vector2 normal) {
+			Vector2 a_topLeft = atrans.Position - a.Offset;
 			Vector2 a_botRight = a_topLeft + a.Dimentions;
-			Vector2 b_topLeft = bpos.Position - b.Offset;
+			Vector2 b_topLeft = btrans.Position - b.Offset;
 			Vector2 b_botRight = b_topLeft + b.Dimentions;
 
 			if(!(a_botRight.X < b_topLeft.X || a_topLeft.X > b_botRight.X || a_topLeft.Y > b_botRight.Y || a_botRight.Y < b_topLeft.Y)) {
@@ -323,14 +310,16 @@ namespace MainGame.Systems {
 			return false;
 		}
 
-		private static bool IsColliding(ref CircleBounds a, ref Transform2D apos, ref CircleBounds b, ref Transform2D bpos, out Vector2 normal) {
+		private static bool IsColliding(ref CircleBounds a, ref Transform2D atrans, ref CircleBounds b, ref Transform2D btrans, out Vector2 normal) {
 			float abRadius = a.Radius + b.Radius;
-			Vector2 dif = apos.Position - a.Offset - (bpos.Position - b.Offset);
+			Vector2 dif = (atrans.Position+new Vector2(a.Radius) -a.Offset) - (btrans.Position+new Vector2(b.Radius)-b.Offset);
+
 			if(dif.LengthSquared() <= abRadius * abRadius) {
-				normal = Vector2.Normalize(dif) * (a.Radius + b.Radius - dif.Length());			
+				normal = Vector2.Normalize(dif) * (abRadius - dif.Length());
 				return true;
 			}
 			normal = Vector2.Zero;
+
 			return false;
 		}
 
@@ -339,8 +328,39 @@ namespace MainGame.Systems {
 			Vector2 a_topLeft = atrans.Position - a.Offset;
 			Vector2 a_botRight = a_topLeft + a.Dimentions;
 			// get difference between nearest point on rectbounds and the center of circle
-			Vector2 dif = Vector2.Clamp(center, a_topLeft, a_botRight) - center;
-			if(b.Radius*b.Radius >= dif.LengthSquared()) {
+			Vector2 cv = Vector2.Clamp(center, a_topLeft, a_botRight);
+			Vector2 dif = cv - center;
+			if(dif == Vector2.Zero) {
+				Vector2 dif1 = center - a_topLeft;
+				Vector2 dif2 = a_botRight - center;
+				
+				if(dif1.X < dif2.X) {
+					if(dif1.Y < dif2.Y) {
+						if(dif1.X < dif1.Y)
+							normal = new Vector2(-dif1.X*b.Radius, 0f);
+						else
+							normal = new Vector2(0f, -dif1.Y * b.Radius);
+					} else {
+						if(dif1.X < dif2.Y)
+							normal = new Vector2(-dif1.X * b.Radius, 0f);
+						else
+							normal = new Vector2(0f, dif2.Y * b.Radius);
+					}
+				} else {
+					if(dif1.Y < dif2.Y) {
+						if(dif2.X < dif1.Y)
+							normal = new Vector2(dif2.X * b.Radius, 0f);
+						else
+							normal = new Vector2(0f, -dif1.Y * b.Radius);
+					} else {
+						if(dif2.X < dif2.Y)
+							normal = new Vector2(dif2.X * b.Radius, 0f);
+						else
+							normal = new Vector2(0f, dif2.Y * b.Radius);
+					}
+				}
+				return true;
+			}else if(b.Radius * b.Radius >= dif.LengthSquared()) {
 				normal = (Vector2.Normalize(dif) * b.Radius) - dif;
 				return true;
 			}

@@ -7,6 +7,5 @@ using Microsoft.Xna.Framework;
 namespace MainGame.Components {
 	public struct Transform2D {
 		[JsonInclude] public Vector2 Position;
-		[JsonInclude] public Vector2 Scale;
 	}
 }

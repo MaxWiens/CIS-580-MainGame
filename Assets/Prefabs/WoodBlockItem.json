@@ -2,7 +2,7 @@
   "Entitites":[
     {
       "Components": {
-        "Transform2D": {"Scale": 1},
+        "Transform2D": {},
         "Sprite": {"TextureName": "Textures\\Items\\log", "Albedo": "White", "Offset": [4,4], "Scale": 1},
         "RigidBody": { "Layer": "Item", "IsTrigger": true},
         "RectBounds": { "Offset": [4,4], "Dimentions": [8,8]},

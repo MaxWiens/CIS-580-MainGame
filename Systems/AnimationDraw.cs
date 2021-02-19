@@ -7,19 +7,19 @@ using System.Text;
 namespace MainGame.Systems {
 	using ECS;
 	using Components;
-	public class SpriteDraw : DrawSystem {
-		public SpriteDraw(ZaWarudo world) : base(world) { }
+	public class AnimationDraw : DrawSystem {
+		public AnimationDraw(ZaWarudo world) : base(world) { }
 
 		public override void Draw() {
 			Transform2D cam = world.GetComponent<Transform2D>(world.MainCamera);
-			var spriteMap = world.GetEntitiesWithComponent<Sprite>();
+			var spriteEntitites = world.GetEntitiesWithComponent<Sprite>();
 			var transMap = world.GetEntitiesWithComponent<Transform2D>();
-			var eids = spriteMap.Keys;
+			var eids = spriteEntitites.Keys;
 			Sprite s;
 			Transform2D trans;
 			Vector2 camCenter = cam.Position - (world.Resolution.ToVector2() * 0.5f);
 			foreach(var eid in eids) {
-				s = spriteMap[eid];
+				s = spriteEntitites[eid];
 				trans = transMap[eid];
 				Point pos = (trans.Position - s.Offset - camCenter).ToPoint();
 				Point scale = new Point((int)(s.Texture.Width * s.Scale.X), (int)(s.Texture.Height * s.Scale.Y));
@@ -33,6 +33,12 @@ namespace MainGame.Systems {
 					effects: SpriteEffects.None, 
 					layerDepth: 0f
 				);
+
+				//world.SpriteBatch.Draw(
+				//	s.Texture, 
+				//	world.GetComponent<Transform2D>(eid).Position-s.Offset-camCenter, 
+				//	s.Albedo
+				//);
 			}
 		}
 	}

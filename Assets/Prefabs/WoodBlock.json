@@ -2,7 +2,7 @@
   "Entitites":[
     {
       "Components": {
-        "Transform2D": {"Scale": 1},
+        "Transform2D": {},
         "Sprite": {"TextureName": "Textures\\wood_block", "Albedo": "White", "Offset": [0,0], "Scale": 1},
         "Health": {"Value": 10},
         "StaticBody": { "Layer": "Enviornment", "IsTrigger": false},

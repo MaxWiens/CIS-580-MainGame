@@ -24,6 +24,7 @@ namespace MainGame.ECS {
 		public Point Resolution = new Point(256, 144);
 		private readonly Dictionary<Type, IKeyRefMap<Guid>> _componentStore;
 		private readonly Dictionary<Guid, HashSet<Type>> _entities;
+		private readonly Dictionary<Guid, object> _assets;
 		private readonly Dictionary<Type, UpdateSystem> _updateSystems;
 
 		private readonly Dictionary<Type, UpdateSystem> _enabledUpdateSystems;
@@ -46,6 +47,7 @@ namespace MainGame.ECS {
 				IgnoreNullValues = false,
 				Converters = {
 						new Serialization.PointConverter(),
+						new Serialization.RectangleConverter(),
 						new Serialization.Vector2Converter(),
 						new Serialization.Vector3Converter(),
 						new Serialization.ColorConverter(),
@@ -162,8 +164,12 @@ namespace MainGame.ECS {
 		}
 
 		public RefMap<Guid,T> GetEntitiesWithComponent<T>() where T : struct {
-			_componentStore.TryGetValue(typeof(T), out var entities);
-			return entities as RefMap<Guid, T>;
+			if(_componentStore.TryGetValue(typeof(T), out var entities)) {
+				return entities as RefMap<Guid, T>;
+			}
+			var map = new RefMap<Guid, T>();
+			_componentStore.Add(typeof(T), map);
+			return map;
 		}
 
 		public void AddComponent(Guid entityID, object component) {
@@ -306,8 +312,8 @@ namespace MainGame.ECS {
 			using(FileStream stream = File.OpenRead(filePath)) {
 				JsonDocument doc = JsonDocument.Parse(stream);
 				List<Guid> eids = new List<Guid>();
-				foreach(JsonElement entityJson in doc.RootElement.GetProperty("Entitites").EnumerateArray()) {
-					eids.Add(LoadEntity(entityJson.GetRawText()));
+				foreach(JsonElement entityElement in doc.RootElement.GetProperty("Entitites").EnumerateArray()) {
+					eids.Add(LoadEntity(entityElement));
 				}
 				return eids;
 			}
