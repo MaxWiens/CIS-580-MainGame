@@ -83,10 +83,6 @@ namespace MainGame.ECS {
 			IsMouseVisible = true;
 			Window.Title = "Block Frog";
 
-			
-
-			
-
 			_systems = GetSystems();
 			foreach(System system in _systems)
 				RegisterSystem(system);
@@ -103,8 +99,8 @@ namespace MainGame.ECS {
 			new MoverSystem(this),
 
 			// debug
-			new CollisionDraw(this),
-			new PositionDraw(this),
+			//new CollisionDraw(this),
+			//new PositionDraw(this),
 		};
 
 		public T GetSystem<T>() where T : System

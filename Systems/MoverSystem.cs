@@ -24,26 +24,26 @@ namespace MainGame.Systems {
 				ref TileAnimation tileAnimation = ref tileAnimationMap[eid];
 
 				if(rb.Velocity.LengthSquared() > 0.25f) {
-					mover.Direction = Direction.None;
+					mover.Direction = Directions.None;
 					if(rb.Velocity.X > 0) {
-						mover.Direction |= Direction.Right;
+						mover.Direction |= Directions.Right;
 						sprite.SpriteEffect = SpriteEffects.None;
 					} else {
-						mover.Direction |= Direction.Left;
+						mover.Direction |= Directions.Left;
 						sprite.SpriteEffect = SpriteEffects.FlipHorizontally;
 					}
 
 					if(rb.Velocity.Y > 0) {
-						mover.Direction |= Direction.Down;
+						mover.Direction |= Directions.Down;
 						tileAnimation.Asset = mover.FrontWalkAnimation;
 						//tileAnimation.FrameIdx = 0;
 					} else {
-						mover.Direction |= Direction.Up;
+						mover.Direction |= Directions.Up;
 						tileAnimation.Asset = mover.BackWalkAnimation;
 						//tileAnimation.FrameIdx = 0;
 					}
 				} else {
-					if((mover.Direction & Direction.Up) != Direction.None) {
+					if((mover.Direction & Directions.Up) != Directions.None) {
 						tileAnimation.Asset = mover.Back;
 						//tileAnimation.FrameIdx = 0;
 					} else {
@@ -51,7 +51,7 @@ namespace MainGame.Systems {
 						//tileAnimation.FrameIdx = 0;
 					}
 
-					if((mover.Direction & Direction.Left) != Direction.None)
+					if((mover.Direction & Directions.Left) != Directions.None)
 						sprite.SpriteEffect = SpriteEffects.FlipHorizontally;
 					else
 						sprite.SpriteEffect = SpriteEffects.None;

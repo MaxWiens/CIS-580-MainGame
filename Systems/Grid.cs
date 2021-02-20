@@ -8,8 +8,8 @@ namespace MainGame.Systems {
 	using Components;
 	public class Grid : UpdateSystem {
 		public const int GRID_SIZE = 16;
-		private bool[,] _filled = new bool[16,9];
-		private Guid[,] _entities = new Guid[16, 9];
+		private bool[,] _filled = new bool[500,500];
+		private Guid[,] _entities = new Guid[500, 500];
 
 		public Grid(ZaWarudo world) : base(world) { }
 		private Transform2D _fallbackT2D;
@@ -18,7 +18,7 @@ namespace MainGame.Systems {
 
 		public override void Update(float deltaTime) {
 			while(PointsToDestroy.TryPop(out Point p)) {
-				if(p.X >= 0 && p.X < 16 && p.Y >= 0 && p.Y < 9 && _filled[p.X, p.Y]) {
+				if(p.X >= 0 && p.X < 500 && p.Y >= 0 && p.Y < 500 && _filled[p.X, p.Y]) {
 					world.DestroyEntity(_entities[p.X, p.Y]);
 				}
 			}
@@ -27,10 +27,8 @@ namespace MainGame.Systems {
 
 			if(entities!= null) {
 				var eids = entities.Keys;
-				_filled = new bool[16, 9];
-				_entities = new Guid[16, 9];
-
-
+				_filled = new bool[500, 500];
+				_entities = new Guid[500, 500];
 
 				foreach(var eid in eids) {
 					ref GridAligned g = ref world.GetComponent<GridAligned>(eid);
@@ -42,7 +40,7 @@ namespace MainGame.Systems {
 						p = g.GridPosition;
 					}
 
-					if(p.X >= 0 && p.X < 16 && p.Y >= 0 && p.Y < 9 && !_filled[p.X,p.Y]) {
+					if(p.X >= 0 && p.X < 500 && p.Y >= 0 && p.Y < 500 && !_filled[p.X,p.Y]) {
 						_filled[p.X, p.Y] = true;
 						_entities[p.X, p.Y] = eid;
 					}
@@ -51,7 +49,7 @@ namespace MainGame.Systems {
 			}
 		}
 		public bool GetEntityAt(int x, int y, out Guid eid) {
-			if(x >= 0 && x < 16 && y >= 0 && y < 9 && _filled[x, y]) {
+			if(x >= 0 && x < 500 && y >= 0 && y < 500 && _filled[x, y]) {
 				eid = _entities[x, y];
 				return true;
 			}
@@ -61,12 +59,12 @@ namespace MainGame.Systems {
 		public bool GetEntityAt(Point p, out Guid eid) => GetEntityAt(p.X ,p.Y, out eid);
 
 		public bool IsCellFilled(int x, int y) {
-			if(x >= 0 && x < 16 && y >= 0 && y < 9)
+			if(x >= 0 && x < 500 && y >= 0 && y < 500)
 				return _filled[x, y];
 			return true;
 		}
 		public bool IsCellFilled(Point p) {
-			if(p.X >= 0 && p.X < 16 && p.Y >= 0 && p.Y < 9)
+			if(p.X >= 0 && p.X < 500 && p.Y >= 0 && p.Y < 500)
 				return _filled[p.X, p.Y];
 			return true;
 		}

@@ -16,9 +16,9 @@ namespace MainGame.Physics {
 		private static readonly Dictionary<Layer, Layer> _collisionMap = new Dictionary<Layer, Layer>() {
 			{Layer.None, Layer.None},
 			{Layer.General,     (Layer)0b1111_1111_1111_1111},
-			{Layer.Creature,    (Layer)0b1111_1111_1111_1111},
+			{Layer.Creature,    (Layer)0b1111_1111_1111_0111},
 			{Layer.Enviornment, (Layer)0b0000_0000_0000_0011},
-			{Layer.Item,        (Layer)0b0000_0000_0000_0011},
+			{Layer.Item,        (Layer)0b0000_0000_0000_1111},
 		};
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

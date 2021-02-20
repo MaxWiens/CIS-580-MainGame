@@ -9,6 +9,6 @@ namespace MainGame.Components {
 		[JsonInclude] public Asset BackWalkAnimation;
 		[JsonInclude] public Asset Front;
 		[JsonInclude] public Asset Back;
-		[JsonInclude] public Util.Direction Direction;
+		[JsonInclude] public Util.Directions Direction;
 	}
 }

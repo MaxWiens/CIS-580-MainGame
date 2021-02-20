@@ -3,7 +3,7 @@
     {
       "ID": "A85B9DC2-1A89-478B-953C-3A88B7F394F0",
       "Components": {
-        "Transform2D": {"Scale": 1, "Position": [0, 0]},
+        "Transform2D": {"Scale": 1, "Position": [4000, 4000]},
         "Camera": {},
         "Follower": {"Strength": 10, "SnapDistance": 1.5, "Target": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409"}
       }
@@ -11,7 +11,7 @@
     {
       "ID": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409",
       "Components": {
-        "Transform2D": {"Scale": 1, "Position": [0,0]},
+        "Transform2D": {"Scale": 1, "Position": [4000,4000]},
         "Sprite": {"Texture": "Textures\\Frog\\frog_front", "Albedo": [255,255,255], "Offset": [8,8], "Scale": 1, "SourceRectangle":[0,0,16,16]},
         "PlayerControl": {},
         "BlockPlacer": {"BlockPrefabPath": "Assets\\Prefabs\\WoodBlock.json"},
@@ -26,7 +26,9 @@
           "Back": "B4EC61FA-7244-4488-AC89-B5308FF93443"
         }
       }
-    },
+    }
+  ],
+  "backup": [
     {
       "Components": {
         "Transform2D": {"Position": [20, 100]},
@@ -35,9 +37,7 @@
         "RigidBody": { "IsTrigger": false, "Layer": "General"},
         "CircleBounds": { "Radius": 32, "Offset": [32,32]}
       }
-    }
-  ],
-  "backup": [
+    },
     {
       "Components": {
         "Transform2D": {"Position": [20, 100]},

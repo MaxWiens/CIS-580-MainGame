@@ -27,7 +27,8 @@ namespace MainGame.Systems {
 			foreach(Guid eid in rbEIDs) {
 				ref RigidBody rb = ref rbMap[eid];
 				ref Transform2D transform = ref transformMap[eid];
-				transform.Position += deltaTime * (rb.Velocity + rb.Acceleration*(deltaTime*0.5f));
+				rb.Velocity += rb.Acceleration * deltaTime;
+				transform.Position += rb.Velocity * deltaTime;
 			}
 			#endregion
 			
