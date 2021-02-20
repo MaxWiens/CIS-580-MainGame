@@ -30,6 +30,9 @@
     <None Update="Assets\Actions.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Assets.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Controlls.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

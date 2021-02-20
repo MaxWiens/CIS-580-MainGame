@@ -1,2 +1,36 @@
 ﻿{
+	"Assets": [
+		{
+			"Type": "MainGame.Assets.TileSheet",
+			"Data": {
+				"ID": "63F821CA-B0D8-422E-B4D0-1D64DE67BAB2",
+				"Texture": "Textures\\Frog\\frog_front",
+				"TileDimentions": [ 16, 16 ]
+			}
+		},
+		{
+			"Type": "MainGame.Assets.TileSheet",
+			"Data": {
+				"ID": "B4EC61FA-7244-4488-AC89-B5308FF93443",
+				"Texture": "Textures\\Frog\\frog_back",
+				"TileDimentions": [ 16, 16 ]
+			}
+		},
+		{
+			"Type": "MainGame.Assets.TileSheet",
+			"Data": {
+				"ID": "3F82A7B3-EBE1-4D74-9AFF-87A623468567",
+				"Texture": "Textures\\Frog\\frog_walk_front",
+				"TileDimentions": [ 16, 16 ]
+			}
+		},
+		{
+			"Type": "MainGame.Assets.TileSheet",
+			"Data": {
+				"ID": "3AF8B425-82DA-49C9-AA85-25ABCB782FF5",
+				"Texture": "Textures\\Frog\\frog_walk_back",
+				"TileDimentions": [ 16, 16 ]
+			}
+		}
+	]
 }

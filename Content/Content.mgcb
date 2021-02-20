@@ -13,6 +13,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin ../RawAssets/Sfx/break.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:../RawAssets/Sfx/break.wav;Sfx/break.wav
+
+#begin ../RawAssets/Sfx/place.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:../RawAssets/Sfx/place.wav;Sfx/place.wav
+
 #begin ../RawAssets/Textures/ball.png
 /importer:TextureImporter
 /processor:TextureProcessor

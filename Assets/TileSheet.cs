@@ -5,10 +5,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MainGame.Assets {
-	public class TileSheet {
-		public readonly Texture2D Texture;
-		[JsonInclude] public readonly Point TileDimentions;
+	public class TileSheet : Asset {
+		[JsonInclude] public Texture2D Texture;
+		[JsonInclude] public Point TileDimentions;
+		public Point NumTiles;
 	}
-
-	
 }

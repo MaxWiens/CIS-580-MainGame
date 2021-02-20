@@ -22,15 +22,15 @@ namespace MainGame.Systems {
 				s = spriteMap[eid];
 				trans = transMap[eid];
 				Point pos = (trans.Position - s.Offset - camCenter).ToPoint();
-				Point scale = new Point((int)(s.Texture.Width * s.Scale.X), (int)(s.Texture.Height * s.Scale.Y));
+				Point scale = new Point((int)(s.SourceRectangle.Width * s.Scale.X), (int)(s.SourceRectangle.Height * s.Scale.Y));
 				world.SpriteBatch.Draw(
 					texture: s.Texture, //Texture2D 
 					destinationRectangle: new Rectangle(pos, scale), 
-					sourceRectangle: null, // draw full texture
+					sourceRectangle: s.SourceRectangle,
 					color: s.Albedo, 
 					rotation: 0f, 
 					origin: Vector2.Zero, 
-					effects: SpriteEffects.None, 
+					effects: s.SpriteEffect, 
 					layerDepth: 0f
 				);
 			}

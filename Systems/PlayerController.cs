@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 using diagonstics = System.Diagnostics;
 
@@ -18,10 +19,14 @@ namespace MainGame.Systems {
 		private Grid _grid;
 
 		private Health _fallbackHealth;
+		SoundEffect _placeSfx;
+		SoundEffect _breakSfx;
 
 		public PlayerController(ZaWarudo world) : base(world) {
 			_moveValue = Vector2.Zero;
 			_sprintValue = 1f;
+			_placeSfx = world.Content.Load<SoundEffect>(@"Sfx\place");
+			_breakSfx = world.Content.Load<SoundEffect>(@"Sfx\break");
 		}
 
 		private void OnEnable() {
@@ -36,14 +41,16 @@ namespace MainGame.Systems {
 			world.InputManager.RemoveListener("Interact", OnInteract);
 			world.InputManager.RemoveListener("Sprint", OnSprint);
 			world.InputManager.RemoveListener("Break", OnBreak);
+			
 		}
 
 		public override void Update(float deltaTime) {
 			var eids = world.GetEntitiesWithComponent<PlayerControl>().Keys;
 			if(_grid==null) _grid = world.GetSystem<Grid>();
 			foreach(var eid in eids) {
-				ref Transform2D pos = ref world.GetComponent<Transform2D>(eid);
-				pos.Position += _moveValue * 100f * deltaTime * _sprintValue;
+				Transform2D pos = world.GetComponent<Transform2D>(eid);
+				ref RigidBody rb = ref world.GetComponent<RigidBody>(eid);
+				rb.Velocity = _moveValue * 100f * _sprintValue;
 				ref BlockPlacer blockPlacer = ref world.GetComponent<BlockPlacer>(eid);
 				
 				
@@ -53,10 +60,12 @@ namespace MainGame.Systems {
 					ref Sprite sprite = ref world.GetComponent<Sprite>(blockeid);
 					blocktransform.Position = Grid.NearestGridPosition(pos.Position);
 					_interacted = false;
-				} else if(_breakActivated && _grid.GetEntityAt(Grid.ToGridPosition(pos.Position), out Guid blockeid)) {
+					_placeSfx.Play();
+				} else if(_breakActivated && _grid.GetEntityAt(Grid.ToGridPosition(pos.Position + new Vector2(0f,8f)), out Guid blockeid)) {
 					ref Health h = ref world.TryGetComponent(blockeid, ref _fallbackHealth, out bool isSuccessful);
 					if(isSuccessful) {
 						h.Value = 0;
+						_breakSfx.Play();
 						_breakActivated = false;
 					}
 				}

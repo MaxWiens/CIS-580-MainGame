@@ -17,6 +17,7 @@ namespace MainGame.ECS {
 	using Systems;
 	using Input;
 	using Collections;
+	using Assets;
 	public class ZaWarudo : Game {
 		public SpriteBatch SpriteBatch;
 		private SpriteBatch _targetBatch;
@@ -24,7 +25,7 @@ namespace MainGame.ECS {
 		public Point Resolution = new Point(256, 144);
 		private readonly Dictionary<Type, IKeyRefMap<Guid>> _componentStore;
 		private readonly Dictionary<Guid, HashSet<Type>> _entities;
-		private readonly Dictionary<Guid, object> _assets;
+		private readonly Dictionary<Guid, Asset> _assets;
 		private readonly Dictionary<Type, UpdateSystem> _updateSystems;
 
 		private readonly Dictionary<Type, UpdateSystem> _enabledUpdateSystems;
@@ -43,6 +44,18 @@ namespace MainGame.ECS {
 		public readonly ComponentParser ComponentParser;
 		private readonly JsonSerializerOptions _jsonSerializerOptions;
 		public ZaWarudo() {
+
+			_entities = new Dictionary<Guid, HashSet<Type>>();
+			_componentStore = new Dictionary<Type, IKeyRefMap<Guid>>();
+
+			_updateSystems = new Dictionary<Type, UpdateSystem>();
+			_enabledUpdateSystems = new Dictionary<Type, UpdateSystem>();
+			_drawSystems = new Dictionary<Type, DrawSystem>();
+			_enabledDrawSystems = new Dictionary<Type, DrawSystem>();
+
+			_systemDictionary = new Dictionary<Type, System>();
+			_assets = new Dictionary<Guid, Asset>();
+
 			_jsonSerializerOptions = new JsonSerializerOptions() {
 				IgnoreNullValues = false,
 				Converters = {
@@ -53,8 +66,12 @@ namespace MainGame.ECS {
 						new Serialization.ColorConverter(),
 						new Serialization.SoloBindingConverter(),
 						new Serialization.CompositeBindingConverter(),
-						new Serialization.SpriteConverter(Content),
+						new Serialization.Texture2DConverter(Content),
 						new Serialization.LayerConverter(),
+						
+						// Assets
+						new Serialization.AssetConverter(_assets),
+						new Serialization.TileSheetConverter(),
 					}
 			};
 			_graphics = new GraphicsDeviceManager(this);
@@ -68,15 +85,7 @@ namespace MainGame.ECS {
 
 			
 
-			_entities = new Dictionary<Guid, HashSet<Type>>();
-			_componentStore = new Dictionary<Type, IKeyRefMap<Guid>>();
 			
-			_updateSystems = new Dictionary<Type, UpdateSystem>();
-			_enabledUpdateSystems = new Dictionary<Type, UpdateSystem>();
-			_drawSystems = new Dictionary<Type, DrawSystem>();
-			_enabledDrawSystems = new Dictionary<Type, DrawSystem>();
-
-			_systemDictionary = new Dictionary<Type, System>();
 
 			_systems = GetSystems();
 			foreach(System system in _systems)
@@ -90,13 +99,13 @@ namespace MainGame.ECS {
 			new Grid(this),
 			new Following(this),
 			new Destruction(this),
+			new Animator(this),
+			new MoverSystem(this),
 
 			// debug
 			new CollisionDraw(this),
 			new PositionDraw(this),
 		};
-
-
 
 		public T GetSystem<T>() where T : System
 			=> _systemDictionary.TryGetValue(typeof(T), out System s) && s is T t ? t : null;
@@ -106,7 +115,10 @@ namespace MainGame.ECS {
 			_graphics.PreferredBackBufferHeight = 720;
 			_graphics.ApplyChanges();
 
+			LoadAssets(@"Assets\Assets.json");
+
 			LoadEntities(@"Assets\TestScene.json");
+
 			var eids = GetEntitiesWithComponent<Components.Camera>();
 			if(eids.Count == 0) {
 				global::System.Diagnostics.Debug.Fail("no camera in startin scene");
@@ -309,14 +321,13 @@ namespace MainGame.ECS {
 		}
 
 		public List<Guid> LoadEntities(string filePath) {
-			using(FileStream stream = File.OpenRead(filePath)) {
-				JsonDocument doc = JsonDocument.Parse(stream);
-				List<Guid> eids = new List<Guid>();
-				foreach(JsonElement entityElement in doc.RootElement.GetProperty("Entitites").EnumerateArray()) {
-					eids.Add(LoadEntity(entityElement));
-				}
-				return eids;
+			using FileStream stream = File.OpenRead(filePath);
+			JsonDocument doc = JsonDocument.Parse(stream);
+			List<Guid> eids = new List<Guid>();
+			foreach(JsonElement entityElement in doc.RootElement.GetProperty("Entitites").EnumerateArray()) {
+				eids.Add(LoadEntity(entityElement));
 			}
+			return eids;
 		}
 
 		public Guid LoadEntity(string entityJson) {
@@ -340,6 +351,26 @@ namespace MainGame.ECS {
 			}
 			MakeEntity(eid, components);
 			return eid;
+		}
+
+		public void LoadAssets(string filePath) {
+			using FileStream stream = File.OpenRead(filePath);
+			using JsonDocument doc = JsonDocument.Parse(stream);
+			foreach(JsonElement entityElement in doc.RootElement.GetProperty("Assets").EnumerateArray()) {
+				LoadAsset(entityElement);
+			}
+		}
+
+		public void LoadAsset(JsonElement jsonElement) {
+			JsonElement data = jsonElement.GetProperty("Data");
+			Guid assetID = data.GetProperty("ID").GetGuid();
+			if(_assets.ContainsKey(assetID))
+				return;
+			Type assetType = Type.GetType(jsonElement.GetProperty("Type").GetString());
+			Asset asset = JsonSerializer.Deserialize(data.GetRawText(), assetType, _jsonSerializerOptions) as Asset;
+			if(asset == null)
+				throw new Exception("Asset type is not Asset");
+			_assets.Add(assetID, asset);
 		}
 		
 		private void LoadSystems(string filePath) {

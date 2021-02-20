@@ -12,18 +12,25 @@
       "ID": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409",
       "Components": {
         "Transform2D": {"Scale": 1, "Position": [0,0]},
-        "Sprite": {"TextureName": "Textures\\Frog\\frog_front", "Albedo": [255,255,255], "Offset": [8,8], "Scale": 1},
+        "Sprite": {"Texture": "Textures\\Frog\\frog_front", "Albedo": [255,255,255], "Offset": [8,8], "Scale": 1, "SourceRectangle":[0,0,16,16]},
         "PlayerControl": {},
         "BlockPlacer": {"BlockPrefabPath": "Assets\\Prefabs\\WoodBlock.json"},
         "Health": {"Value": 10},
         "RigidBody": { "Layer": "Creature", "IsTrigger": false},
-        "CircleBounds": { "Offset": [4,0], "Radius": 4}
+        "CircleBounds": { "Offset": [4,0], "Radius": 4},
+        "TileAnimation": {"FrameDelay": 0.0833, "FrameIdx": 0, "Asset": "63F821CA-B0D8-422E-B4D0-1D64DE67BAB2"},
+        "Mover": {
+          "FrontWalkAnimation": "3F82A7B3-EBE1-4D74-9AFF-87A623468567",
+          "BackWalkAnimation": "3AF8B425-82DA-49C9-AA85-25ABCB782FF5",
+          "Front": "63F821CA-B0D8-422E-B4D0-1D64DE67BAB2",
+          "Back": "B4EC61FA-7244-4488-AC89-B5308FF93443"
+        }
       }
     },
     {
       "Components": {
         "Transform2D": {"Position": [20, 100]},
-        "Sprite": {"TextureName": "Textures\\circle", "Albedo": [24,255,25], "Offset": [32,32], "Scale": 0.0625},
+        "Sprite": {"Texture": "Textures\\circle", "Albedo": [24,255,25], "Offset": [32,32], "Scale": 0.0625, "SourceRectangle":[0,0,1024,1024]},
         "Follower": {"Strength": 1, "SnapDistance": 1.5, "Target": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409"},
         "RigidBody": { "IsTrigger": false, "Layer": "General"},
         "CircleBounds": { "Radius": 32, "Offset": [32,32]}
@@ -34,7 +41,7 @@
     {
       "Components": {
         "Transform2D": {"Position": [20, 100]},
-        "Sprite": {"TextureName": "Textures\\circle", "Albedo": [24,255,25], "Offset": [32,32], "Scale": 0.0625},
+        "Sprite": {"Texture": "Textures\\circle", "Albedo": [24,255,25], "Offset": [32,32], "Scale": 0.0625, "SourceRectangle":[0,0,16,16]},
         "Follower": {"Strength": 1, "SnapDistance": 1.5, "Target": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409"},
         "RigidBody": { "IsTrigger": false, "Layer": "General"},
         "CircleBounds": { "Radius": 32, "Offset": [32,32]}
@@ -43,7 +50,7 @@
     {
       "Components": {
         "Transform2D": {"Position": [200, 0]},
-        "Sprite": {"TextureName": "Textures\\circle", "Albedo": "Purple", "Offset": [0,0], "Scale": 0.0625},
+        "Sprite": {"Texture": "Textures\\circle", "Albedo": "Purple", "Offset": [0,0], "Scale": 0.0625, "SourceRectangle":[0,0,1024,1024]},
         "Follower": {"Strength": 1, "SnapDistance": 1.5, "Target": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409"},
         "RigidBody": { "IsTrigger": false, "Layer": "General"},
         "CircleBounds": { "Radius": 32, "Offset": [0,0]}
@@ -53,7 +60,7 @@
       "ID": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409",
       "Components": {
         "Transform2D": {"Scale": 1, "Position": [0,0]},
-        "Sprite": {"TextureName": "Textures\\Frog\\frog_front", "Albedo": [255,255,255], "Offset": [8,8], "Scale": 1},
+        "Sprite": {"Texture": "Textures\\Frog\\frog_front", "Albedo": [255,255,255], "Offset": [8,8], "Scale": 1, "SourceRectangle":[0,0,16,16]},
         "PlayerControl": {},
         "BlockPlacer": {"BallPrefabPath": "Assets\\Prefabs\\WoodBlock.json"},
         "Health": {"Value": 10},
