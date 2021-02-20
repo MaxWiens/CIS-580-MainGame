@@ -7,23 +7,39 @@ namespace MainGame.Systems {
 	using ECS;
 	using Components;
 	public class Grid : UpdateSystem {
-		public const int GRID_SIZE = 16;
+		public const int CHUNK_SIZE_FACTOR = 4;
+		public const int CHUNK_SIZE = 1<<4;
+		public const int WORLD_HEIGHT = CHUNK_SIZE * CHUNK_SIZE;
+		public const int TILE_SIZE = 16;
 		private bool[,] _filled = new bool[500,500];
 		private Guid[,] _entities = new Guid[500, 500];
 
-		public Grid(ZaWarudo world) : base(world) { }
+		public Dictionary<Point, Guid[,]> _chunks = new Dictionary<Point, Guid[,]>();
 		private Transform2D _fallbackT2D;
-
 		public Stack<Point> PointsToDestroy = new Stack<Point>();
 
+		public Grid(ZaWarudo world) : base(world) { }
+
 		public override void Update(float deltaTime) {
+			var gridElementMap = world.GetEntitiesWithComponent<GridElement>();
+			var chunkLoaderMap = world.GetEntitiesWithComponent<ChunkLoading>();
+			var transMap = world.GetEntitiesWithComponent<Transform2D>();
+			Transform2D trans;
+			Point position;
+			Point chunkPosition;
+			foreach(var eid in chunkLoaderMap.Keys) {
+				trans = transMap[eid];
+				position = ToGridPosition(trans.Position);
+				chunkPosition = GetChunk(position);
+			}
+
 			while(PointsToDestroy.TryPop(out Point p)) {
 				if(p.X >= 0 && p.X < 500 && p.Y >= 0 && p.Y < 500 && _filled[p.X, p.Y]) {
 					world.DestroyEntity(_entities[p.X, p.Y]);
 				}
 			}
 
-			var entities = world.GetEntitiesWithComponent<GridAligned>();
+			var entities = world.GetEntitiesWithComponent<GridElement>();
 
 			if(entities!= null) {
 				var eids = entities.Keys;
@@ -31,13 +47,13 @@ namespace MainGame.Systems {
 				_entities = new Guid[500, 500];
 
 				foreach(var eid in eids) {
-					ref GridAligned g = ref world.GetComponent<GridAligned>(eid);
+					ref GridElement g = ref world.GetComponent<GridElement>(eid);
 					Point p;
 					Transform2D transform = world.TryGetComponent(eid, ref _fallbackT2D, out bool isSuccessful);
 					if(isSuccessful) {
-						p = g.GridPosition = ToGridPosition(transform.Position);
+						p = g.Position = ToGridPosition(transform.Position);
 					} else {
-						p = g.GridPosition;
+						p = g.Position;
 					}
 
 					if(p.X >= 0 && p.X < 500 && p.Y >= 0 && p.Y < 500 && !_filled[p.X,p.Y]) {
@@ -70,9 +86,15 @@ namespace MainGame.Systems {
 		}
 
 		public static Point ToGridPosition(Vector2 vector)
-			=> new Point((int)vector.X / GRID_SIZE, (int)vector.Y / GRID_SIZE);
+			=> new Point((int)vector.X / TILE_SIZE, (int)vector.Y / TILE_SIZE);
+
+		public static Point GetChunk(Point gridPosition)
+			=> new Point(gridPosition.X>>CHUNK_SIZE_FACTOR, gridPosition.Y>>CHUNK_SIZE_FACTOR);
+
+		public static Point GetChunk(Vector2 realPosition)
+			=> new Point(((int)realPosition.X/TILE_SIZE) >> CHUNK_SIZE_FACTOR, ((int)realPosition.Y/TILE_SIZE)>> CHUNK_SIZE_FACTOR);
 
 		public static Vector2 NearestGridPosition(Vector2 vector)
-			=> new Vector2((int)vector.X/ GRID_SIZE, (int)vector.Y / GRID_SIZE)* GRID_SIZE;
+			=> new Vector2(((int)vector.X/TILE_SIZE)* TILE_SIZE, ((int)vector.Y/TILE_SIZE)*TILE_SIZE);
 	}
 }

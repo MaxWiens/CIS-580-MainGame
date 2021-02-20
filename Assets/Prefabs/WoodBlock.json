@@ -7,7 +7,7 @@
         "Health": {"Value": 10},
         "StaticBody": { "Layer": "Enviornment", "IsTrigger": false},
         "RectBounds": { "Offset": [0,0], "Dimentions": [16,16]},
-        "GridAligned": {},
+        "GridElement": {},
         "Drops": {"Items": ["Assets\\Prefabs\\WoodBlockItem.json"]}
       }
     }
