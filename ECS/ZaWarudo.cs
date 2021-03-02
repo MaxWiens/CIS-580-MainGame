@@ -99,7 +99,7 @@ namespace MainGame.ECS {
 			new MoverSystem(this),
 
 			// debug
-			//new CollisionDraw(this),
+			new CollisionDraw(this),
 			//new PositionDraw(this),
 		};
 

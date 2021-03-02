@@ -8,29 +8,74 @@ namespace MainGame.Systems {
 	using Components;
 	public class Grid : UpdateSystem {
 		public const int CHUNK_SIZE_FACTOR = 4;
-		public const int CHUNK_SIZE = 1<<4;
+		public const int CHUNK_SIZE = 1<<CHUNK_SIZE_FACTOR;
 		public const int WORLD_HEIGHT = CHUNK_SIZE * CHUNK_SIZE;
 		public const int TILE_SIZE = 16;
 		private bool[,] _filled = new bool[500,500];
 		private Guid[,] _entities = new Guid[500, 500];
 
-		public Dictionary<Point, Guid[,]> _chunks = new Dictionary<Point, Guid[,]>();
+		private Dictionary<Point, Guid[,]> _chunks = new Dictionary<Point, Guid[,]>();
 		private Transform2D _fallbackT2D;
 		public Stack<Point> PointsToDestroy = new Stack<Point>();
 
 		public Grid(ZaWarudo world) : base(world) { }
+		
+		public void LoadChunk(Point chunkPosition) {
+			if(!_chunks.ContainsKey(chunkPosition)) {
+				// load chunk
+				Guid[,] chunk = new Guid[CHUNK_SIZE, CHUNK_SIZE];
+
+				Guid blockEid = world.LoadEntities(@"Assets\Prefabs\WoodBlock.json")[0];
+				world.GetComponent<Transform2D>(blockEid).Position = new Vector2(
+					(chunkPosition.X<<CHUNK_SIZE_FACTOR)*TILE_SIZE,
+					(chunkPosition.Y<<CHUNK_SIZE_FACTOR)*TILE_SIZE
+				);
+				chunk[0, 0] = blockEid;
+
+				blockEid = world.LoadEntities(@"Assets\Prefabs\WoodBlock.json")[0];
+				world.GetComponent<Transform2D>(blockEid).Position = new Vector2(
+					((chunkPosition.X << CHUNK_SIZE_FACTOR)+ CHUNK_SIZE-1) * TILE_SIZE,
+					((chunkPosition.Y << CHUNK_SIZE_FACTOR)+ CHUNK_SIZE-1) * TILE_SIZE
+				);
+				chunk[CHUNK_SIZE-1, CHUNK_SIZE-1] = blockEid;
+				
+				blockEid = world.LoadEntities(@"Assets\Prefabs\WoodBlock.json")[0];
+				world.GetComponent<Transform2D>(blockEid).Position = new Vector2(
+					((chunkPosition.X << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 2) * TILE_SIZE,
+					((chunkPosition.Y << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 1) * TILE_SIZE
+				);
+				chunk[CHUNK_SIZE - 1, CHUNK_SIZE - 1] = blockEid;
+
+				blockEid = world.LoadEntities(@"Assets\Prefabs\WoodBlock.json")[0];
+				world.GetComponent<Transform2D>(blockEid).Position = new Vector2(
+					((chunkPosition.X << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 1) * TILE_SIZE,
+					((chunkPosition.Y << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 2) * TILE_SIZE
+				);
+				chunk[CHUNK_SIZE - 1, CHUNK_SIZE - 1] = blockEid;
+
+				_chunks.Add(chunkPosition, chunk);
+			}
+		}
 
 		public override void Update(float deltaTime) {
 			var gridElementMap = world.GetEntitiesWithComponent<GridElement>();
 			var chunkLoaderMap = world.GetEntitiesWithComponent<ChunkLoading>();
 			var transMap = world.GetEntitiesWithComponent<Transform2D>();
 			Transform2D trans;
-			Point position;
 			Point chunkPosition;
 			foreach(var eid in chunkLoaderMap.Keys) {
 				trans = transMap[eid];
-				position = ToGridPosition(trans.Position);
-				chunkPosition = GetChunk(position);
+				Point p = ToGridPosition(trans.Position);
+				chunkPosition = GetChunk(p);
+				LoadChunk(chunkPosition + new Point(1));
+				LoadChunk(chunkPosition + new Point(1,0));
+				LoadChunk(chunkPosition + new Point(0, 1));
+				LoadChunk(chunkPosition);
+				LoadChunk(chunkPosition + new Point(0, -1));
+				LoadChunk(chunkPosition + new Point(-1, 0));
+				LoadChunk(chunkPosition + new Point(-1));
+				LoadChunk(chunkPosition + new Point(1, -1));
+				LoadChunk(chunkPosition + new Point(-1, 1));
 			}
 
 			while(PointsToDestroy.TryPop(out Point p)) {

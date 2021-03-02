@@ -11,7 +11,7 @@
     {
       "ID": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409",
       "Components": {
-        "Transform2D": {"Scale": 1, "Position": [4000,4000]},
+        "Transform2D": {"Scale": 1, "Position": [32,32]},
         "Sprite": {"Texture": "Textures\\Frog\\frog_front", "Albedo": [255,255,255], "Offset": [8,8], "Scale": 1, "SourceRectangle":[0,0,16,16]},
         "PlayerControl": {},
         "BlockPlacer": {"BlockPrefabPath": "Assets\\Prefabs\\WoodBlock.json"},
@@ -24,7 +24,8 @@
           "BackWalkAnimation": "3AF8B425-82DA-49C9-AA85-25ABCB782FF5",
           "Front": "63F821CA-B0D8-422E-B4D0-1D64DE67BAB2",
           "Back": "B4EC61FA-7244-4488-AC89-B5308FF93443"
-        }
+        },
+        "ChunkLoading": {}
       }
     }
   ],
