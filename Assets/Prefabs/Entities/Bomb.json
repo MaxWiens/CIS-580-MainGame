@@ -1,0 +1,24 @@
+﻿{
+  "Entitites":[
+    {
+      "Components": {
+        "Transform2D": {},
+        "Sprite": {
+          "Texture": "Textures\\pixel",
+          "Albedo": "Black",
+          "Offset": 1.5,
+          "Scale": 3,
+          "SourceRectangle": [0,0,1,1]
+        },
+        "Health": { "Value": 1 },
+        "RigidBody": { "Layer": "Item", "IsTrigger": false},
+        "CircleBounds": { "Radius": 3, "Offset": 1.5},
+        "Exploding": { 
+          "Timer": 2,
+          "ExplodesOnContact": false,
+          "ExplosionPrefabPath": ""
+        }
+      }
+    }
+  ]
+}

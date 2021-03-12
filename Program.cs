@@ -3,8 +3,8 @@ namespace MainGame {
 	public static class Program {
 		[STAThread]
 		static void Main() {
-			using(var game = new ECS.ZaWarudo())
-				game.Run();
+			using MegaDungeonGame game = new MegaDungeonGame();
+			game.Run();
 		}
 	}
 }

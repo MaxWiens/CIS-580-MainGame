@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace MainGame.Collections {
-	public class RefMap<TKey, TValue> : IRefMap<TKey,TValue> where TValue : struct {
+	public class RefMap<TKey, TValue> : IRefMap<TKey,TValue> {
 		private readonly Dictionary<TKey, int> _keyIdxMap = new Dictionary<TKey, int>();
 		private TValue[] _values;
 		private int _count = 0;
@@ -18,6 +18,16 @@ namespace MainGame.Collections {
 
 		public ref TValue this[TKey id] => ref _values[_keyIdxMap[id]];
 
+		public object this[object id] { 
+			get => _values[_keyIdxMap[(TKey)id]]; 
+			set => _values[_keyIdxMap[(TKey)id]] = (TValue)value;
+		}
+		object IKeyRefMap<TKey>.this[TKey id] {
+			get => _values[_keyIdxMap[id]];
+			set => _values[_keyIdxMap[id]] = (TValue)value;
+		}
+
+
 		public ref TValue TryGetValue(TKey id, ref TValue fallbackValue, out bool isSuccessful) {
 			if(_keyIdxMap.TryGetValue(id, out int idx)) {
 				isSuccessful = true;
@@ -25,6 +35,15 @@ namespace MainGame.Collections {
 			}
 			isSuccessful = false;
 			return ref fallbackValue;
+		}
+		
+		public bool TryGetValue(TKey id, out object value) {
+			if(_keyIdxMap.TryGetValue(id, out int idx)) {
+				value = _values[idx];
+				return true;
+			}
+			value = default;
+			return false;
 		}
 
 		public RefMap() {
@@ -74,11 +93,12 @@ namespace MainGame.Collections {
 
 		public void Add(object key, object value) => Add((TKey)key, (TValue)value);
 		public void Add(TKey key, object value) => Add(key, (TValue)value);
-		public void Add(object key, TValue value) => Add(key, (TValue)value);
 
-		public bool Remove(TKey key) {
+		public bool Remove(TKey key) => Remove(key, out TValue _);
+		public bool Remove(TKey key, out TValue value) {
 			if(_keyIdxMap.TryGetValue(key, out int i)) {
 				_keyIdxMap.Remove(key);
+				value = _values[i];
 				_values[i] = default;
 
 				bool isStart = _continiousStartIdxs.Remove(i);
@@ -99,8 +119,9 @@ namespace MainGame.Collections {
 				_count--;
 				return true;
 			}
+			value = default;
 			return false;
 		}
-		public bool Remove(object key) => Remove((TKey)key);
+		public bool Remove(TKey key, out object value) => Remove(key, out value);
 	}
 }

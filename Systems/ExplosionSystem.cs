@@ -6,10 +6,11 @@ namespace MainGame.Systems {
 	using ECS;
 	using ECS.S;
 	using Components;
-	public class Destruction : System, IUpdateable {
-		public Destruction(World world) : base(world) { }
+	public class ExplosionSystem : System, IUpdateable {
+		public ExplosionSystem(World world) : base(world) { }
 		private Inventory _fallbackInventory;
 		private Drops _fallbackDrops;
+		
 		public void Update(float deltaTime) {
 			var entitites = world.GetEntitiesWithComponent<Health>();
 			if(entitites != null) {

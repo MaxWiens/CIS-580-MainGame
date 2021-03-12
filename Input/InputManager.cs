@@ -8,59 +8,58 @@ using System.Text.Json.Serialization;
 using System.IO;
 
 namespace MainGame.Input {
-	public class InputManager {
-		private Dictionary<string, InputAction> _actions;
-		private readonly JsonSerializerOptions _options;
-		public InputManager(JsonSerializerOptions options) {
-			_options = options;
-			_actions = new Dictionary<string, InputAction>();
-			LoadBindings(@"Assets\Controlls.json");
-		}
+	public static class InputManager {
+		private static Dictionary<string, InputAction> _actions = new Dictionary<string, InputAction>();
+		private static readonly JsonSerializerOptions _options = new JsonSerializerOptions() {
+			Converters = {
+				new Serialization.SoloBindingConverter(),
+				new Serialization.CompositeBindingConverter(),
+			}
+		};
 
-		public void AddListener(string actionName, Action<Vector2> inputAction) {
+		public static void AddListener(string actionName, Action<Vector2> inputAction) {
 			if(_actions.TryGetValue(actionName, out InputAction action)) {
 				action.ValueChanged += inputAction;
 			}
 		}
 
-		public void RemoveListener(string actionName, Action<Vector2> inputAction) {
+		public static void RemoveListener(string actionName, Action<Vector2> inputAction) {
 			if(_actions.TryGetValue(actionName, out InputAction action)) {
 				action.ValueChanged -= inputAction;
 			}
 		}
 
-		public void Update(float deltaTime) {
+		public static void Update() {
 			InputState state = new InputState(Keyboard.GetState(), Mouse.GetState(), GamePad.GetState(0));
 			foreach(InputAction action in _actions.Values) {
 				action.Update(state);
 			}
 		}
 
-		public void LoadBindings(string filePath) {
-			using(FileStream stream = File.OpenRead(filePath)) {
-				JsonDocument doc = JsonDocument.Parse(stream);
-				_actions.Clear();
-				foreach(JsonProperty actionJson in doc.RootElement.EnumerateObject()) {
-					if(_actions.ContainsKey(actionJson.Name))
-						throw new Exception($"Binding already exists for action {actionJson.Name}");
-					List<Binding> bindings = new List<Binding>();
-					foreach(JsonElement bindingJson in actionJson.Value.EnumerateArray()) {
-						switch(bindingJson.ValueKind) {
-							case JsonValueKind.String:
-								// single binding
-								bindings.Add(JsonSerializer.Deserialize<SoloBinding>(bindingJson.GetRawText(), _options));
-								break;
-							case JsonValueKind.Object:
-							case JsonValueKind.Array:
-								// composite type
-								bindings.Add(JsonSerializer.Deserialize<CompositeBinding>(bindingJson.GetRawText(), _options));
-								break;
-							default:
-								throw new JsonException();
-						}
+		public static void LoadBindings(string filePath) {
+			using FileStream stream = File.OpenRead(filePath);
+			JsonDocument doc = JsonDocument.Parse(stream);
+			_actions.Clear();
+			foreach(JsonProperty actionJson in doc.RootElement.EnumerateObject()) {
+				if(_actions.ContainsKey(actionJson.Name))
+					throw new Exception($"Binding already exists for action {actionJson.Name}");
+				List<Binding> bindings = new List<Binding>();
+				foreach(JsonElement bindingJson in actionJson.Value.EnumerateArray()) {
+					switch(bindingJson.ValueKind) {
+						case JsonValueKind.String:
+							// single binding
+							bindings.Add(JsonSerializer.Deserialize<SoloBinding>(bindingJson.GetRawText(), _options));
+							break;
+						case JsonValueKind.Object:
+						case JsonValueKind.Array:
+							// composite type
+							bindings.Add(JsonSerializer.Deserialize<CompositeBinding>(bindingJson.GetRawText(), _options));
+							break;
+						default:
+							throw new JsonException();
 					}
-					_actions.Add(actionJson.Name, new InputAction(actionJson.Name, bindings));
 				}
+				_actions.Add(actionJson.Name, new InputAction(actionJson.Name, bindings));
 			}
 		}
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace MainGame.ECS {
+namespace ECS {
 	public class Prefab {
 		private static Dictionary<string, Prefab> _prefabs = new Dictionary<string, Prefab>();
 

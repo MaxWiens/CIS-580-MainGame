@@ -1,16 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MainGame.Systems {
 	using ECS;
+	using ECS.S;
 	using Components;
-	public class Following : UpdateSystem {
-		public Following(ZaWarudo world) : base(world) { }
+	public class Following : System, IUpdateable {
+		public Following(World world) : base(world) { }
 
-		public override void Update(float deltaTime) {
+		public void Update(float deltaTime) {
 			var followerMap = world.GetEntitiesWithComponent<Follower>();
 			var transMap = world.GetEntitiesWithComponent<Transform2D>();
 			var eids = followerMap.Keys;

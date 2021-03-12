@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
 
 using diagonstics = System.Diagnostics;
 
 namespace MainGame.Systems {
 	using ECS;
+	using ECS.S;
 	using Components;
 	using Input;
 	using Util;
-	public class PlayerController : UpdateSystem {
+	public class PlayerController : System, IUpdateable, IEnableHandler, IDisableHandler {
 		private Vector2 _moveValue;
 		private Vector2 _lastMoveInput;
 		private float _sprintValue;
@@ -20,60 +22,53 @@ namespace MainGame.Systems {
 
 		private Grid _grid;
 
-		private Guid _highlighter;
+		//private Guid _highlighter;
 
 		private Health _fallbackHealth;
 		SoundEffect _placeSfx;
 		SoundEffect _breakSfx;
 		Texture2D _pixel;
 
-		public PlayerController(ZaWarudo world) : base(world) {
+		public PlayerController(World world, ContentManager content) : base(world) {
+			_placeSfx = content.Load<SoundEffect>(@"Sfx\place");
+			_breakSfx = content.Load<SoundEffect>(@"Sfx\break");
+			_pixel = content.Load<Texture2D>(@"Textures\pixel");
+			//_highlighter = world.MakeEntity(
+			//	new Sprite() { Texture = _pixel, Scale = new Vector2(16), SourceRectangle = new Rectangle(0, 0, 1, 1), Albedo = new Color(255, 255, 255, 25) },
+			//	new Transform2D()
+			//);
 			_moveValue = Vector2.Zero;
 			_sprintValue = 1f;
-			
-		}
-		private void OnContentLoad() {
-			_placeSfx = world.Content.Load<SoundEffect>(@"Sfx\place");
-			_breakSfx = world.Content.Load<SoundEffect>(@"Sfx\break");
-			_pixel = world.Content.Load<Texture2D>(@"Textures\pixel");
-			_highlighter = world.MakeEntity(
-				new Sprite() { Texture = _pixel, Scale = new Vector2(16), SourceRectangle = new Rectangle(0, 0, 1, 1), Albedo = new Color(255, 255, 255, 25) },
-				new Transform2D()
-			);
 		}
 
-		private void OnEnable() {
-			
-
-
-			world.InputManager.AddListener("Move", OnMove);
-			world.InputManager.AddListener("Interact", OnInteract);
-			world.InputManager.AddListener("Sprint", OnSprint);
-			world.InputManager.AddListener("Break", OnBreak);
+		public void OnEnable() {
+			InputManager.AddListener("Move", OnMove);
+			InputManager.AddListener("Interact", OnInteract);
+			InputManager.AddListener("Sprint", OnSprint);
+			InputManager.AddListener("Break", OnBreak);
 		}
 
-		private void OnDisable() {
-			world.InputManager.RemoveListener("Move", OnMove);
-			world.InputManager.RemoveListener("Interact", OnInteract);
-			world.InputManager.RemoveListener("Sprint", OnSprint);
-			world.InputManager.RemoveListener("Break", OnBreak);
+		public void OnDisable() {
+			InputManager.RemoveListener("Move", OnMove);
+			InputManager.RemoveListener("Interact", OnInteract);
+			InputManager.RemoveListener("Sprint", OnSprint);
+			InputManager.RemoveListener("Break", OnBreak);
 		}
 
-		public override void Update(float deltaTime) {
+		public void Update(float deltaTime) {
 			var eids = world.GetEntitiesWithComponent<PlayerControl>().Keys;
 			var moverMap = world.GetEntitiesWithComponent<Mover>();
 			if(_grid==null) _grid = world.GetSystem<Grid>();
 			foreach(var eid in eids) {
 				Transform2D pos = world.GetComponent<Transform2D>(eid);
-				ref RigidBody rb = ref world.GetComponent<RigidBody>(eid);
-				rb.Velocity = _moveValue * 100f * _sprintValue;
-				ref Transform2D highlighterTrans = ref world.GetComponent<Transform2D>(_highlighter);
+				ref Body rb = ref world.GetComponent<Body>(eid);
+				rb.LinearVelocity = _moveValue * 100f * _sprintValue;
+				//ref Transform2D highlighterTrans = ref world.GetComponent<Transform2D>(_highlighter);
 				ref BlockPlacer blockPlacer = ref world.GetComponent<BlockPlacer>(eid);
 				Point potentialPlace = Grid.ToGridPosition(pos.Position)+Vector2.Normalize(_lastMoveInput).ToPoint();
-				highlighterTrans.Position = potentialPlace.ToVector2() * 16;
+				//highlighterTrans.Position = potentialPlace.ToVector2() * 16;
 				if(_interacted && !_grid.IsCellFilled(potentialPlace)) {
-					
-					Guid blockeid = world.LoadEntities(blockPlacer.BlockPrefabPath)[0];
+					Guid blockeid = world.LoadEntityGroupFromFile(blockPlacer.BlockPrefabPath, Guid.Empty)[0];
 					ref Transform2D blocktransform = ref world.GetComponent<Transform2D>(blockeid);
 					ref Sprite sprite = ref world.GetComponent<Sprite>(blockeid);
 					blocktransform.Position = potentialPlace.ToVector2() * 16;

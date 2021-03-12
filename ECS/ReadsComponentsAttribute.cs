@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MainGame.ECS {
+namespace ECS {
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 	class ReadsComponentsAttribute : Attribute {
 		public readonly Type[] Reads;

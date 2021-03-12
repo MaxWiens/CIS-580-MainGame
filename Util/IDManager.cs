@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MainGame.Util {
+namespace Util {
 	public static class IDManager {
 		private static ulong _id = 0;
 		private static Queue<ulong> _available = new Queue<ulong>();

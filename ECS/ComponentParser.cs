@@ -3,32 +3,28 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace MainGame.ECS {
-	public class ComponentParser {
-		public ComponentParser(JsonSerializerOptions options) {
-			_options = options;
-		}
+namespace ECS {
+	public static class ComponentParser {
+		public const string COMPONENT_NAMESPACE = "MainGame.Components.";
 
-		private readonly JsonSerializerOptions _options;
+		public static object Parse(Type componentType, JsonElement json, JsonSerializerOptions options)
+			=> JsonSerializer.Deserialize(json.GetRawText(), componentType, options);
 
-		public object Parse(Type componentType, JsonElement json)
-			=> JsonSerializer.Deserialize(json.GetRawText(), componentType, _options);
-
-		public object Parse(Type componentType, string json) {
+		public static object Parse(Type componentType, string json, JsonSerializerOptions options) {
 			JsonDocument doc = JsonDocument.Parse(json);
-			object t = Parse(componentType, doc.RootElement);
+			object t = Parse(componentType, doc.RootElement, options);
 			doc.Dispose();
 			return t;
 		}
 
-		public object Parse(JsonProperty json)
-			=> Parse(Type.GetType("MainGame.Components." + json.Name), json.Value);
+		public static object Parse(JsonProperty json, JsonSerializerOptions options)
+			=> Parse(Type.GetType(COMPONENT_NAMESPACE + json.Name), json.Value, options);
 			
-		public T Parse<T>(string json) where T : struct 
-			=> (T)JsonSerializer.Deserialize(json, typeof(T), _options);
+		public static T Parse<T>(string json, JsonSerializerOptions options)
+			=> (T)JsonSerializer.Deserialize(json, typeof(T), options);
 
-		public T Parse<T>(JsonElement json) where T : struct
-			=> (T)JsonSerializer.Deserialize(json.GetRawText(), typeof(T), _options);
+		public static T Parse<T>(JsonElement json, JsonSerializerOptions options)
+			=> (T)JsonSerializer.Deserialize(json.GetRawText(), typeof(T), options);
 	}
 
 }

@@ -1,22 +1,34 @@
 ﻿{
-  "Entitites": [
+  "Entities": [
     {
-      "ID": "A85B9DC2-1A89-478B-953C-3A88B7F394F0",
+      "EID": "#Camera",
+      "IsEnabled": true,
       "Components": {
         "Transform2D": {"Scale": 1, "Position": [4000, 4000]},
         "Camera": {},
-        "Follower": {"Strength": 10, "SnapDistance": 1.5, "Target": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409"}
+        "Follower": {"Strength": 10, "SnapDistance": 1.5, "Target": "#player"}
       }
     },
     {
-      "ID": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409",
+      "EID": "#player",
+      "IsEnabled": true,
       "Components": {
         "Transform2D": {"Scale": 1, "Position": [32,32]},
         "Sprite": {"Texture": "Textures\\Frog\\frog_front", "Albedo": [255,255,255], "Offset": [8,8], "Scale": 1, "SourceRectangle":[0,0,16,16]},
         "PlayerControl": {},
         "BlockPlacer": {"BlockPrefabPath": "Assets\\Prefabs\\WoodBlock.json"},
         "Health": {"Value": 10},
-        "RigidBody": { "Layer": "Creature", "IsTrigger": false},
+        "Body" : {
+          "Position": [32,32],
+          "BodyType": "Dynamic",
+          "Fixture": {
+            "Shape": {
+              "Type": "Circle",
+              "Radius": 4
+            },
+            "IsSensor": false
+          }
+        },
         "CircleBounds": { "Offset": [4,0], "Radius": 4},
         "TileAnimation": {"FrameDelay": 0.0833, "FrameIdx": 0, "Asset": "63F821CA-B0D8-422E-B4D0-1D64DE67BAB2"},
         "Mover": {
@@ -31,10 +43,11 @@
   ],
   "backup": [
     {
+      "RigidBody": { "Layer": "Creature", "IsTrigger": false},
       "Components": {
         "Transform2D": {"Position": [20, 100]},
         "Sprite": {"Texture": "Textures\\circle", "Albedo": [24,255,25], "Offset": [32,32], "Scale": 0.0625, "SourceRectangle":[0,0,1024,1024]},
-        "Follower": {"Strength": 1, "SnapDistance": 1.5, "Target": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409"},
+        "Follower": {"Strength": 1, "SnapDistance": 1.5, "Target": "#player"},
         "RigidBody": { "IsTrigger": false, "Layer": "General"},
         "CircleBounds": { "Radius": 32, "Offset": [32,32]}
       }
@@ -43,7 +56,7 @@
       "Components": {
         "Transform2D": {"Position": [20, 100]},
         "Sprite": {"Texture": "Textures\\circle", "Albedo": [24,255,25], "Offset": [32,32], "Scale": 0.0625, "SourceRectangle":[0,0,16,16]},
-        "Follower": {"Strength": 1, "SnapDistance": 1.5, "Target": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409"},
+        "Follower": {"Strength": 1, "SnapDistance": 1.5, "Target": "#player"},
         "RigidBody": { "IsTrigger": false, "Layer": "General"},
         "CircleBounds": { "Radius": 32, "Offset": [32,32]}
       }
@@ -52,13 +65,13 @@
       "Components": {
         "Transform2D": {"Position": [200, 0]},
         "Sprite": {"Texture": "Textures\\circle", "Albedo": "Purple", "Offset": [0,0], "Scale": 0.0625, "SourceRectangle":[0,0,1024,1024]},
-        "Follower": {"Strength": 1, "SnapDistance": 1.5, "Target": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409"},
+        "Follower": {"Strength": 1, "SnapDistance": 1.5, "Target": "#player"},
         "RigidBody": { "IsTrigger": false, "Layer": "General"},
         "CircleBounds": { "Radius": 32, "Offset": [0,0]}
       }
     },
     {
-      "ID": "0A5685C2-25AF-4AD6-AA2A-F0437E51A409",
+      "EID": "#player",
       "Components": {
         "Transform2D": {"Scale": 1, "Position": [0,0]},
         "Sprite": {"Texture": "Textures\\Frog\\frog_front", "Albedo": [255,255,255], "Offset": [8,8], "Scale": 1, "SourceRectangle":[0,0,16,16]},

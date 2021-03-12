@@ -1,0 +1,20 @@
+﻿{
+  "Entitites":[
+    {
+      "Components": {
+        "Transform2D": {},
+        "RigidBody": { "Layer": "General", "IsTrigger": true },
+        "CircleBounds": {},
+        "DamageArea": {}
+      }
+    },
+    {
+      "Components": {
+        "Transform2D": {},
+        "RigidBody": { "Layer": "General", "IsTrigger": true },
+        "CircleBounds": {},
+        "DamageArea": {}
+      }
+    }
+  ]
+}

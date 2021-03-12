@@ -5,8 +5,9 @@ using Microsoft.Xna.Framework;
 
 namespace MainGame.Systems {
 	using ECS;
+	using ECS.S;
 	using Components;
-	public class Grid : UpdateSystem {
+	public class Grid : System, IUpdateable {
 		public const int CHUNK_SIZE_FACTOR = 4;
 		public const int CHUNK_SIZE = 1<<CHUNK_SIZE_FACTOR;
 		public const int WORLD_HEIGHT = CHUNK_SIZE * CHUNK_SIZE;
@@ -18,35 +19,35 @@ namespace MainGame.Systems {
 		private Transform2D _fallbackT2D;
 		public Stack<Point> PointsToDestroy = new Stack<Point>();
 
-		public Grid(ZaWarudo world) : base(world) { }
+		public Grid(World world) : base(world) { }
 		
 		public void LoadChunk(Point chunkPosition) {
 			if(!_chunks.ContainsKey(chunkPosition)) {
 				// load chunk
 				Guid[,] chunk = new Guid[CHUNK_SIZE, CHUNK_SIZE];
 
-				Guid blockEid = world.LoadEntities(@"Assets\Prefabs\WoodBlock.json")[0];
+				Guid blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
 				world.GetComponent<Transform2D>(blockEid).Position = new Vector2(
 					(chunkPosition.X<<CHUNK_SIZE_FACTOR)*TILE_SIZE,
 					(chunkPosition.Y<<CHUNK_SIZE_FACTOR)*TILE_SIZE
 				);
 				chunk[0, 0] = blockEid;
 
-				blockEid = world.LoadEntities(@"Assets\Prefabs\WoodBlock.json")[0];
+				blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
 				world.GetComponent<Transform2D>(blockEid).Position = new Vector2(
 					((chunkPosition.X << CHUNK_SIZE_FACTOR)+ CHUNK_SIZE-1) * TILE_SIZE,
 					((chunkPosition.Y << CHUNK_SIZE_FACTOR)+ CHUNK_SIZE-1) * TILE_SIZE
 				);
 				chunk[CHUNK_SIZE-1, CHUNK_SIZE-1] = blockEid;
 				
-				blockEid = world.LoadEntities(@"Assets\Prefabs\WoodBlock.json")[0];
+				blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
 				world.GetComponent<Transform2D>(blockEid).Position = new Vector2(
 					((chunkPosition.X << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 2) * TILE_SIZE,
 					((chunkPosition.Y << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 1) * TILE_SIZE
 				);
 				chunk[CHUNK_SIZE - 1, CHUNK_SIZE - 1] = blockEid;
 
-				blockEid = world.LoadEntities(@"Assets\Prefabs\WoodBlock.json")[0];
+				blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
 				world.GetComponent<Transform2D>(blockEid).Position = new Vector2(
 					((chunkPosition.X << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 1) * TILE_SIZE,
 					((chunkPosition.Y << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 2) * TILE_SIZE
@@ -57,8 +58,8 @@ namespace MainGame.Systems {
 			}
 		}
 
-		public override void Update(float deltaTime) {
-			var gridElementMap = world.GetEntitiesWithComponent<GridElement>();
+		public void Update(float deltaTime) {
+			//var gridElementMap = world.GetEntitiesWithComponent<GridElement>();
 			var chunkLoaderMap = world.GetEntitiesWithComponent<ChunkLoading>();
 			var transMap = world.GetEntitiesWithComponent<Transform2D>();
 			Transform2D trans;

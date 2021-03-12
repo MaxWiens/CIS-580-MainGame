@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 using Microsoft.Xna.Framework;
 
 namespace MainGame.Serialization {
-	class ColorConverter : JsonConverter<Color> {
+	public class ColorConverter : JsonConverter<Color> {
 		public override Color Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 			JsonDocument document = JsonDocument.ParseValue(ref reader);
 			var root = document.RootElement;

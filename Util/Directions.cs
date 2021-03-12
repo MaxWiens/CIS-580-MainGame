@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
-namespace MainGame.Util {
+namespace Util {
 	[Flags]
 	public enum Directions : byte{
 		None = 0,
