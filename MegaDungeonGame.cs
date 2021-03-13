@@ -93,7 +93,7 @@ namespace MainGame {
 
 			// debug
 			//_world.RegisterSystem(new CollisionDraw(_world, this), 0);
-			_world.RegisterSystem(new PositionDraw(_world, this), 0);
+			//_world.RegisterSystem(new PositionDraw(_world, this), 0);
 
 			LoadAssets(@"Assets\Assets.json");
 			_world.LoadEntityGroupFromFile("Assets/Scenes/MainMenuScene.json", Guid.Empty);

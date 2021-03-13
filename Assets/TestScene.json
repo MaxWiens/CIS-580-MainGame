@@ -7,6 +7,7 @@
       "IsEnabled": true,
       "Components": {
         "Body": {
+          "Position": [4000,4000],
           "BodyType": "Kinematic"
         },
         "Camera": {},
@@ -23,7 +24,7 @@
         "BlockPlacer": {"BlockPrefabPath": "Assets\\Prefabs\\WoodBlock.json"},
         "Health": {"Value": 10},
         "Body" : {
-          "Position": [32,32],
+          "Position": [4000,4000],
           "Type": "Dynamic",
           "Fixture": {
             "Shape": {
@@ -43,7 +44,9 @@
         },
         "ChunkLoading": {}
       }
-    },
+    }
+  ],
+  "backup": [
     {
       "Name": "Button",
       "Components": {
@@ -64,9 +67,7 @@
         },
         "UI.Sprite": {"Texture": "Textures\\Frog\\frog_front", "SourceRectangle":[0,0,16,16]}
       }
-    }
-  ],
-  "backup": [
+    },
     {
       "RigidBody": { "Layer": "Creature", "IsTrigger": false},
       "Components": {

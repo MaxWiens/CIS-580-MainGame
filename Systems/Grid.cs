@@ -18,42 +18,66 @@ namespace MainGame.Systems {
 		private Dictionary<Point, Guid[,]> _chunks = new Dictionary<Point, Guid[,]>();
 		private Body _fallbackBody;
 		public Stack<Point> PointsToDestroy = new Stack<Point>();
+		Random r;
+		public Grid(World world) : base(world) {
+			r = new Random((int)DateTime.Now.Ticks);
+			world.Reset += OnReset;
+		}
 
-		public Grid(World world) : base(world) { }
-		
+		private void OnReset() {
+			_chunks = new Dictionary<Point, Guid[,]>();
+			PointsToDestroy = new Stack<Point>();
+			_entities = new Guid[500, 500];
+			_filled = new bool[500, 500];
+		}
+
 		public void LoadChunk(Point chunkPosition) {
 			if(!_chunks.ContainsKey(chunkPosition)) {
 				// load chunk
 				Guid[,] chunk = new Guid[CHUNK_SIZE, CHUNK_SIZE];
-				/*
-				Guid blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
-				world.GetComponent<Body>(blockEid).Position = new Vector2(
-					(chunkPosition.X<<CHUNK_SIZE_FACTOR)*TILE_SIZE,
-					(chunkPosition.Y<<CHUNK_SIZE_FACTOR)*TILE_SIZE
-				);
-				chunk[0, 0] = blockEid;
+				int cur = 0;
+				int count = 0;
+				while(cur < CHUNK_SIZE * CHUNK_SIZE && count < 5) {
+					cur = r.Next(cur, CHUNK_SIZE * CHUNK_SIZE);
+					count++;
+					int i = cur % CHUNK_SIZE;
+					int j = cur / CHUNK_SIZE;
+					Guid blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
+					world.GetComponent<Body>(blockEid).Position = new Vector2(
+						((chunkPosition.X << CHUNK_SIZE_FACTOR) + i) * TILE_SIZE,
+						((chunkPosition.Y << CHUNK_SIZE_FACTOR) + j) * TILE_SIZE
+					);
+					chunk[i, j] = blockEid;
+				}
 
-				blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
-				world.GetComponent<Body>(blockEid).Position = new Vector2(
-					((chunkPosition.X << CHUNK_SIZE_FACTOR)+ CHUNK_SIZE-1) * TILE_SIZE,
-					((chunkPosition.Y << CHUNK_SIZE_FACTOR)+ CHUNK_SIZE-1) * TILE_SIZE
-				);
-				chunk[CHUNK_SIZE-1, CHUNK_SIZE-1] = blockEid;
+				//Guid blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
+				//world.GetComponent<Body>(blockEid).Position = new Vector2(
+				//	(chunkPosition.X<<CHUNK_SIZE_FACTOR)*TILE_SIZE,
+				//	(chunkPosition.Y<<CHUNK_SIZE_FACTOR)*TILE_SIZE
+				//);
+				//chunk[0, 0] = blockEid;
+
+				//blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
+				//world.GetComponent<Body>(blockEid).Position = new Vector2(
+				//	((chunkPosition.X << CHUNK_SIZE_FACTOR)+ CHUNK_SIZE-1) * TILE_SIZE,
+				//	((chunkPosition.Y << CHUNK_SIZE_FACTOR)+ CHUNK_SIZE-1) * TILE_SIZE
+				//);
+				//chunk[CHUNK_SIZE-1, CHUNK_SIZE-1] = blockEid;
 				
-				blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
-				world.GetComponent<Body>(blockEid).Position = new Vector2(
-					((chunkPosition.X << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 2) * TILE_SIZE,
-					((chunkPosition.Y << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 1) * TILE_SIZE
-				);
-				chunk[CHUNK_SIZE - 1, CHUNK_SIZE - 1] = blockEid;
+				//blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
+				//world.GetComponent<Body>(blockEid).Position = new Vector2(
+				//	((chunkPosition.X << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 2) * TILE_SIZE,
+				//	((chunkPosition.Y << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 1) * TILE_SIZE
+				//);
+				//chunk[CHUNK_SIZE - 1, CHUNK_SIZE - 1] = blockEid;
 
-				blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
-				world.GetComponent<Body>(blockEid).Position = new Vector2(
-					((chunkPosition.X << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 1) * TILE_SIZE,
-					((chunkPosition.Y << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 2) * TILE_SIZE
-				);
-				chunk[CHUNK_SIZE - 1, CHUNK_SIZE - 1] = blockEid;
-				*/
+				//blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
+				//world.GetComponent<Body>(blockEid).Position = new Vector2(
+				//	((chunkPosition.X << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 1) * TILE_SIZE,
+				//	((chunkPosition.Y << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 2) * TILE_SIZE
+				//);
+				//chunk[CHUNK_SIZE - 1, CHUNK_SIZE - 1] = blockEid;
+				
 				_chunks.Add(chunkPosition, chunk);
 			}
 		}

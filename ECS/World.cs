@@ -28,7 +28,7 @@ namespace ECS {
 		private readonly SortedDictionary<uint, IUpdateable> _enabledUpdateSystems = new SortedDictionary<uint, IUpdateable>();
 		private readonly SortedDictionary<uint, IFixedUpdatable> _enabledFixedUpdateSystems = new SortedDictionary<uint, IFixedUpdatable>();
 		private readonly SortedDictionary<uint, IDrawable> _enabledDrawSystems = new SortedDictionary<uint, IDrawable>();
-
+		public event Action Reset;
 		public float DeltaTimeScale = 1f;
 		private float _fixedTimeTimer = 0f;
 		private readonly tainicom.Aether.Physics2D.Dynamics.World _physicsWorld;
@@ -319,6 +319,7 @@ namespace ECS {
 			while(_sceneList.Count > 1)
 				PopScene();
 			PopScene();
+			Reset?.Invoke();
 		}
 
 		public void SetTimeScale(Guid sid, float value) => _scenes[sid].TimeScale = value;
