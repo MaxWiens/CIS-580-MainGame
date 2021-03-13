@@ -2,7 +2,13 @@
   "Entities":[
     {
       "Components": {
-        "Transform2D": {},
+        "Body": { 
+          "BodyType": "Static",
+          "Fixture": {
+            "IsSensor": false,
+            "Shape": { "Type": "Rectangle", "Dimentions": [16,16], "Offset": [8,8] }
+          }
+        },
         "Sprite": {"Texture": "Textures\\wood_block", "Albedo": "White", "Offset": [0,0], "Scale": 1, "SourceRectangle":[0,0,16,16]},
         "Health": {"Value": 10},
         "StaticBody": { "Layer": "Enviornment", "IsTrigger": false},

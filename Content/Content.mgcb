@@ -157,6 +157,66 @@
 /processorParam:TextureFormat=Color
 /build:../RawAssets/Textures/Tiles/wheat_growth.png;Textures/Tiles/wheat_growth.png
 
+#begin ../RawAssets/Textures/UI/ArrowButton.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../RawAssets/Textures/UI/ArrowButton.png;Textures/UI/ArrowButton.png
+
+#begin ../RawAssets/Textures/UI/MainMenuButton.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../RawAssets/Textures/UI/MainMenuButton.png;Textures/UI/MainMenuButton.png
+
+#begin ../RawAssets/Textures/UI/RestartButton.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../RawAssets/Textures/UI/RestartButton.png;Textures/UI/RestartButton.png
+
+#begin ../RawAssets/Textures/UI/StartButton.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../RawAssets/Textures/UI/StartButton.png;Textures/UI/StartButton.png
+
+#begin ../RawAssets/Textures/UI/Volume.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../RawAssets/Textures/UI/Volume.png;Textures/UI/Volume.png
+
 #begin ../RawAssets/Textures/wood_block.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -168,4 +228,11 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:../RawAssets/Textures/wood_block.png;Textures/wood_block.png
+
+#begin MainFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:MainFont.spritefont
 

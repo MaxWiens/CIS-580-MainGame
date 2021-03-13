@@ -17,5 +17,10 @@
   ],
   "Sprint": [
     "Keys.LeftShift"
+  ],
+  "Pause": [
+    "Keys.Escape",
+    "GamePad.Start",
+    "GamePad.Back"
   ]
 }

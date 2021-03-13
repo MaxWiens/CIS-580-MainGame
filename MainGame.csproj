@@ -23,6 +23,7 @@
     <PackageReference Include="Aether.Physics2D.MG" Version="1.5.0" />
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.0.1641" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
+    <PackageReference Include="MoonSharp" Version="2.0.0" />
     <PackageReference Include="System.Text.Json" Version="5.0.1" />
   </ItemGroup>
   <ItemGroup>
@@ -56,9 +57,18 @@
     <None Update="Assets\Prefabs\WoodBlock.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Scenes\PauseMenuScene.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Scenes\MainMenuScene.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\TestScene.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="RawAssets\Textures\UI\" />
   </ItemGroup>
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 </Project>

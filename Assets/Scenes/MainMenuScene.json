@@ -1,0 +1,115 @@
+﻿{
+  "Entities": [
+    {
+      "EID": "#Camera",
+      "Name": "MainCamera",
+      "IsEnabled": true,
+      "Components": {
+        "Body": {"BodyType": "Kinematic"},
+        "Camera": {}
+      }
+    },
+    {
+      "Name": "StartButton",
+      "Components": {
+        "Body": {
+          "Position": [128,72],
+          "Type": "Static",
+          "Fixture": {
+            "IsSensor": true,
+            "Shape": {
+              "Type": "Rectangle",
+              "Dimentions": [48,16]
+            }
+          }
+        },
+        "UI.Button": {
+          "ClickEvent": "function OnClick(arg1) ECS.PopScene(); ECS.LoadEntityGroupFromFile('Assets/TestScene.json') end"
+        },
+        "UI.Sprite": {"Texture": "Textures/UI/StartButton", "SourceRectangle":[0,0,48,16], "Offset": [24,8]}
+      }
+    },
+    {
+      "Name": "VolumeElement",
+      "Components": {
+        "Body": {
+          "Position": [128,90],
+          "Type": "Static"
+        },
+        "UI.Sprite": {"Texture": "Textures/UI/Volume", "SourceRectangle":[0,0,64,16], "Offset": [32,8]}
+      }
+    },
+    {
+      "Name": "VolumeIncreaseButton",
+      "Components": {
+        "Body": {
+          "Position": [166,90],
+          "Type": "Static",
+          "Fixture": {
+            "IsSensor": true,
+            "Shape": {
+              "Type": "Rectangle",
+              "Dimentions": [16,16]
+            }
+          }
+        },
+        "UI.Button": {
+          "ClickEvent": "function OnClick(arg1) SetVolume(GetVolume()+0.1); PlayTestSound() end"
+        },
+        "UI.Sprite": {"Texture": "Textures/UI/ArrowButton", "SourceRectangle":[0,0,16,16], "Offset": [8,8]}
+      }
+    },
+    {
+      "Name": "VolumeDecreaseButton",
+      "Components": {
+        "Body": {
+          "Position": [90,90],
+          "Type": "Static",
+          "Fixture": {
+            "IsSensor": true,
+            "Shape": {
+              "Type": "Rectangle",
+              "Dimentions": [16,16]
+            }
+          }
+        },
+        "UI.Button": {
+          "ClickEvent": "function OnClick(arg1) SetVolume(GetVolume()-0.1); PlayTestSound() end"
+        },
+        "UI.Sprite": {"Texture": "Textures/UI/ArrowButton", "SourceRectangle":[0,0,16,16], "Offset": [-8,-8], "Scale": [-1,-1]}
+      }
+    },
+    {
+      "Components": {
+        "UI.Volume": {},
+        "Body": {
+          "Position": [128,106],
+          "Type": "Static"
+        }
+      }
+    }
+  ],
+  "Backup": [
+    {
+      "Name": "MainMenuButton",
+      "Components": {
+        "Body": {
+          "Position": [128,72],
+          "Type": "Static",
+          "Fixture": {
+            "IsSensor": true,
+            "Shape": {
+              "Type": "Rectangle",
+              "Dimentions": [88,16]
+            }
+          }
+        },
+        "UI.Button": {
+          "ClickEvent": "function OnClick(arg1) ECS.PopScene(); ECS.LoadEntityGroupFromFile('Assets/TestScene.json') end"
+        },
+        "UI.Sprite": {"Texture": "Textures/UI/MainMenuButton", "SourceRectangle":[0,0,88,16], "Offset": [44,8]}
+      }
+    }
+  ]
+}
+

@@ -4,7 +4,7 @@ using System.Text;
 using System.Reflection;
 using MainGame.Collections;
 using System.Text.Json;
-
+using System.Linq;
 namespace ECS {
 	using S;
 	public partial class World {
@@ -14,8 +14,10 @@ namespace ECS {
 		public const string DEFAULT_SCENE_NAME = "Default";
 
 		private readonly List<SceneData> _sceneList = new List<SceneData>();
+		public Guid TopScene => _sceneList[_sceneList.Count-1].SID;
+		public Guid[] Scenes => (from SceneData d in _sceneList select d.SID).ToArray();
 		private readonly Dictionary<Guid, SceneData> _scenes = new Dictionary<Guid, SceneData>();
-
+		private readonly Dictionary<string, Guid> _entityNames = new Dictionary<string, Guid>();
 		private readonly Dictionary<Guid, EntityData> _entities = new Dictionary<Guid, EntityData>();
 		
 		/// <summary> Holds components in a structure that can easily re-enable and access the components in a disabled entity </summary>
@@ -27,10 +29,12 @@ namespace ECS {
 		private readonly SortedDictionary<uint, IFixedUpdatable> _enabledFixedUpdateSystems = new SortedDictionary<uint, IFixedUpdatable>();
 		private readonly SortedDictionary<uint, IDrawable> _enabledDrawSystems = new SortedDictionary<uint, IDrawable>();
 
-
+		public float DeltaTimeScale = 1f;
 		private float _fixedTimeTimer = 0f;
+		private readonly tainicom.Aether.Physics2D.Dynamics.World _physicsWorld;
 
-		public World(JsonSerializerOptions entitySerializerOptions, float fixedDeltaTime = 1f/60f) {
+		public World(JsonSerializerOptions entitySerializerOptions, tainicom.Aether.Physics2D.Dynamics.World physicsWorld, float fixedDeltaTime = 1f/60f) {
+			_physicsWorld = physicsWorld;
 			FixedDeltaTime = fixedDeltaTime;
 			_entitySerializerOptions = entitySerializerOptions;
 			// add default scene
@@ -38,6 +42,7 @@ namespace ECS {
 		}
 
 		public void Update(float deltaTime) {
+			deltaTime *= DeltaTimeScale;
 			_fixedTimeTimer += deltaTime;
 			if(_fixedTimeTimer >= FixedDeltaTime) {
 				_fixedTimeTimer -= FixedDeltaTime;
@@ -57,9 +62,11 @@ namespace ECS {
 		#region Entity
 		public Guid MakeEntity(Guid sceneID, bool isEnabled = true) => MakeEntity(Guid.NewGuid(), sceneID, isEnabled);
 
-		public Guid MakeEntity(Guid eid, Guid sceneID, bool isEnabled = true) {
-			EntityData data = new EntityData(eid, sceneID, new HashSet<Type>(), isEnabled);
+		public Guid MakeEntity(Guid eid, Guid sceneID, bool isEnabled = true, string name = null) {
+			EntityData data = new EntityData(eid, sceneID, new HashSet<Type>(), isEnabled, name);
 			_entities.Add(eid, data);
+			if(name != null)
+				_entityNames.Add(name, eid);
 			if(!isEnabled) {
 				_disabledComponentStore.Add(eid, new Dictionary<Type, object>());
 			}
@@ -67,8 +74,8 @@ namespace ECS {
 			return eid;
 		}
 
-		public Guid MakeEntity(Guid eid, Guid sceneID, IEnumerable<object> components, bool isEnabled = true) {
-			MakeEntity(eid, sceneID, isEnabled);
+		public Guid MakeEntity(Guid eid, Guid sceneID, IEnumerable<object> components, bool isEnabled = true, string name = null) {
+			MakeEntity(eid, sceneID, isEnabled, name);
 			foreach(object component in components)
 				AddComponent(eid, component);
 			return eid;
@@ -78,15 +85,27 @@ namespace ECS {
 			EntityData data = _entities[eid];
 			foreach(var componentType in data.Components) {
 				if(data.IsEnabled) {
-					if(_enabledComponentStore.TryGetValue(componentType, out var componentMap))
+					if(_enabledComponentStore.TryGetValue(componentType, out var componentMap)) {
+						if(componentType == typeof(MainGame.Components.Body))
+							_physicsWorld.Remove((MainGame.Components.Body)componentMap[eid]);
 						componentMap.Remove(eid);
+					}
 				} else {
 					_disabledComponentStore[eid].Remove(componentType);
 				}
+				
 			}
 			_scenes[data.SceneID].Entities.Remove(eid);
 			_entities.Remove(eid);
+			if(data.Name != null)
+				_entityNames.Remove(data.Name);
 		}
+		
+		public Guid GetEID(string name) {
+			return _entityNames[name];
+		}
+		public bool TryGetEID(string name, out Guid eid)
+			=> _entityNames.TryGetValue(name, out eid);
 
 		public ref T GetComponent<T>(Guid eid)
 			=> ref (_enabledComponentStore[typeof(T)] as RefMap<Guid, T>)[eid];
@@ -181,12 +200,14 @@ namespace ECS {
 		public bool IsEnabled(Guid eid) => _entities[eid].IsEnabled;
 
 		private class EntityData {
-			public EntityData(Guid eid, Guid sceneID, HashSet<Type> components, bool isEnabled) {
+			public EntityData(Guid eid, Guid sceneID, HashSet<Type> components, bool isEnabled, string name = null) {
 				EID = eid;
 				SceneID = sceneID;
 				Components = components;
 				IsEnabled = isEnabled;
+				Name = name;
 			}
+			public readonly string Name;
 			public readonly Guid EID;
 			public readonly HashSet<Type> Components;
 			public Guid SceneID;
@@ -260,11 +281,26 @@ namespace ECS {
 		public void RemoveScene(Guid sid) {
 			if(_scenes.TryGetValue(sid, out SceneData sceneData)){
 				foreach(Guid eid in sceneData.Entities) {
-					DestroyEntity(eid);
+					EntityData data = _entities[eid];
+					foreach(var componentType in data.Components) {
+						if(data.IsEnabled) {
+							if(_enabledComponentStore.TryGetValue(componentType, out var componentMap)) {
+								if(componentType == typeof(MainGame.Components.Body))
+									_physicsWorld.Remove((MainGame.Components.Body)componentMap[eid]);
+								componentMap.Remove(eid);
+							}
+						} else {
+							_disabledComponentStore[eid].Remove(componentType);
+						}
+					}
+					_entities.Remove(eid);
+					if(data.Name != null)
+						_entityNames.Remove(data.Name);
 				}
-				
+
 				if(sid == Guid.Empty) {
 					// reset default scene's timescale
+					_scenes[sid].Entities.Clear();
 					sceneData.TimeScale = 1f;
 				} else {
 					// remove scene from list
@@ -277,6 +313,12 @@ namespace ECS {
 		public void PopScene() {
 			SceneData sid = _sceneList[_sceneList.Count - 1];
 			RemoveScene(sid.SID);
+		}
+
+		public void RemoveAllScenes() {
+			while(_sceneList.Count > 1)
+				PopScene();
+			PopScene();
 		}
 
 		public void SetTimeScale(Guid sid, float value) => _scenes[sid].TimeScale = value;

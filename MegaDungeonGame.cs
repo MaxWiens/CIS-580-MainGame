@@ -9,19 +9,18 @@ using System;
 using System.IO;
 using MainGame.Input;
 using MainGame.Systems;
+using UI = MainGame.Systems.UI;
 using MainGame.Assets;
 namespace MainGame {
 	public class MegaDungeonGame : Game {
 		private readonly JsonSerializerOptions _serializerOptions;
-
-
 		public const string GAME_TITLE = "Enter the Megadungeon";
 		public const string CONTROLLS_CONFIG_PATH = @"Assets\Controlls.json";
 		public Point Resolution = new Point(256, 144);
 		private readonly ECS.World _world;
 		private readonly tainicom.Aether.Physics2D.Dynamics.World _physicsWorld;
 		private readonly Dictionary<Guid, Assets.Asset> _assets = new Dictionary<Guid, Assets.Asset>();
-		private GraphicsDeviceManager _graphics;
+		public GraphicsDeviceManager Graphics;
 		public Guid MainCamera;
 
 		private SpriteBatch _targetBatch;
@@ -33,13 +32,12 @@ namespace MainGame {
 			Window.Title = GAME_TITLE;
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
-			_graphics = new GraphicsDeviceManager(this);
+			Graphics = new GraphicsDeviceManager(this);
 			_physicsWorld = new tainicom.Aether.Physics2D.Dynamics.World();
 
 			InputManager.LoadBindings(CONTROLLS_CONFIG_PATH);
 			_serializerOptions = new JsonSerializerOptions() {
 				Converters = {
-					new BodyConverter(_physicsWorld),
 					new LayerConverter(),
 					
 					// Monogame type converters
@@ -48,6 +46,7 @@ namespace MainGame {
 					new Vector2Converter(),
 					new Vector3Converter(),
 					new ColorConverter(),
+					
 					
 					// Aether type converters
 					new ShapeConverter(),
@@ -60,15 +59,17 @@ namespace MainGame {
 					new TileSheetConverter()
 				}
 			};
-			_world = new ECS.World(_serializerOptions);
+			_world = new ECS.World(_serializerOptions, _physicsWorld);
+			_serializerOptions.Converters.Add(new BodyConverter(_physicsWorld, _world));
+			_serializerOptions.Converters.Add(new ScriptConverter(this, _physicsWorld, _world));
 		}
 
 		protected override void Initialize() {
 			base.Initialize();
 
-			_graphics.PreferredBackBufferWidth = 1280;
-			_graphics.PreferredBackBufferHeight = 720;
-			_graphics.ApplyChanges();
+			Graphics.PreferredBackBufferWidth = 1280;
+			Graphics.PreferredBackBufferHeight = 720;
+			Graphics.ApplyChanges();
 
 			_targetBatch = new SpriteBatch(GraphicsDevice);
 			SpriteBatch = new SpriteBatch(GraphicsDevice);
@@ -77,23 +78,25 @@ namespace MainGame {
 
 		protected override void BeginRun() {
 			_world.RegisterSystem(new Systems.Physics(_world, _physicsWorld), 0);
-			_world.RegisterSystem(new Systems.Physics(_world, _physicsWorld), 1);
-
+			_world.RegisterSystem(new ButtonClickSystem(_world, _physicsWorld, this));
+			
 			_world.RegisterSystem(new PlayerController(_world, Content));
-			_world.RegisterSystem(new SpriteDraw(_world, this));
 			_world.RegisterSystem(new Grid(_world));
 			_world.RegisterSystem(new Following(_world));
 			_world.RegisterSystem(new Destruction(_world));
 			_world.RegisterSystem(new Animator(_world));
 			_world.RegisterSystem(new MoverSystem(_world));
 
+			_world.RegisterSystem(new UI.SpriteDraw(_world, this));
+			_world.RegisterSystem(new UI.VolumeDraw(_world, this));
+			_world.RegisterSystem(new SpriteDraw(_world, this));
+
 			// debug
-			_world.RegisterSystem(new CollisionDraw(_world, this), 0);
+			//_world.RegisterSystem(new CollisionDraw(_world, this), 0);
 			_world.RegisterSystem(new PositionDraw(_world, this), 0);
 
-
 			LoadAssets(@"Assets\Assets.json");
-			_world.LoadEntityGroupFromFile(@"Assets\TestScene.json", Guid.Empty);
+			_world.LoadEntityGroupFromFile("Assets/Scenes/MainMenuScene.json", Guid.Empty);
 
 			var eids = _world.GetEntitiesWithComponent<Components.Camera>();
 			if(eids.Count == 0) {
@@ -122,7 +125,7 @@ namespace MainGame {
 
 			GraphicsDevice.SetRenderTarget(null);
 			_targetBatch.Begin(blendState: BlendState.AlphaBlend, samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack);
-			_targetBatch.Draw(_target, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
+			_targetBatch.Draw(_target, new Rectangle(0, 0, Graphics.PreferredBackBufferWidth, Graphics.PreferredBackBufferHeight), Color.White);
 			_targetBatch.End();
 		}
 

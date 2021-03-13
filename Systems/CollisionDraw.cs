@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using System;
 using System.Collections.Generic;
 using System.Text;
-
+#if false
 namespace MainGame.Systems {
 	using ECS;
 	using ECS.S;
@@ -27,7 +27,7 @@ namespace MainGame.Systems {
 			var sbMap = world.GetEntitiesWithComponent<StaticBody>();
 			var rectMap = world.GetEntitiesWithComponent<RectBounds>();
 			var circMap = world.GetEntitiesWithComponent<CircleBounds>();
-			var transMap = world.GetEntitiesWithComponent<Transform2D>();
+			var transMap = world.GetEntitiesWithComponent<Body>();
 			Transform2D cam = world.GetComponent<Transform2D>(_game.MainCamera);
 			Color c;
 			Vector2 camCenter = (cam.Position - (_game.Resolution.ToVector2() * 0.5f));
@@ -92,3 +92,4 @@ namespace MainGame.Systems {
 		}
 	}
 }
+#endif

@@ -10,19 +10,19 @@ namespace MainGame.Systems {
 
 		public void Update(float deltaTime) {
 			var followerMap = world.GetEntitiesWithComponent<Follower>();
-			var transMap = world.GetEntitiesWithComponent<Transform2D>();
+			var bodyMap = world.GetEntitiesWithComponent<Body>();
 			var eids = followerMap.Keys;
 			Vector2 dif;
 			foreach(var eid in eids) {
 				ref Follower f = ref followerMap[eid];
-				ref Transform2D t = ref world.GetComponent<Transform2D>(eid);
-				Transform2D target = world.GetComponent<Transform2D>(f.Target);
-				if(t.Position != target.Position) {
-					dif = target.Position - t.Position;
+				ref Body body = ref bodyMap[eid];
+				Body target = bodyMap[f.Target];
+				if(body.Position != target.Position) {
+					dif = target.Position - body.Position;
 					if(dif.Length() < f.SnapDistance) {
-						t.Position = target.Position;
+						body.Position = target.Position;
 					} else {
-						t.Position += dif * Math.Clamp(f.Strength * deltaTime, 0f, 1f);
+						body.Position += dif * Math.Clamp(f.Strength * deltaTime, 0f, 1f);
 					}
 				}
 			}

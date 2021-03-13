@@ -35,13 +35,14 @@ namespace MainGame.Systems {
 			_pixel = content.Load<Texture2D>(@"Textures\pixel");
 			//_highlighter = world.MakeEntity(
 			//	new Sprite() { Texture = _pixel, Scale = new Vector2(16), SourceRectangle = new Rectangle(0, 0, 1, 1), Albedo = new Color(255, 255, 255, 25) },
-			//	new Transform2D()
+			//	new Body()
 			//);
 			_moveValue = Vector2.Zero;
 			_sprintValue = 1f;
 		}
 
 		public void OnEnable() {
+			InputManager.AddListener("Pause", OnPause);
 			InputManager.AddListener("Move", OnMove);
 			InputManager.AddListener("Interact", OnInteract);
 			InputManager.AddListener("Sprint", OnSprint);
@@ -49,6 +50,7 @@ namespace MainGame.Systems {
 		}
 
 		public void OnDisable() {
+			InputManager.RemoveListener("Pause", OnPause);
 			InputManager.RemoveListener("Move", OnMove);
 			InputManager.RemoveListener("Interact", OnInteract);
 			InputManager.RemoveListener("Sprint", OnSprint);
@@ -57,19 +59,18 @@ namespace MainGame.Systems {
 
 		public void Update(float deltaTime) {
 			var eids = world.GetEntitiesWithComponent<PlayerControl>().Keys;
-			var moverMap = world.GetEntitiesWithComponent<Mover>();
 			if(_grid==null) _grid = world.GetSystem<Grid>();
 			foreach(var eid in eids) {
-				Transform2D pos = world.GetComponent<Transform2D>(eid);
+				Body pos = world.GetComponent<Body>(eid);
 				ref Body rb = ref world.GetComponent<Body>(eid);
 				rb.LinearVelocity = _moveValue * 100f * _sprintValue;
-				//ref Transform2D highlighterTrans = ref world.GetComponent<Transform2D>(_highlighter);
+				//ref Body highlighterTrans = ref world.GetComponent<Body>(_highlighter);
 				ref BlockPlacer blockPlacer = ref world.GetComponent<BlockPlacer>(eid);
 				Point potentialPlace = Grid.ToGridPosition(pos.Position)+Vector2.Normalize(_lastMoveInput).ToPoint();
 				//highlighterTrans.Position = potentialPlace.ToVector2() * 16;
 				if(_interacted && !_grid.IsCellFilled(potentialPlace)) {
 					Guid blockeid = world.LoadEntityGroupFromFile(blockPlacer.BlockPrefabPath, Guid.Empty)[0];
-					ref Transform2D blocktransform = ref world.GetComponent<Transform2D>(blockeid);
+					ref Body blocktransform = ref world.GetComponent<Body>(blockeid);
 					ref Sprite sprite = ref world.GetComponent<Sprite>(blockeid);
 					blocktransform.Position = potentialPlace.ToVector2() * 16;
 					_interacted = false;
@@ -81,6 +82,19 @@ namespace MainGame.Systems {
 						_breakSfx.Play();
 						_breakActivated = false;
 					}
+				}
+			}
+		}
+
+		private void OnPause(Vector2 obj) {
+			if(obj.AsBool()) {
+				Guid top = world.TopScene;
+				if(top == Guid.Parse("FA60209B-C86C-40E1-BB37-C8121C728F45")) {
+					world.LoadEntityGroupFromFile("Assets/Scenes/PauseMenuScene.json");
+					world.DeltaTimeScale = 0f;
+				}else if(top == Guid.Parse("2689D0B7-BD3C-4DBA-9660-5349E0701878")) {
+					world.PopScene();
+					world.DeltaTimeScale = 1f;
 				}
 			}
 		}

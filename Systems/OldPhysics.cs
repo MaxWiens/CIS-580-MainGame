@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using System.Linq;
 using MainGame.Physics;
-
+#if false
 namespace MainGame.Systems {
 	using ECS;
 	using ECS.S;
@@ -24,16 +24,16 @@ namespace MainGame.Systems {
 
 			var transformMap = world.GetEntitiesWithComponent<Transform2D>();
 			
-			#region Move Rigid Bodies;
+#region Move Rigid Bodies;
 			foreach(Guid eid in rbEIDs) {
 				ref RigidBody rb = ref rbMap[eid];
 				ref Transform2D transform = ref transformMap[eid];
 				rb.Velocity += rb.Acceleration * deltaTime;
 				transform.Position += rb.Velocity * deltaTime;
 			}
-			#endregion
+#endregion
 			
-			#region Check Collisions
+#region Check Collisions
 			// Guid[] rectBoundsEIDs = rectBoundsMap.Keys.ToArray();
 			int i, j;
 			Guid eid1;
@@ -249,7 +249,7 @@ namespace MainGame.Systems {
 					}
 				}
 			}
-			#endregion
+#endregion
 		}
 
 		private static bool IsIntersecting(ref RectBounds a, ref Transform2D apos, ref RectBounds b, ref Transform2D bpos) {
@@ -371,3 +371,4 @@ namespace MainGame.Systems {
 		}
 	}
 }
+#endif

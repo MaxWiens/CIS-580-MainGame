@@ -1,26 +1,30 @@
 ﻿{
+  "SID": "FA60209B-C86C-40E1-BB37-C8121C728F45",
   "Entities": [
     {
       "EID": "#Camera",
+      "Name": "MainCamera",
       "IsEnabled": true,
       "Components": {
-        "Transform2D": {"Scale": 1, "Position": [4000, 4000]},
+        "Body": {
+          "BodyType": "Kinematic"
+        },
         "Camera": {},
         "Follower": {"Strength": 10, "SnapDistance": 1.5, "Target": "#player"}
       }
     },
     {
       "EID": "#player",
+      "Name": "PlayerCharacter",
       "IsEnabled": true,
       "Components": {
-        "Transform2D": {"Scale": 1, "Position": [32,32]},
         "Sprite": {"Texture": "Textures\\Frog\\frog_front", "Albedo": [255,255,255], "Offset": [8,8], "Scale": 1, "SourceRectangle":[0,0,16,16]},
         "PlayerControl": {},
         "BlockPlacer": {"BlockPrefabPath": "Assets\\Prefabs\\WoodBlock.json"},
         "Health": {"Value": 10},
         "Body" : {
           "Position": [32,32],
-          "BodyType": "Dynamic",
+          "Type": "Dynamic",
           "Fixture": {
             "Shape": {
               "Type": "Circle",
@@ -38,6 +42,27 @@
           "Back": "B4EC61FA-7244-4488-AC89-B5308FF93443"
         },
         "ChunkLoading": {}
+      }
+    },
+    {
+      "Name": "Button",
+      "Components": {
+        "Body": {
+          "Position": [0,0],
+          "Type": "Static",
+          "Fixture": {
+            "IsSensor": true,
+            "Shape": {
+              "Type": "Rectangle",
+              "Dimentions": [16,16],
+              "Offset": [8,8]
+            }
+          }
+        },
+        "UI.Button": {
+          "ClickEvent": "function OnClick(arg1) SetVolume(GetVolume()*0.5); PlayTestSound() end"
+        },
+        "UI.Sprite": {"Texture": "Textures\\Frog\\frog_front", "SourceRectangle":[0,0,16,16]}
       }
     }
   ],

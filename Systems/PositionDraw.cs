@@ -18,16 +18,18 @@ namespace MainGame.Systems {
 		}
 
 		public void Draw() {
-			Transform2D cam = world.GetComponent<Transform2D>(_game.MainCamera);
-			var entitites = world.GetEntitiesWithComponent<Transform2D>();
+			if(!world.TryGetEID("MainCamera", out Guid cameraEid))
+				return;
+			Body camBody = world.GetComponent<Body>(cameraEid);
+			var entitites = world.GetEntitiesWithComponent<Body>();
 			if(entitites != null) {
 				var eids = entitites.Keys;
-				Transform2D pos;
+				Body body;
 				foreach(var eid in eids) {
-					pos = entitites[eid];
+					body = entitites[eid];
 					_game.SpriteBatch.Draw(
 						_pixelTexture, 
-						new Rectangle((pos.Position - (cam.Position - (_game.Resolution.ToVector2() * 0.5f))).ToPoint(), new Point(1,1)), 
+						new Rectangle((body.Position - (camBody.Position - (_game.Resolution.ToVector2() * 0.5f))).ToPoint(), new Point(1,1)), 
 						new Rectangle(0, 0, 1, 1), 
 						Color.White,
 						0f,

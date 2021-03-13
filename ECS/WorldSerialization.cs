@@ -6,8 +6,11 @@ using System.Text.Json.Serialization;
 using MainGame.Serialization;
 namespace ECS {
 	public partial class World {
-
+		private Guid _currentlySerializingEntity;
+		public Guid CurrentlySerializingEntity => _currentlySerializingEntity;
 		private readonly JsonSerializerOptions _entitySerializerOptions;
+		public IList<Guid> LoadEntityGroupFromFile(string filepath)
+			=> LoadEntityGroupFromFile(filepath, Guid.Empty);
 
 		public IList<Guid> LoadEntityGroupFromFile(string filepath, Guid sceneID) {
 			using FileStream stream = File.OpenRead(filepath);
@@ -18,6 +21,14 @@ namespace ECS {
 			op.Converters.Add(new LocalTagGuidConverter(localTagIDs));
 			List<Guid> eids = new List<Guid>();
 			List<object> components;
+
+			if(root.TryGetProperty("SID", out JsonElement SceneIDElm)){
+				sceneID = SceneIDElm.GetGuid();
+				if(!_scenes.ContainsKey(sceneID)) {
+					AddScene(sceneID, string.Empty);
+				}
+			}
+
 			foreach(JsonElement elm in root.GetProperty("Entities").EnumerateArray()) {
 				//load entities
 				Guid eid;
@@ -35,10 +46,15 @@ namespace ECS {
 				} else {
 					eid = Guid.NewGuid();
 				}
+				_currentlySerializingEntity = eid;
 				eids.Add(eid);
 				bool isEnabled = true;
 				if(elm.TryGetProperty("IsEnabled", out value))
 					isEnabled = value.GetBoolean();
+
+				string name = null;
+				if(elm.TryGetProperty("Name", out value))
+					name = value.GetString();
 
 				components = new List<object>();
 				if(elm.TryGetProperty("Components", out JsonElement componentsElement)){
@@ -46,7 +62,7 @@ namespace ECS {
 						components.Add(ComponentParser.Parse(componentProperty, op));
 					}
 				}
-				MakeEntity(eid, sceneID, components, isEnabled);
+				MakeEntity(eid, sceneID, components, isEnabled, name);
 			}
 			return eids;
 		}

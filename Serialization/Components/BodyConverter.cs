@@ -11,8 +11,10 @@ namespace MainGame.Serialization {
 	using MainGame.Components;
 	public class BodyConverter : JsonConverter<Body> {
 		private readonly World _world;
-		public BodyConverter(World world) {
+		private readonly ECS.World _ecsWorld;
+		public BodyConverter(World world, ECS.World ecsWorld) {
 			_world = world;
+			_ecsWorld = ecsWorld;
 		}
 
 		public override Body Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
@@ -23,7 +25,7 @@ namespace MainGame.Serialization {
 				position = JsonSerializer.Deserialize<Vector2>(value.GetRawText(), options);
 			}
 			BodyType type = BodyType.Static;
-			if(root.TryGetProperty("BodyType", out value)) {
+			if(root.TryGetProperty("Type", out value)) {
 				type = (BodyType)Enum.Parse(typeof(BodyType), value.ToString());
 			}
 			Body b = new Body() {
@@ -33,8 +35,8 @@ namespace MainGame.Serialization {
 			};
 
 			Shape shape = null;
-			bool isSensor = false;
 			if(root.TryGetProperty("Fixture", out value)) {
+				bool isSensor = false;
 				if(value.TryGetProperty("IsSensor", out JsonElement sensorElm)) {
 					isSensor = sensorElm.GetBoolean();
 				}
@@ -42,7 +44,9 @@ namespace MainGame.Serialization {
 				shape = JsonSerializer.Deserialize<Shape>(elm.GetRawText(), options);
 				var f = b.CreateFixture(shape);
 				f.IsSensor = isSensor;
+				//f. = Category.Cat1 | Category.Cat2;
 			}
+			b.Tag = _ecsWorld.CurrentlySerializingEntity;
 			_world.Add(b);
 			return b;
 		}

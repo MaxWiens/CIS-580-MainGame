@@ -19,18 +19,19 @@ namespace MainGame.Serialization {
 			}
 			Vector2 offset = Vector2.Zero;
 			if(root.TryGetProperty("Offset", out elm)) {
-				//offset = JsonSerializer.Deserialize<>(elm.GetRawText())
+				offset = JsonSerializer.Deserialize<Vector2>(elm.GetRawText(), options);
 			}
+			float offsetX = offset.X;
+			float offsetY = offset.Y;
 			var typePropElm = root.GetProperty("Type");
 			switch(typePropElm.GetString()) {
 				case "Rectangle":
-					float halfWidth = root.GetProperty("Width").GetSingle()/2;
-					float halfHeight = root.GetProperty("Height").GetSingle()/2;
-					return new PolygonShape(new Vertices(new Vector2[]{ 
-						new Vector2(halfWidth, -halfHeight),
-						new Vector2(halfWidth, halfHeight),
-						new Vector2(-halfWidth, halfHeight),
-						new Vector2(-halfWidth, -halfHeight)
+					Vector2 halfDimentions = JsonSerializer.Deserialize<Vector2>(root.GetProperty("Dimentions").GetRawText(), options)/2;
+					return new PolygonShape(new Vertices(new Vector2[]{
+						new Vector2(offsetX+halfDimentions.X, offsetY-halfDimentions.Y),
+						new Vector2(offsetX+halfDimentions.X, offsetY+halfDimentions.Y),
+						new Vector2(offsetX-halfDimentions.X, offsetY+halfDimentions.Y),
+						new Vector2(offsetX-halfDimentions.X, offsetY-halfDimentions.Y)
 					}), density);
 				case "Polygon":
 					break;
