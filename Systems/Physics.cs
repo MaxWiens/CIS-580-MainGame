@@ -10,7 +10,7 @@ namespace MainGame.Systems {
 	using ECS.S;
 	class Physics : System, IUpdateable {
 		private readonly World _physicsWorld;
-		public Physics(ECS.World world, World physicsWorld) : base(world) {
+		public Physics(ECS.GameWorld world, World physicsWorld) : base(world) {
 
 			_physicsWorld = physicsWorld;
 			_physicsWorld.Gravity = Vector2.Zero;

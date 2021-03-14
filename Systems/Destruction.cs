@@ -7,7 +7,7 @@ namespace MainGame.Systems {
 	using ECS.S;
 	using Components;
 	public class Destruction : System, IUpdateable {
-		public Destruction(World world) : base(world) { }
+		public Destruction(GameWorld world) : base(world) { }
 		private Inventory _fallbackInventory;
 		private Drops _fallbackDrops;
 		public void Update(float deltaTime) {

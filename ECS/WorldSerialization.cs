@@ -5,9 +5,12 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using MainGame.Serialization;
 namespace ECS {
-	public partial class World {
+	public partial class GameWorld {
 		private Guid _currentlySerializingEntity;
 		public Guid CurrentlySerializingEntity => _currentlySerializingEntity;
+
+		//private Dictionary<string, >
+
 		private readonly JsonSerializerOptions _entitySerializerOptions;
 		public IList<Guid> LoadEntityGroupFromFile(string filepath)
 			=> LoadEntityGroupFromFile(filepath, Guid.Empty);
@@ -65,6 +68,21 @@ namespace ECS {
 				MakeEntity(eid, sceneID, components, isEnabled, name);
 			}
 			return eids;
+		}
+
+
+		public class EntityGroup {
+			public readonly string Name;
+			private readonly List<Action> _buildTodos = new List<Action>();
+			private readonly List<Entity> _entities = new List<Entity>();
+			public EntityGroup(string name) {
+				Name = name;
+			}
+			public class Entity {
+				Guid EID;
+				string Tag;
+				object[] components;
+			}
 		}
 	}
 }

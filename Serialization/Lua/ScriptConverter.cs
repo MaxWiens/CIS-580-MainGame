@@ -13,11 +13,11 @@ namespace MainGame.Serialization {
 		private readonly DynValue _soundEffect;
 		private readonly DynValue _mediaPlayer;
 		private readonly SoundEffect _defaultSoundEffect;
-		public ScriptConverter(MegaDungeonGame game, tainicom.Aether.Physics2D.Dynamics.World physicsWorld, ECS.World ecsWorld) {
+		public ScriptConverter(MegaDungeonGame game, tainicom.Aether.Physics2D.Dynamics.World physicsWorld, ECS.GameWorld ecsWorld) {
 			_defaultSoundEffect = game.Content.Load<SoundEffect>(@"Sfx\place");
 			UserData.RegisterType<MegaDungeonGame>();
 			UserData.RegisterType<tainicom.Aether.Physics2D.Dynamics.World>();
-			UserData.RegisterType<ECS.World>();
+			UserData.RegisterType<ECS.GameWorld>();
 			UserData.RegisterType<Guid>();
 
 			_soundEffect = UserData.CreateStatic(typeof(SoundEffect));

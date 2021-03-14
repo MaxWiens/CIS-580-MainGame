@@ -12,7 +12,7 @@ namespace MainGame.Systems {
 	public class PositionDraw : System, IDrawable {
 		private readonly Texture2D _pixelTexture;
 		private readonly MegaDungeonGame _game;
-		public PositionDraw(World world, MegaDungeonGame game) : base(world) {
+		public PositionDraw(GameWorld world, MegaDungeonGame game) : base(world) {
 			_game = game;
 			_pixelTexture = game.Content.Load<Texture2D>(@"Textures\pixel");
 		}

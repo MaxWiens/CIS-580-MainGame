@@ -1,8 +1,8 @@
 ﻿namespace ECS.S {
 	public abstract class System {
-		protected readonly World world;
+		protected readonly GameWorld world;
 	
-		public System(World world) {
+		public System(GameWorld world) {
 			this.world = world;
 		}
 	}

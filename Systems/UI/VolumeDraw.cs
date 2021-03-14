@@ -12,7 +12,7 @@ namespace MainGame.Systems.UI {
 	public class VolumeDraw : System, IDrawable {
 		private MegaDungeonGame _game;
 		private readonly SpriteFont _font;
-		public VolumeDraw(World world, MegaDungeonGame game) : base(world) {
+		public VolumeDraw(GameWorld world, MegaDungeonGame game) : base(world) {
 			_font = game.Content.Load<SpriteFont>("MainFont");
 			_game = game;
 		}

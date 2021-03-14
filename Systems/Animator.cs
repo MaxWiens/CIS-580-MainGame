@@ -5,7 +5,7 @@ namespace MainGame.Systems {
 	using ECS.S;
 	using Components;
 	public class Animator : System, IUpdateable {
-		public Animator(World world) : base(world) { }
+		public Animator(GameWorld world) : base(world) { }
 
 		public void Update(float deltaTime) {
 			var aniMap = world.GetEntitiesWithComponent<TileAnimation>();

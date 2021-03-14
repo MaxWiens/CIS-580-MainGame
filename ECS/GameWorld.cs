@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Linq;
 namespace ECS {
 	using S;
-	public partial class World {
+	public partial class GameWorld {
 		private const BindingFlags MESSAGE_FLAGS = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.InvokeMethod | BindingFlags.Instance;
 		
 		public readonly float FixedDeltaTime;
@@ -33,7 +33,7 @@ namespace ECS {
 		private float _fixedTimeTimer = 0f;
 		private readonly tainicom.Aether.Physics2D.Dynamics.World _physicsWorld;
 
-		public World(JsonSerializerOptions entitySerializerOptions, tainicom.Aether.Physics2D.Dynamics.World physicsWorld, float fixedDeltaTime = 1f/60f) {
+		public GameWorld(JsonSerializerOptions entitySerializerOptions, tainicom.Aether.Physics2D.Dynamics.World physicsWorld, float fixedDeltaTime = 1f/60f) {
 			_physicsWorld = physicsWorld;
 			FixedDeltaTime = fixedDeltaTime;
 			_entitySerializerOptions = entitySerializerOptions;
@@ -93,7 +93,6 @@ namespace ECS {
 				} else {
 					_disabledComponentStore[eid].Remove(componentType);
 				}
-				
 			}
 			_scenes[data.SceneID].Entities.Remove(eid);
 			_entities.Remove(eid);

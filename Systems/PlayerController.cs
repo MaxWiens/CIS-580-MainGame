@@ -29,7 +29,7 @@ namespace MainGame.Systems {
 		SoundEffect _breakSfx;
 		Texture2D _pixel;
 
-		public PlayerController(World world, ContentManager content) : base(world) {
+		public PlayerController(GameWorld world, ContentManager content) : base(world) {
 			_placeSfx = content.Load<SoundEffect>(@"Sfx\place");
 			_breakSfx = content.Load<SoundEffect>(@"Sfx\break");
 			_pixel = content.Load<Texture2D>(@"Textures\pixel");

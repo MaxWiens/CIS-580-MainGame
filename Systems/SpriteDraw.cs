@@ -10,7 +10,7 @@ namespace MainGame.Systems {
 	using Components;
 	public class SpriteDraw : System, IDrawable {
 		private MegaDungeonGame _game;
-		public SpriteDraw(World world, MegaDungeonGame game) : base(world) {
+		public SpriteDraw(GameWorld world, MegaDungeonGame game) : base(world) {
 			_game = game;
 		}
 

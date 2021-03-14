@@ -10,7 +10,7 @@ namespace MainGame.Systems {
 	using Components;
 	using Util;
 	public class MoverSystem : System, IUpdateable {
-		public MoverSystem(World world) : base(world) { }
+		public MoverSystem(GameWorld world) : base(world) { }
 
 		public void Update(float deltaTime) {
 			if(deltaTime != 0f) {

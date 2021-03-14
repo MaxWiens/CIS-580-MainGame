@@ -87,6 +87,19 @@
           "Type": "Static"
         }
       }
+    },
+    {
+      "Name": "Button",
+      "Components": {
+        "Body": {
+          "Position": [0,0],
+          "Type": "Static"
+        },
+        "UI.Button": {
+          "ClickEvent": "function OnClick(arg1) PlayTestSound() end"
+        },
+        "UI.Sprite": {"Texture": "Textures/UI/ArrowButton", "SourceRectangle":[0,0,16,16], "Albedo": [0,0,0,0],  "Offset": [8,8], "Scale": 1}
+      }
     }
   ],
   "Backup": [

@@ -11,8 +11,8 @@ namespace MainGame.Serialization {
 	using MainGame.Components;
 	public class BodyConverter : JsonConverter<Body> {
 		private readonly World _world;
-		private readonly ECS.World _ecsWorld;
-		public BodyConverter(World world, ECS.World ecsWorld) {
+		private readonly ECS.GameWorld _ecsWorld;
+		public BodyConverter(World world, ECS.GameWorld ecsWorld) {
 			_world = world;
 			_ecsWorld = ecsWorld;
 		}

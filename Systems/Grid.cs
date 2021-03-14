@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MainGame.Systems {
 	using ECS;
@@ -19,8 +20,13 @@ namespace MainGame.Systems {
 		private Body _fallbackBody;
 		public Stack<Point> PointsToDestroy = new Stack<Point>();
 		Random r;
-		public Grid(World world) : base(world) {
+		private readonly MegaDungeonGame _game;
+		private readonly tainicom.Aether.Physics2D.Dynamics.World _physicsWorld;
+
+		public Grid(GameWorld world, MegaDungeonGame game, tainicom.Aether.Physics2D.Dynamics.World physicsWorld) : base(world) {
 			r = new Random((int)DateTime.Now.Ticks);
+			_game = game;
+			_physicsWorld = physicsWorld;
 			world.Reset += OnReset;
 		}
 
@@ -35,49 +41,39 @@ namespace MainGame.Systems {
 			if(!_chunks.ContainsKey(chunkPosition)) {
 				// load chunk
 				Guid[,] chunk = new Guid[CHUNK_SIZE, CHUNK_SIZE];
-				int cur = 0;
-				int count = 0;
-				while(cur < CHUNK_SIZE * CHUNK_SIZE && count < 5) {
-					cur = r.Next(cur, CHUNK_SIZE * CHUNK_SIZE);
-					count++;
-					int i = cur % CHUNK_SIZE;
-					int j = cur / CHUNK_SIZE;
-					Guid blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
-					world.GetComponent<Body>(blockEid).Position = new Vector2(
-						((chunkPosition.X << CHUNK_SIZE_FACTOR) + i) * TILE_SIZE,
-						((chunkPosition.Y << CHUNK_SIZE_FACTOR) + j) * TILE_SIZE
-					);
-					chunk[i, j] = blockEid;
-				}
+				/*
+				object[] components = new object[] {
+					new Sprite() {
+						Texture = _game.Content.Load<Texture2D>("Textures\\wood_block"),
+						Albedo = Color.White,
+						Scale = new Vector2(1),
+						SourceRectangle = new Rectangle(0,0,16,16)
+					},
+					new Health(){ Value = 10},
+					new Drops(){ Items = new string[]{"Assets\\Prefabs\\WoodBlockItem.json"}},
+					new GridElement()
+				};
+				for(int i = 0; i < CHUNK_SIZE; i++) {
+					for(int j = 0; j < CHUNK_SIZE; j++) {
+						if(r.Next(0, 100) > 50) {
+							Guid blockEID = Guid.NewGuid();
+							world.MakeEntity(blockEID, Guid.Empty, components);
+							//Guid blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
+							Body b = new Body() {
+								Position = new Vector2(
+									((chunkPosition.X << CHUNK_SIZE_FACTOR) + i) * TILE_SIZE,
+									((chunkPosition.Y << CHUNK_SIZE_FACTOR) + j) * TILE_SIZE
+								)
+							};
+							b.CreateRectangle(16, 16, 1, new Vector2(8, 8));
+							_physicsWorld.Add(b);
+							world.AddComponent(blockEID, b);
+							//world.GetComponent<Body>(blockEid).Position = 
+							chunk[i, j] = blockEID;
+						}
+					}
+				}*/
 
-				//Guid blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
-				//world.GetComponent<Body>(blockEid).Position = new Vector2(
-				//	(chunkPosition.X<<CHUNK_SIZE_FACTOR)*TILE_SIZE,
-				//	(chunkPosition.Y<<CHUNK_SIZE_FACTOR)*TILE_SIZE
-				//);
-				//chunk[0, 0] = blockEid;
-
-				//blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
-				//world.GetComponent<Body>(blockEid).Position = new Vector2(
-				//	((chunkPosition.X << CHUNK_SIZE_FACTOR)+ CHUNK_SIZE-1) * TILE_SIZE,
-				//	((chunkPosition.Y << CHUNK_SIZE_FACTOR)+ CHUNK_SIZE-1) * TILE_SIZE
-				//);
-				//chunk[CHUNK_SIZE-1, CHUNK_SIZE-1] = blockEid;
-				
-				//blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
-				//world.GetComponent<Body>(blockEid).Position = new Vector2(
-				//	((chunkPosition.X << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 2) * TILE_SIZE,
-				//	((chunkPosition.Y << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 1) * TILE_SIZE
-				//);
-				//chunk[CHUNK_SIZE - 1, CHUNK_SIZE - 1] = blockEid;
-
-				//blockEid = world.LoadEntityGroupFromFile(@"Assets\Prefabs\WoodBlock.json", Guid.Empty)[0];
-				//world.GetComponent<Body>(blockEid).Position = new Vector2(
-				//	((chunkPosition.X << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 1) * TILE_SIZE,
-				//	((chunkPosition.Y << CHUNK_SIZE_FACTOR) + CHUNK_SIZE - 2) * TILE_SIZE
-				//);
-				//chunk[CHUNK_SIZE - 1, CHUNK_SIZE - 1] = blockEid;
-				
 				_chunks.Add(chunkPosition, chunk);
 			}
 		}

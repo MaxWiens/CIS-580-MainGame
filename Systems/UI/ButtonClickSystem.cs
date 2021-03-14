@@ -14,7 +14,7 @@ namespace MainGame.Systems {
 	public class ButtonClickSystem : System, IUpdateable {
 		private readonly PhysicsWorld _physicsWorld;
 		private readonly MegaDungeonGame _game;
-		public ButtonClickSystem(World world, PhysicsWorld physicsWorld, MegaDungeonGame game) : base(world) {
+		public ButtonClickSystem(GameWorld world, PhysicsWorld physicsWorld, MegaDungeonGame game) : base(world) {
 			_physicsWorld = physicsWorld;
 			_game = game;
 		}

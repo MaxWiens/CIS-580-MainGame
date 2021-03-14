@@ -6,7 +6,7 @@ namespace MainGame.Systems {
 	using ECS.S;
 	using Components;
 	public class Following : System, IUpdateable {
-		public Following(World world) : base(world) { }
+		public Following(GameWorld world) : base(world) { }
 
 		public void Update(float deltaTime) {
 			var followerMap = world.GetEntitiesWithComponent<Follower>();
