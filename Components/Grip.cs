@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿using MoonSharp.Interpreter;
+using ECS;
 namespace MainGame.Components {
-	public struct Grip {
-
+	[MoonSharpUserData]
+	public struct Grip : IComponent {
+		public object Clone() => this;
 	}
 }

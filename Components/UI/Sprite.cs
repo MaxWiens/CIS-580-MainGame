@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Text.Json.Serialization;
+using MoonSharp.Interpreter;
+using ECS;
 namespace MainGame.Components.UI {
-	public struct Sprite {
+	[MoonSharpUserData]
+	public struct Sprite : IComponent {
 		[JsonConstructor]
 		public Sprite(Texture2D Texture, Rectangle SourceRectangle) {
 			this.Texture = Texture;
@@ -22,5 +22,7 @@ namespace MainGame.Components.UI {
 		[JsonInclude] public Vector2 Scale;
 		[JsonInclude] public Rectangle SourceRectangle;
 		public SpriteEffects SpriteEffect;
+
+		public object Clone() => this;
 	}
 }

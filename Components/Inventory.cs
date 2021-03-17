@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using MoonSharp.Interpreter;
+using ECS;
 namespace MainGame.Components {
-	public struct Inventory {
-		
+	[MoonSharpUserData]
+	public struct Inventory : IComponent {
+		public object Clone() => this;
 	}
 }

@@ -20,7 +20,7 @@ namespace MainGame.Systems {
 		private bool _interacted;
 		private bool _breakActivated;
 
-		private Grid _grid;
+		private TileSystem _grid;
 
 		//private Guid _highlighter;
 
@@ -59,14 +59,14 @@ namespace MainGame.Systems {
 
 		public void Update(float deltaTime) {
 			var eids = world.GetEntitiesWithComponent<PlayerControl>().Keys;
-			if(_grid==null) _grid = world.GetSystem<Grid>();
+			if(_grid==null) _grid = world.GetSystem<TileSystem>();
 			foreach(var eid in eids) {
 				Body pos = world.GetComponent<Body>(eid);
 				ref Body rb = ref world.GetComponent<Body>(eid);
 				rb.LinearVelocity = _moveValue * 100f * _sprintValue;
 				//ref Body highlighterTrans = ref world.GetComponent<Body>(_highlighter);
 				ref BlockPlacer blockPlacer = ref world.GetComponent<BlockPlacer>(eid);
-				Point potentialPlace = Grid.ToGridPosition(pos.Position)+Vector2.Normalize(_lastMoveInput).ToPoint();
+				Point potentialPlace = TileSystem.ToTilePosition(pos.Position)+Vector2.Normalize(_lastMoveInput).ToPoint();
 				//highlighterTrans.Position = potentialPlace.ToVector2() * 16;
 				if(_interacted && !_grid.IsCellFilled(potentialPlace)) {
 					Guid blockeid = world.LoadEntityGroupFromFile(blockPlacer.BlockPrefabPath, Guid.Empty)[0];

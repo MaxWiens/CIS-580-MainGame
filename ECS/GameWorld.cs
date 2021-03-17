@@ -5,6 +5,7 @@ using System.Reflection;
 using MainGame.Collections;
 using System.Text.Json;
 using System.Linq;
+using MainGame.Components;
 namespace ECS {
 	using S;
 	public partial class GameWorld {
@@ -83,19 +84,32 @@ namespace ECS {
 
 		public void DestroyEntity(Guid eid) {
 			EntityData data = _entities[eid];
+			DestroyEntityNotScene(data);
+			_scenes[data.SceneID].Entities.Remove(eid);			
+		}
+
+		
+
+		private void DestroyEntityNotScene(EntityData data) {
+			OnDestoryHandler value = default;
+			value = TryGetComponent(data.EID , ref value, out bool isSuccessful);
+			if(isSuccessful) {
+				value.Script.Call("OnDestroy", data.EID);
+			}
+
+
 			foreach(var componentType in data.Components) {
 				if(data.IsEnabled) {
 					if(_enabledComponentStore.TryGetValue(componentType, out var componentMap)) {
 						if(componentType == typeof(MainGame.Components.Body))
-							_physicsWorld.Remove((MainGame.Components.Body)componentMap[eid]);
-						componentMap.Remove(eid);
+							_physicsWorld.Remove((MainGame.Components.Body)componentMap[data.EID]);
+						componentMap.Remove(data.EID);
 					}
 				} else {
-					_disabledComponentStore[eid].Remove(componentType);
+					_disabledComponentStore[data.EID].Remove(componentType);
 				}
 			}
-			_scenes[data.SceneID].Entities.Remove(eid);
-			_entities.Remove(eid);
+			_entities.Remove(data.EID);
 			if(data.Name != null)
 				_entityNames.Remove(data.Name);
 		}
@@ -281,22 +295,8 @@ namespace ECS {
 			if(_scenes.TryGetValue(sid, out SceneData sceneData)){
 				foreach(Guid eid in sceneData.Entities) {
 					EntityData data = _entities[eid];
-					foreach(var componentType in data.Components) {
-						if(data.IsEnabled) {
-							if(_enabledComponentStore.TryGetValue(componentType, out var componentMap)) {
-								if(componentType == typeof(MainGame.Components.Body))
-									_physicsWorld.Remove((MainGame.Components.Body)componentMap[eid]);
-								componentMap.Remove(eid);
-							}
-						} else {
-							_disabledComponentStore[eid].Remove(componentType);
-						}
-					}
-					_entities.Remove(eid);
-					if(data.Name != null)
-						_entityNames.Remove(data.Name);
+					DestroyEntityNotScene(data);
 				}
-
 				if(sid == Guid.Empty) {
 					// reset default scene's timescale
 					_scenes[sid].Entities.Clear();

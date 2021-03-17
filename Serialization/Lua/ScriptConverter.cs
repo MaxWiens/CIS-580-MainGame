@@ -34,7 +34,6 @@ namespace MainGame.Serialization {
 			s.Globals["GetVolume"] = (Func<float>)GetVolume;
 			s.Globals["PlayTestSound"] = (Action)PlayTestSound;
 			s.Globals["Game"] = _game;
-			s.Globals["Game"] = _game;
 			s.Globals["ECS"] = _ecsWorld;
 			s.Globals["Physics"] = _physicsWorld;
 			s.DoString(reader.GetString());

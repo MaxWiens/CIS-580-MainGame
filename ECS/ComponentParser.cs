@@ -7,17 +7,17 @@ namespace ECS {
 	public static class ComponentParser {
 		public const string COMPONENT_NAMESPACE = "MainGame.Components.";
 
-		public static object Parse(Type componentType, JsonElement json, JsonSerializerOptions options)
-			=> JsonSerializer.Deserialize(json.GetRawText(), componentType, options);
+		public static IComponent Parse(Type componentType, JsonElement json, JsonSerializerOptions options)
+			=> (IComponent)JsonSerializer.Deserialize(json.GetRawText(), componentType, options);
 
-		public static object Parse(Type componentType, string json, JsonSerializerOptions options) {
+		public static IComponent Parse(Type componentType, string json, JsonSerializerOptions options) {
 			JsonDocument doc = JsonDocument.Parse(json);
-			object t = Parse(componentType, doc.RootElement, options);
+			IComponent t = Parse(componentType, doc.RootElement, options);
 			doc.Dispose();
 			return t;
 		}
 
-		public static object Parse(JsonProperty json, JsonSerializerOptions options)
+		public static IComponent Parse(JsonProperty json, JsonSerializerOptions options)
 			=> Parse(Type.GetType(COMPONENT_NAMESPACE + json.Name), json.Value, options);
 			
 		public static T Parse<T>(string json, JsonSerializerOptions options)

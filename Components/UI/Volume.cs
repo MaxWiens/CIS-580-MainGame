@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿using ECS;
+using MoonSharp.Interpreter;
 namespace MainGame.Components.UI {
-	public struct Volume {}
+	[MoonSharpUserData]
+	public struct Volume : IComponent {
+		public object Clone() => this;
+	}
 }

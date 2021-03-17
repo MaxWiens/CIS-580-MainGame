@@ -25,7 +25,7 @@ namespace MainGame {
 
 		public const int SCALE = 16;
 
-		public const float aspectRatio = 16f/9f;
+		public float aspectRatio = 16f/9f;
 
 		private SpriteBatch _targetBatch;
 		public SpriteBatch SpriteBatch;
@@ -39,7 +39,6 @@ namespace MainGame {
 			IsMouseVisible = true;
 			Graphics = new GraphicsDeviceManager(this);
 			_physicsWorld = new tainicom.Aether.Physics2D.Dynamics.World();
-
 			InputManager.LoadBindings(CONTROLLS_CONFIG_PATH);
 			_serializerOptions = new JsonSerializerOptions() {
 				Converters = {
@@ -86,7 +85,7 @@ namespace MainGame {
 			_world.RegisterSystem(new ButtonClickSystem(_world, _physicsWorld, this));
 			
 			_world.RegisterSystem(new PlayerController(_world, Content));
-			_world.RegisterSystem(new Grid(_world, this, _physicsWorld));
+			_world.RegisterSystem(new TileSystem(_world, this, _physicsWorld));
 			_world.RegisterSystem(new Following(_world));
 			_world.RegisterSystem(new Destruction(_world));
 			_world.RegisterSystem(new Animator(_world));
@@ -125,29 +124,29 @@ namespace MainGame {
 			int w = Graphics.PreferredBackBufferWidth;
 			int h = Graphics.PreferredBackBufferHeight;
 			float scaleValue;
-			float viewx;
-			float viewy;
+
+			float maxtargetresolution = 256f;
+			aspectRatio = (float)w / h;
+			float targetResolutionX;
+			float targetResolutionY;
 			
-			if((float)w/h > aspectRatio) { //w > h) {// && 
-				//boarders on Sides
-				scaleValue = h / 144f;
-				System.Diagnostics.Debug.WriteLine($"A {w},{h}, {scaleValue}, {(float)w/h}");
-				viewx = (w-(256f*scaleValue))/2f;
-				viewy = 0f;
+			if(w > h) {
+				scaleValue = w/255f; 
+				targetResolutionX = maxtargetresolution;
+				targetResolutionY = targetResolutionX / aspectRatio;
 			} else {
-				//boarders on 
-				scaleValue = w / 256f;
-				System.Diagnostics.Debug.WriteLine($"B {w},{h}, {scaleValue}, {(float)w / h}");
-				viewx = 0f;
-				viewy = (h - (144f * scaleValue)) / 2f;
+				scaleValue = h / 255f;
+				targetResolutionY = maxtargetresolution;
+				targetResolutionX = targetResolutionY * aspectRatio;
 			}
-			Matrix m = Matrix.CreateScale(scaleValue, scaleValue, 1f) * Matrix.CreateTranslation(new Vector3(viewx, viewy, 0f));
+
+			Matrix m = Matrix.CreateScale(scaleValue, scaleValue, 1f); // * Matrix.CreateTranslation(new Vector3(viewx, viewy, 0f));
 			
 			// Matrix.CreateLookAt(Vector3.Zero, Vector3.Forward, Vector3.Up) * Matrix.CreateOrthographicOffCenter(0f, 1280f, 720f, 0, 0, -100) *  * Matrix.CreateTranslation(0f, 0f, 0);
 			//GraphicsDevice.SetRenderTarget(_target);
 			GraphicsDevice.Clear(new Color(0x2d, 0x9c, 0x42));
 			SpriteBatch.Begin(blendState: BlendState.AlphaBlend, samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack, transformMatrix: m);
-			//SpriteBatch.Draw(Content.Load<Texture2D>("Textures/pixel"), new Rectangle(0, 0, 256, 144), Color.White);
+			SpriteBatch.Draw(Content.Load<Texture2D>("Textures/pixel"), new Rectangle(0, 0, (int)targetResolutionX, (int)targetResolutionY), Color.White);
 			_world.Draw();
 			SpriteBatch.End();
 			

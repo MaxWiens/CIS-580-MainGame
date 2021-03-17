@@ -4,7 +4,6 @@
       "Components": {
         "Transform2D": {},
         "RigidBody": { "Layer": "General", "IsTrigger": true },
-        "RectBounds": {},
         "DamageArea": {}
       }
     }

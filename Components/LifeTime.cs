@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿using MoonSharp.Interpreter;
+using ECS;
 namespace MainGame.Components {
-	public struct LifeTime {
+	[MoonSharpUserData]
+	public struct LifeTime : IComponent{
 		public float Time;
+
+		public object Clone() => this;
 	}
 }

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using MoonSharp.Interpreter;
+using ECS;
 namespace MainGame.Components {
-	public class Grab {
-
+	[MoonSharpUserData]
+	public class Grab : IComponent {
+		public object Clone() => this;
 	}
 }

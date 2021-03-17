@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿using MoonSharp.Interpreter;
+using ECS;
 namespace MainGame.Components {
-	public struct Camera {
+	[MoonSharpUserData]
+	public struct Camera : IComponent {
+		public object Clone() => this;
 	}
 }

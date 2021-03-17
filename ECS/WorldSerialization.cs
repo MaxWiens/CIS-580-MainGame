@@ -9,7 +9,7 @@ namespace ECS {
 		private Guid _currentlySerializingEntity;
 		public Guid CurrentlySerializingEntity => _currentlySerializingEntity;
 
-		//private Dictionary<string, >
+		private Dictionary<string, EntityGroup> _loadedEntityGroups = new Dictionary<string, EntityGroup>();
 
 		private readonly JsonSerializerOptions _entitySerializerOptions;
 		public IList<Guid> LoadEntityGroupFromFile(string filepath)
@@ -70,18 +70,110 @@ namespace ECS {
 			return eids;
 		}
 
+		public IEnumerable<Guid> CloneEntityGroup(string path) {
+			string fullPath = Path.GetFullPath(path);
+			if(!_loadedEntityGroups.TryGetValue(fullPath, out EntityGroup group)) {
+				group = EntityGroup.LoadEntityGroup(path, this);
+				_loadedEntityGroups.Add(fullPath, group);
+			}
+			return group.BuildCopy(this);
+		}
 
 		public class EntityGroup {
 			public readonly string Name;
-			private readonly List<Action> _buildTodos = new List<Action>();
-			private readonly List<Entity> _entities = new List<Entity>();
-			public EntityGroup(string name) {
-				Name = name;
+			public readonly string Path;
+			private readonly List<ID> _tagids = new List<ID>();
+			private readonly List<ID> _globalTagIDList = new List<ID>();
+			private readonly Entity[] _entities;
+
+			private EntityGroup(string groupName, string path, Entity[] entities, List<ID> tagids, List<ID> globalTagIDList) {
+				Name = groupName;
+				Path = path;
+				_entities = entities;
+				_tagids = tagids;
+				_globalTagIDList = globalTagIDList;
 			}
-			public class Entity {
-				Guid EID;
-				string Tag;
-				object[] components;
+
+			public struct Entity {
+				public ID EID;
+				public string Name;
+				public bool IsEnabled;
+				public List<IComponent> Components;
+			}
+
+			public IEnumerable<Guid> BuildCopy(GameWorld world) {
+				foreach(ID id in _globalTagIDList)
+					id.Guid = world._entityNames[id.Tag];
+
+				Dictionary<string, Guid> tagMap = new Dictionary<string, Guid>();
+				foreach(ID id in _tagids) {
+					if(!tagMap.TryGetValue(id.Tag, out Guid guid))
+						tagMap.Add(id.Tag, guid = Guid.NewGuid());
+					id.Guid = guid;
+				}
+
+				List<IComponent> components;
+				IComponent[] copiedComponents;
+				Entity e;
+				Guid[] entityGUIDs = new Guid[_entities.Length];
+				for(int i = 0; i < _entities.Length; i++) {
+					e = _entities[i];
+					if(e.EID.Tag == null && !e.EID.GivenValue) e.EID.Guid = Guid.NewGuid();
+					entityGUIDs[i] = e.EID;
+					copiedComponents = new IComponent[e.Components.Count];
+					components = e.Components;
+					for(int j = 0; j < components.Count; j++)
+						copiedComponents[j] = (IComponent)components[j].Clone();
+					world.MakeEntity(e.EID, Guid.Empty, copiedComponents, e.IsEnabled, e.Name);
+				}
+				return entityGUIDs;
+			}
+
+			public static EntityGroup LoadEntityGroup(string filepath, GameWorld world) {
+				List<IComponent> components;
+				ID id;
+				JsonElement entityElement;
+
+				List<ID> tagIDList = new List<ID>();
+				List<ID> globalTagIDList = new List<ID>();
+				JsonSerializerOptions op = new JsonSerializerOptions(world._entitySerializerOptions);
+				op.Converters.Add(new EntityGroupIDConverter(tagIDList, globalTagIDList));
+
+				using FileStream stream = File.OpenRead(filepath);
+				using JsonDocument doc = JsonDocument.Parse(stream);
+				JsonElement root = doc.RootElement;
+				string entityGroupName = root.GetProperty("Name").GetString();
+				JsonElement EntitiesElement = root.GetProperty("Entities");
+				Entity[] entities = new Entity[EntitiesElement.GetArrayLength()];
+				for(int i = 0; i < entities.Length; i++) {
+					entityElement = EntitiesElement[i];
+					if(entityElement.TryGetProperty("EID", out JsonElement value)) {
+						id = JsonSerializer.Deserialize<ID>(value.GetRawText(), op);
+					} else {
+						id = new ID();
+					}
+					bool isEnabled = true;
+					if(entityElement.TryGetProperty("IsEnabled", out value))
+						isEnabled = value.GetBoolean();
+
+					string name = null;
+					if(entityElement.TryGetProperty("Name", out value))
+						name = value.GetString();
+
+					components = new List<IComponent>();
+					if(entityElement.TryGetProperty("Components", out JsonElement componentsElement)) {
+						foreach(JsonProperty componentProp in componentsElement.EnumerateObject()) {
+							components.Add(ComponentParser.Parse(componentProp, op));
+						}
+					}
+					entities[i] = new Entity() {
+						EID = id,
+						Name = name,
+						IsEnabled = isEnabled,
+						Components = components
+					};
+				}
+				return new EntityGroup(entityGroupName, filepath, entities, tagIDList, globalTagIDList);
 			}
 		}
 	}

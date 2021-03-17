@@ -34,7 +34,6 @@
             "IsSensor": false
           }
         },
-        "CircleBounds": { "Offset": [4,0], "Radius": 4},
         "TileAnimation": {"FrameDelay": 0.0833, "FrameIdx": 0, "Asset": "63F821CA-B0D8-422E-B4D0-1D64DE67BAB2"},
         "Mover": {
           "FrontWalkAnimation": "3F82A7B3-EBE1-4D74-9AFF-87A623468567",

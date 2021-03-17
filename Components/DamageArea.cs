@@ -1,7 +1,11 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using MoonSharp.Interpreter;
+using ECS;
 namespace MainGame.Components {
-	public struct DamageArea {
+	[MoonSharpUserData]
+	public struct DamageArea : IComponent {
 		[JsonInclude] public int Damage;
+
+		public object Clone() => this;
 	}
 }

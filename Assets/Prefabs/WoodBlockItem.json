@@ -8,10 +8,7 @@
             "Shape": { "Type": "Circle", "Radius": 2 }
           }
         },
-        "Sprite": {"Texture": "Textures\\Items\\log", "Albedo": "White", "Offset": [4,4], "Scale": 1, "SourceRectangle":[0,0,8,8]},
-        "RigidBody": { "Layer": "Item", "IsTrigger": false},
-        "RectBounds": { "Offset": [4,4], "Dimentions": [8,8]}
-        
+        "Sprite": {"Texture": "Textures\\Items\\log", "Albedo": "White", "Offset": [4,4], "Scale": 1, "SourceRectangle":[0,0,8,8]}
       }
     }
   ],
