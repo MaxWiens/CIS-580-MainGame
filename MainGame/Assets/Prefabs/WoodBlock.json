@@ -11,8 +11,8 @@
           }
         },
         "Sprite": {"Texture": "Textures\\wood_block", "Albedo": "White", "Offset": [0,0], "Scale": 1, "SourceRectangle":[0,0,16,16]},
-        "Health": {"Value": 10},
-        "Tile": { "BreakSound": "Sfx\\break", "PlaceSound": "Sfx\\place" },
+        "Health": {"Value": 1},
+        "Tile": { "PlaceSound": "Sfx\\place" },
         "Drops": {"Items": []}
       }
     }

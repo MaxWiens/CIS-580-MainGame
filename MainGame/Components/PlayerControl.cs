@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using ECS;
 using InputSystem;
 using System;
+using tainicom.Aether.Physics2D.Dynamics;
 namespace MainGame.Components {
 	[MoonSharpUserData]
 	public class PlayerControl : Component {
@@ -11,6 +12,23 @@ namespace MainGame.Components {
 		public PlayerControl(Entity entity) : base(entity) { }
 
 		public override IComponent Clone(Entity entity) => new PlayerControl(entity);
+
+
+		[MessageHandler]
+		public bool OnDeath(Message _) {
+			Entity.World.RemoveAllScenes();
+			Entity.World.LoadEntityGroupFromFile("Assets/Scenes/MainMenuScene.json");
+			return false;
+		}
+
+		[MessageHandler]
+		public bool OnCollision(Message message) {
+			
+			if(((Entity)((Fixture)message.Content["Other"]).Body.Tag).TryGetComponent(out Components.AI.BasicEnemyAI enemy)) {
+				Entity.World.Todos.Enqueue(() => { enemy.Entity.SendMessage(new Message("OnDamage") { Content = { { "Total", 1 } } }); });
+			}
+			return true;
+		}
 
 		/*
 		[MessageHandler]

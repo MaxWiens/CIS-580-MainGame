@@ -22,6 +22,7 @@ namespace MainGame.Components {
 			if(World == null) {
 				Entity.World.GetSystem<Systems.PhysicsSystem>().PhysicsWorld.Add(this);
 			}
+			
 			OnCollision += SendCollisionMessage;
 			Enabled = true;
 			return true;
@@ -29,7 +30,8 @@ namespace MainGame.Components {
 
 		[MoonSharpHidden]
 		private bool SendCollisionMessage(Fixture sender, Fixture other, Contact contact) {
-			Entity.SendMessage(new Message("OnCollision") { Content = { { "Sender", sender }, { "Other", other }, { "Contact", contact } } });
+			Entity.World.Todos.Enqueue(() => { Entity.SendMessage(new Message("OnCollision") { Content = { { "Sender", sender }, { "Other", other }, { "Contact", contact } } }); });
+			
 			return true;
 		}
 

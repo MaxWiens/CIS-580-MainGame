@@ -1,15 +1,20 @@
 ﻿{
   "Entities":[
     {
+      "IsEnabled": true,
       "Components": {
+        "PlayerDamageArea": { "Damage": 1 },
+        "Sprite": {
+          "Texture": "Textures\\pixel", "Albedo": [255,255,255], "Offset": [12,12], "Scale": 24, "SourceRectangle":[0,0,1,1]
+        },
         "Body": { 
           "BodyType": "Static",
           "Fixture": {
             "IsSensor": true,
-            "Shape": { "Type": "Rectangle", "Dimentions": [16,16] }
+            "Shape": { "Type": "Rectangle", "Dimentions": [24,24] }
           }
         },
-        "DamageArea": { "Damage": 1 }
+        "LifeTime":  {"Time": 0.1}
       }
     }
   ]

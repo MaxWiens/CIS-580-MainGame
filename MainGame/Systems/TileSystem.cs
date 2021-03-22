@@ -74,6 +74,10 @@ namespace MainGame.Systems {
 				int leftSize =  r.Next(0, 6);
 				int rightSize = r.Next(CHUNK_SIZE-6, CHUNK_SIZE+1);
 
+				Entity e = World.CloneEntityGroup("Assets\\Prefabs\\Entities\\Enemy.json")[0];
+
+				e.GetComponent<Body>().Position = chunkPosition.ToVector2()*(16f*16f);
+
 				for(int y =0; y < topSize; y++) {
 					for(int x = 0; x < CHUNK_SIZE; x++) {
 						if(x == 7 || x == 8) continue;

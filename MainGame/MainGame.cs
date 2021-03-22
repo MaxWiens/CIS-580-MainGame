@@ -28,7 +28,7 @@ namespace MainGame {
 	public class MainGame : Game {
 		private readonly JsonSerializerOptions _entitySerializerOptions;
 		private readonly JsonSerializerOptions _entityGroupSerializerOptions;
-		public const string GAME_TITLE = "Enter the Megadungeon";
+		public const string GAME_TITLE = "Frogs of Destruction";
 		public const string CONTROLLS_CONFIG_PATH = @"Assets\Controlls.json";
 		public Point Resolution = new Point(256, 144);
 		private readonly ECS.World _world;
@@ -47,7 +47,6 @@ namespace MainGame {
 		private RenderTarget2D _target;
 
 		public MainGame() : base() {
-			Window.Title = GAME_TITLE;
 			//Window.AllowUserResizing = true;
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
@@ -86,6 +85,7 @@ namespace MainGame {
 
 		protected override void Initialize() {
 			base.Initialize();
+			Window.Title = GAME_TITLE;
 
 			Graphics.PreferredBackBufferWidth = 1280;
 			Graphics.PreferredBackBufferHeight = 720;
@@ -106,15 +106,17 @@ namespace MainGame {
 			_world.AddSystem(new CameraFollow(_world, this));
 			_world.AddSystem(new Animator(_world));
 			_world.AddSystem(new MoverSystem(_world));
+			_world.AddSystem(new Systems.AI.EnemyAISystem(_world));
 
 			_world.AddSystem(new UI.SpriteDraw(_world, this));
 			_world.AddSystem(new UI.VolumeDraw(_world, this));
 			_world.AddSystem(new SpriteDraw(_world, this));
+			_world.AddSystem(new LifetimeSystem(_world));
 
 			// debug
 			//_world.RegisterSystem(new CollisionDraw(_world, this), 0);
-			#if DEBUG
-			_world.AddSystem(new PositionDraw(_world, this));
+#if DEBUG
+			//_world.AddSystem(new PositionDraw(_world, this));
 			#endif
 
 			LoadAssets(@"Assets\Assets.json");

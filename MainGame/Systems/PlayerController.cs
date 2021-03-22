@@ -61,20 +61,26 @@ namespace MainGame.Systems {
 			foreach(var entity in World.GetEntitiesWith<PlayerControl>().Keys) {
 				Body body = entity.GetComponent<Body>();
 				body.LinearVelocity = _moveValue * 100f * _sprintValue;
-				
-				System.Diagnostics.Debug.WriteLine($"{body.Position} { body.LinearVelocity}");
 				//ref Body highlighterTrans = ref World.GetComponent<Body>(_highlighter);
 
 				BlockPlacer blockPlacer = entity.GetComponent<BlockPlacer>();
 				Point potentialPlace = TileSystem.ToTilePosition(body.Position) + Vector2.Normalize(_lastMoveInput).ToPoint();
 				//highlighterTrans.Position = potentialPlace.ToVector2() * 16;
-				if(_interacted && !_grid.IsCellFilled(potentialPlace)) {
-					Entity placedBlock = World.CloneEntityGroup(blockPlacer.BlockPrefabPath)[0];
-					Body blockBody = placedBlock.GetComponent<Body>();
-					blockBody.Position = potentialPlace.ToVector2() * TileSystem.TILE_SIZE;
-					placedBlock.Enable();
-					placedBlock.SendMessage(new Message("OnPlace"));
-				} else if(_breakActivated && _grid.GetEntityAt(potentialPlace, out Guid blockeid)) {
+				if(_interacted) {
+					Entity dam = World.CloneEntityGroup("Assets/Prefabs/DamageRectangle.json")[0];
+					Body blockBody = dam.GetComponent<Body>();
+					blockBody.Position = (body.Position + _lastMoveInput*16);
+					_breakSfx.Play();
+				} else
+				//if(_interacted && !_grid.IsCellFilled(potentialPlace)) {
+				//	Entity placedBlock = World.CloneEntityGroup(blockPlacer.BlockPrefabPath)[0];
+				//	Body blockBody = placedBlock.GetComponent<Body>();
+				//	blockBody.Position = potentialPlace.ToVector2() * TileSystem.TILE_SIZE;
+				//	placedBlock.Enable();
+				//	placedBlock.SendMessage(new Message("OnPlace"));
+				//} else 
+				
+				if(_breakActivated && _grid.GetEntityAt(potentialPlace, out Guid blockeid)) {
 					World.GetEntity(blockeid).SendMessage(new Message("OnDamage") { Content = { { "Total", 100 } } });
 				}
 				_interacted = false;

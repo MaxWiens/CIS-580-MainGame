@@ -15,6 +15,8 @@ namespace ECS {
 		private readonly Dictionary<Guid, Entity> _entities = new Dictionary<Guid, Entity>();
 		private readonly Dictionary<object,HashSet<Entity>> _entityGroups = new Dictionary<object, HashSet<Entity>>();
 
+		public readonly Queue<Action> Todos = new Queue<Action>();
+
 		private readonly Dictionary<Entity, IComponent> _emptyCompList = new Dictionary<Entity, IComponent>(0);
 		internal readonly Dictionary<Type, Dictionary<Entity, IComponent>> enabledComponents = new Dictionary<Type, Dictionary<Entity, IComponent>>();
 
@@ -44,6 +46,8 @@ namespace ECS {
 				FixedUpdate(1f/60f);
 				_fixedUpdateTimer -= 1f / 60f;
 			}
+			while(Todos.Count > 0)
+				Todos.Dequeue()();
 		}
 		
 		private void FixedUpdate(float fixedDeltaTime) {

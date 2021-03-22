@@ -6,10 +6,10 @@
       "Name": "PlayerCharacter",
       "IsEnabled": true,
       "Components": {
-        "Sprite": {"Texture": "Textures\\Frog\\frog_front", "Albedo": [255,255,255], "Offset": [8,8], "Scale": 1, "SourceRectangle":[0,0,16,16]},
+        "Health": {"Value": 1},
         "PlayerControl": {},
+        "Sprite": {"Texture": "Textures\\Frog\\frog_front", "Albedo": [255,255,255], "Offset": [8,8], "Scale": 1, "SourceRectangle":[0,0,16,16]},
         "BlockPlacer": {"BlockPrefabPath": "Assets\\Prefabs\\WoodBlock.json"},
-        "Health": {"Value": 10},
         "Body" : {
           "Position": [128,128],
           "Type": "Dynamic",
