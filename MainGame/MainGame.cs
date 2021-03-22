@@ -120,7 +120,7 @@ namespace MainGame {
 			#endif
 
 			LoadAssets(@"Assets\Assets.json");
-			_world.LoadEntityGroupFromFile("Assets/TestScene.json");
+			_world.LoadEntityGroupFromFile("Assets/Scenes/MainMenuScene.json");
 			//_world.LoadEntityGroupFromFile("Assets/Scenes/MainMenuScene.json");
 		}
 
