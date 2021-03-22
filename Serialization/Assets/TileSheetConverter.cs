@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using MainGame.Components;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
+using Assets;
 
-namespace MainGame.Serialization {
+namespace Serialization.Assets {
 	using Assets;
-	class TileSheetConverter : JsonConverter<TileSheet> {
+	public class TileSheetConverter : JsonConverter<TileSheet> {
 
 		public override TileSheet Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 			var op = new JsonSerializerOptions(options);

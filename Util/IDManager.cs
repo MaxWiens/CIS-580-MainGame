@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Util {
 	public static class IDManager {
@@ -8,18 +6,25 @@ namespace Util {
 		private static Queue<ulong> _available = new Queue<ulong>();
 
 		public static ulong NextID() {
-			lock(_available)
-				return _available.TryDequeue(out ulong result) ? result : _id++;
+			lock(_available) {
+				if(_available.Count > 0)
+					return _available.Dequeue();
+			}
+			return _id++;
 		}
 		public static void ReturnID(ulong id) {
-			lock(_available)
-				if(id < _id && !_available.Contains(id)) _available.Enqueue(id);
+			lock(_available) {
+				if(id < _id && !_available.Contains(id))
+					_available.Enqueue(id);
+			}
 		}
 
 		public static IEnumerator<ulong> NextIDs(int numIds) {
+			ulong id;
 			for(; numIds >= 0; numIds--) {
 				lock(_available)
-					yield return _available.TryDequeue(out ulong result) ? result : _id++;
+					id = _available.Count > 0 ? _available.Dequeue() : _id++;
+				yield return id;
 			}
 		}
 	}

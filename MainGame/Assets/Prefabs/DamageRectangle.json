@@ -1,0 +1,16 @@
+﻿{
+  "Entities":[
+    {
+      "Components": {
+        "Body": { 
+          "BodyType": "Static",
+          "Fixture": {
+            "IsSensor": true,
+            "Shape": { "Type": "Rectangle", "Dimentions": [16,16] }
+          }
+        },
+        "DamageArea": { "Damage": 1 }
+      }
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<PublishReadyToRun>false</PublishReadyToRun>
+		<TieredCompilation>false</TieredCompilation>
+		<UseWindowsForms>true</UseWindowsForms>
+	</PropertyGroup>
+	<PropertyGroup>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<ApplicationIcon>Icon.ico</ApplicationIcon>
+	</PropertyGroup>
+	<ItemGroup>
+		<MonoGameContentReference Include="Content\Content.mgcb" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="Aether.Physics2D.MG" Version="1.5.0" />
+	  <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
+	  <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.0.1641" />
+	  <PackageReference Include="MoonSharp" Version="2.0.0" />
+	  <PackageReference Include="NETStandard.Library" Version="2.0.3" />
+	  <PackageReference Include="System.Text.Json" Version="5.0.1" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\ECS\ECS.csproj" />
+	  <ProjectReference Include="..\InputSystem\InputSystem.csproj" />
+	  <ProjectReference Include="..\Serialization\Serialization.csproj" />
+	  <ProjectReference Include="..\Util\Util.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="Assets\Actions.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\Assets.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\Controlls.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\Prefabs\DamageCircle.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\Prefabs\DamageRectangle.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\Prefabs\Entities\Bomb.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\Prefabs\Entities\BombBlast.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\Prefabs\WoodBlock.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\Prefabs\WoodBlockItem.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\Scenes\MainMenuScene.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\Scenes\PauseMenuScene.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\TestScene.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+</Project>

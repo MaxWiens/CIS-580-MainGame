@@ -4,8 +4,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Xna.Framework;
 
-namespace MainGame.Serialization {
-	class RectangleConverter : JsonConverter<Rectangle> {
+namespace Serialization {
+	public class RectangleConverter : JsonConverter<Rectangle> {
 		public override Rectangle Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 			Rectangle r = new Rectangle();
 			if(JsonDocument.TryParseValue(ref reader, out JsonDocument document)) {

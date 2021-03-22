@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using MainGame.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-
-namespace MainGame.Serialization {
-	using Assets;
-	class AssetConverter : JsonConverter<Asset> {
+using Assets;
+namespace Serialization.Assets {
+	public class AssetConverter : JsonConverter<Asset> {
 		private IDictionary<Guid, Asset> _assets;
 		public AssetConverter(IDictionary<Guid,Asset> assets) {
 			_assets = assets;

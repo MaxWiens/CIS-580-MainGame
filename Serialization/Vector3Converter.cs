@@ -4,8 +4,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Xna.Framework;
 
-namespace MainGame.Serialization {
-	class Vector3Converter : JsonConverter<Vector3> {
+namespace Serialization {
+	public class Vector3Converter : JsonConverter<Vector3> {
 		public override Vector3 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 			Vector3 v = new Vector3();
 			if(JsonDocument.TryParseValue(ref reader, out JsonDocument document)) {

@@ -4,8 +4,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Xna.Framework;
 
-namespace MainGame.Serialization {
-	class PointConverter : JsonConverter<Point> {
+namespace Serialization {
+	public class PointConverter : JsonConverter<Point> {
 		public override Point Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 			Point p = new Point();
 			if(JsonDocument.TryParseValue(ref reader, out JsonDocument document)) {

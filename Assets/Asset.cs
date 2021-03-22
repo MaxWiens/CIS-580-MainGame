@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace MainGame.Assets {
+namespace Assets {
 	public abstract class Asset {
 		[JsonInclude] public Guid ID;
 	}

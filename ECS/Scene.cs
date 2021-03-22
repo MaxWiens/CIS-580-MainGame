@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-
+﻿using System.Collections.Generic;
 namespace ECS {
-	public static class Scene {
-		
+	public class Scene {
+		public readonly string Name;
+		internal readonly List<Entity> entities = new List<Entity>();
+		public Scene(string name) {
+			Name = name;
+		}
 	}
 }
