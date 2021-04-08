@@ -13,8 +13,7 @@ namespace MainGame.Components {
 
 		[MessageHandler]
 		public bool OnCollision(Message message) {
-			((Entity)((Fixture)message.Content["Other"]).Body.Tag).SendMessage(new Message("OnDamage") { Content = { {"Total", Damage} } });
-			return true;
+			return ((Entity)((Fixture)message.Content["Other"]).Body.Tag).SendMessage(new Message("OnDamage") { Content = { {"Total", Damage} } });
 		}
 	}
 }

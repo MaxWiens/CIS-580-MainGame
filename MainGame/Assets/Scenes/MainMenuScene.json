@@ -1,8 +1,13 @@
 ﻿{
+  "Scene": "MainMenu",
   "Entities": [
     {
       "Name": "StartButton",
       "Components": {
+        "UI.Element": {
+          "Anchor": [0.5, 0.5],
+          "Offset": [0, 0]
+        },
         "Body": {
           "Position": [128,72],
           "Type": "Static",
@@ -15,7 +20,7 @@
           }
         },
         "UI.Button": {
-          "ClickEvent": "function OnClick(arg1) ECS.PopScene(); ECS.LoadEntityGroupFromFile('Assets/TestScene.json') end"
+          "ClickEvent": "function OnClick(message) ECS.PopScene(); ECS.LoadEntityGroupFromFile('Assets/Scenes/GameplayScene.json'); return false end"
         },
         "UI.Sprite": {"Texture": "Textures/UI/StartButton", "SourceRectangle":[0,0,48,16], "Offset": [24,8]}
       }
@@ -23,6 +28,10 @@
     {
       "Name": "VolumeElement",
       "Components": {
+        "UI.Element": {
+          "Anchor": [0.5, 0.5],
+          "Offset": [0, 18]
+        },
         "Body": {
           "Position": [128,90],
           "Type": "Static"
@@ -33,6 +42,10 @@
     {
       "Name": "VolumeIncreaseButton",
       "Components": {
+        "UI.Element": {
+          "Anchor": [0.5, 0.5],
+          "Offset": [38, 18]
+        },
         "Body": {
           "Position": [166,90],
           "Type": "Static",
@@ -45,7 +58,7 @@
           }
         },
         "UI.Button": {
-          "ClickEvent": "function OnClick(arg1) SetVolume(GetVolume()+0.1); PlayTestSound() end"
+          "ClickEvent": "function OnClick(message) SetVolume(GetVolume()+0.1); PlayTestSound(); return true end"
         },
         "UI.Sprite": {"Texture": "Textures/UI/ArrowButton", "SourceRectangle":[0,0,16,16], "Offset": [8,8]}
       }
@@ -53,6 +66,10 @@
     {
       "Name": "VolumeDecreaseButton",
       "Components": {
+        "UI.Element": {
+          "Anchor": [0.5, 0.5],
+          "Offset": [-38, 18]
+        },
         "Body": {
           "Position": [90,90],
           "Type": "Static",
@@ -65,31 +82,33 @@
           }
         },
         "UI.Button": {
-          "ClickEvent": "function OnClick(arg1) SetVolume(GetVolume()-0.1); PlayTestSound() end"
+          "ClickEvent": "function OnClick(message) SetVolume(GetVolume()-0.1); PlayTestSound(); return true end"
         },
         "UI.Sprite": {"Texture": "Textures/UI/ArrowButton", "SourceRectangle":[0,0,16,16], "Offset": [-8,-8], "Scale": [-1,-1]}
       }
     },
     {
       "Components": {
-        "UI.Volume": {},
+        "UI.Element": {
+          "Anchor": [0, 0],
+          "Offset": [0, 0]
+        },
         "Body": {
-          "Position": [128,106],
           "Type": "Static"
-        }
+        },
+        "UI.Sprite": {"Texture": "Textures/UI/ArrowButton", "SourceRectangle":[0,0,16,16], "Offset": [8,8], "Scale": 1}
       }
     },
     {
-      "Name": "Button",
       "Components": {
+        "UI.Element": {
+          "Anchor": [1, 1],
+          "Offset": [0, 0]
+        },
         "Body": {
-          "Position": [0,0],
           "Type": "Static"
         },
-        "UI.Button": {
-          "ClickEvent": "function OnClick(arg1) PlayTestSound() end"
-        },
-        "UI.Sprite": {"Texture": "Textures/UI/ArrowButton", "SourceRectangle":[0,0,16,16], "Albedo": [0,0,0,0],  "Offset": [8,8], "Scale": 1}
+        "UI.Sprite": {"Texture": "Textures/UI/ArrowButton", "SourceRectangle":[0,0,16,16], "Offset": [8,8], "Scale": 1}
       }
     }
   ],

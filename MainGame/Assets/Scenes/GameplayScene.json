@@ -6,7 +6,6 @@
       "Name": "PlayerCharacter",
       "IsEnabled": true,
       "Components": {
-        "Health": {"Value": 1},
         "PlayerControl": {},
         "Sprite": {"Texture": "Textures\\Frog\\frog_front", "Albedo": [255,255,255], "Offset": [8,8], "Scale": 1, "SourceRectangle":[0,0,16,16]},
         "BlockPlacer": {"BlockPrefabPath": "Assets\\Prefabs\\WoodBlock.json"},
@@ -28,12 +27,15 @@
           "Front": "63F821CA-B0D8-422E-B4D0-1D64DE67BAB2",
           "Back": "B4EC61FA-7244-4488-AC89-B5308FF93443"
         },
-        "ChunkLoading": {}
+        "ChunkLoading": {},
+        "Health": {"Value": 1}
       }
     }
   ],
   "backup": [
     {
+      
+
       "EID": "#Camera",
       "Name": "MainCamera",
       "IsEnabled": true,

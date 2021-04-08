@@ -4,9 +4,6 @@
       "IsEnabled": true,
       "Components": {
         "PlayerDamageArea": { "Damage": 1 },
-        "Sprite": {
-          "Texture": "Textures\\pixel", "Albedo": [255,255,255], "Offset": [12,12], "Scale": 24, "SourceRectangle":[0,0,1,1]
-        },
         "Body": { 
           "BodyType": "Static",
           "Fixture": {

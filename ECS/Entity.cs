@@ -12,11 +12,11 @@ namespace ECS {
 		public readonly Guid EID;
 		public readonly string Name;
 		public readonly World World;
-		private Scene _scene;
+		private readonly Scene _scene;
 		public Scene Scene => _scene;
 		public object EntityGroup;
 		
-		private readonly Dictionary<string, Dictionary<IComponent, MessageHandler>> _messageHandles = new Dictionary<string, Dictionary<IComponent, MessageHandler>>();
+		private readonly Dictionary<string, SortedDictionary<PriorityHandler, MessageHandler>> _messageHandles = new Dictionary<string, SortedDictionary<PriorityHandler, MessageHandler>>();
 		private readonly Dictionary<Type, IComponent> _components = new Dictionary<Type, IComponent>();
 
 		private bool _isEnabled = false;
@@ -54,10 +54,10 @@ namespace ECS {
 				foreach(var v in messageHandlers) {
 					MessageHandler handler = (MessageHandler)v.CreateDelegate(typeof(MessageHandler), component);
 					if(!_messageHandles.TryGetValue(v.Name, out var handlers)) {
-						handlers = new Dictionary<IComponent, MessageHandler>();// (IPriorityComparer.Comparer);
+						handlers = new SortedDictionary<PriorityHandler, MessageHandler>();// (IPriorityComparer.Comparer);
 						_messageHandles.Add(v.Name, handlers);
 					}
-					handlers.Add(component, handler);
+					handlers.Add(new PriorityHandler(component, v), handler);
 				}
 				_components.Add(componentType, component);
 				if(_isEnabled) {
@@ -77,9 +77,9 @@ namespace ECS {
 				_components.Remove(componentType);
 				if(_isEnabled)
 					World.enabledComponents[componentType].Remove(this);
-
+				PriorityHandler p = new PriorityHandler(value);
 				foreach(var v in _cachedComponentData[componentType])
-					_messageHandles[v.Name].Remove(value);
+					_messageHandles[v.Name].Remove(p);
 
 				return true;
 			}
@@ -118,12 +118,30 @@ namespace ECS {
 		}
 		
 		public bool SendMessage(Message message) {
-			if(_isEnabled && _messageHandles.TryGetValue(message.HandlerName, out Dictionary<IComponent, MessageHandler> handlers)){
+			if(_isEnabled && _messageHandles.TryGetValue(message.HandlerName, out SortedDictionary<PriorityHandler, MessageHandler> handlers)){
 				foreach(var handler in handlers.Values) {
-					if(!handler(message)) break;
+					if(!handler(message)) return false;
 				}
 			}
-			return false;
+			return true;
+		}
+
+		private struct PriorityHandler : IComparable<PriorityHandler> {
+			private readonly IComponent _component;
+			private readonly ulong _priority;
+			public PriorityHandler(IComponent component) {
+				_component = component;
+				_priority = 0;
+			}
+			public PriorityHandler(IComponent component, MethodInfo method) {
+				MessageHandlerAttribute a = method.GetCustomAttribute<MessageHandlerAttribute>();
+				_component = component;
+				ulong pri = ((ulong)a.Priority) << 32;
+				ulong pri2 = (ulong)component.GetHashCode();
+				_priority = pri | pri2;
+			}
+
+			public int CompareTo(PriorityHandler other) => _component==other._component ? 0 : _priority.CompareTo(other._priority);
 		}
 	}
 }

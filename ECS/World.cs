@@ -15,8 +15,6 @@ namespace ECS {
 		private readonly Dictionary<Guid, Entity> _entities = new Dictionary<Guid, Entity>();
 		private readonly Dictionary<object,HashSet<Entity>> _entityGroups = new Dictionary<object, HashSet<Entity>>();
 
-		public readonly Queue<Action> Todos = new Queue<Action>();
-
 		private readonly Dictionary<Entity, IComponent> _emptyCompList = new Dictionary<Entity, IComponent>(0);
 		internal readonly Dictionary<Type, Dictionary<Entity, IComponent>> enabledComponents = new Dictionary<Type, Dictionary<Entity, IComponent>>();
 
@@ -28,8 +26,10 @@ namespace ECS {
 		internal readonly Dictionary<Type, IFixedUpdateable> _fixedUpdateSystems = new Dictionary<Type, IFixedUpdateable>();// (IPriorityComparer.Comparer);
 
 		public float DeltaTimeScale = 1f;
+		private readonly float _fixedUpdateTime;
 
-		public World(JsonSerializerOptions entitySerializerOptions, JsonSerializerOptions entityGroupSerializerOptions) {
+		public World(JsonSerializerOptions entitySerializerOptions, JsonSerializerOptions entityGroupSerializerOptions, float fixedUpdateTime = 1f/60f) {
+			_fixedUpdateTime = fixedUpdateTime;
 			_entitySerializerOptions = entitySerializerOptions;
 			_entityGroupSerializerOptions = entityGroupSerializerOptions;
 			AddScene(_defaultScene);
@@ -42,14 +42,13 @@ namespace ECS {
 			foreach(IUpdateable u in _updateSystems.Values)
 				u.Update(deltaTime);
 			_fixedUpdateTimer += deltaTime;
-			if(_fixedUpdateTimer >= 1f / 60f) {
-				FixedUpdate(1f/60f);
-				_fixedUpdateTimer -= 1f / 60f;
+			if(_fixedUpdateTimer >= _fixedUpdateTime) {
+				FixedUpdate(_fixedUpdateTime);
+				_fixedUpdateTimer -= _fixedUpdateTime;
 			}
-			while(Todos.Count > 0)
-				Todos.Dequeue()();
 		}
-		
+
+		[MoonSharpHidden]
 		private void FixedUpdate(float fixedDeltaTime) {
 			foreach(IFixedUpdateable fu in _fixedUpdateSystems.Values)
 				fu.FixedUpdate(fixedDeltaTime);

@@ -12,7 +12,6 @@ namespace MainGame.Components {
 		private readonly Entity _entity;
 		public Entity Entity => _entity;
 
-
 		public Body(Entity entity) {
 			_entity = entity;
 		}
@@ -30,7 +29,7 @@ namespace MainGame.Components {
 
 		[MoonSharpHidden]
 		private bool SendCollisionMessage(Fixture sender, Fixture other, Contact contact) {
-			Entity.World.Todos.Enqueue(() => { Entity.SendMessage(new Message("OnCollision") { Content = { { "Sender", sender }, { "Other", other }, { "Contact", contact } } }); });
+			Entity.World.GetSystem<Systems.PhysicsSystem>().AddTodo(() => { Entity.SendMessage(new Message("OnCollision") { Content = { { "Sender", sender }, { "Other", other }, { "Contact", contact } } }); });
 			
 			return true;
 		}

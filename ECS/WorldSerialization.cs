@@ -10,8 +10,7 @@ namespace ECS {
 		private Entity _currentlySerializingEntity;
 		public Entity CurrentlySerializingEntity => _currentlySerializingEntity;
 
-		private Dictionary<string, EntityGroupData> _loadedEntityGroups = new Dictionary<string, EntityGroupData>();
-
+		private readonly Dictionary<string, EntityGroupData> _loadedEntityGroups = new Dictionary<string, EntityGroupData>();
 		private readonly JsonSerializerOptions _entitySerializerOptions;
 		private readonly JsonSerializerOptions _entityGroupSerializerOptions;
 
@@ -115,16 +114,11 @@ namespace ECS {
 					id.Guid = guid;
 				}
 
-				List<IComponent> components;
-				IComponent[] copiedComponents;
-				EntityData e;
+				EntityData entityData;
 				Entity[] clonedEntities = new Entity[_entities.Length];
 				for(int i = 0; i < _entities.Length; i++) {
-					e = _entities[i];
-					//if(e.EID.Tag == null && !e.EID.GivenValue)
-					//	e.EID.Guid = Guid.NewGuid();
-					//entities[i] = e.EID;
-					clonedEntities[i] = world.MakeEntity(e.Components, name: e.Name, isEnabled: e.IsEnabled);
+					entityData = _entities[i];
+					clonedEntities[i] = world.MakeEntity(entityData.Components, name: entityData.Name, isEnabled: entityData.IsEnabled);
 				}
 				return clonedEntities;
 			}

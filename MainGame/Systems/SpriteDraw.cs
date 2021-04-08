@@ -17,10 +17,11 @@ namespace MainGame.Systems {
 
 		public void Draw() {
 			Body body;
-			Vector2 camCenter = _game.MainCamera.Center;
+			float camY = _game.MainCamera.Resolution.Y - _game.MainCamera.Position.Y;
+
 			foreach(Sprite s in World.GetEntitiesWith<Sprite>().Values) {
 				body = s.Entity.GetComponent<Body>();
-				Point pos = (body.Position - s.Offset - camCenter).ToPoint();
+				Point pos = (body.Position - s.Offset).ToPoint();
 				Point scale = new Point((int)(s.SourceRectangle.Width * s.Scale.X), (int)(s.SourceRectangle.Height * s.Scale.Y));
 				_game.SpriteBatch.Draw(
 					texture: s.Texture, //Texture2D 
@@ -30,7 +31,7 @@ namespace MainGame.Systems {
 					rotation: 0f,
 					origin: Vector2.Zero,
 					effects: s.SpriteEffect,
-					layerDepth: (float)(pos.Y+s.SourceRectangle.Height % _game.Resolution.Y) / _game.Resolution.Y
+					layerDepth: (float)((pos.Y + s.SourceRectangle.Height + camY) % _game.MainCamera.Resolution.Y)/_game.MainCamera.Resolution.Y
 				);
 			}
 		}

@@ -25,7 +25,8 @@
           "Back": "B4EC61FA-7244-4488-AC89-B5308FF93443"
         },
         "AI.BasicEnemyAI": { "Range": 128 },
-        "DamageArea": {"Damage": 1}
+        "DamageArea": {"Damage": 1},
+        "BloodyDeath": {}
       }
     }
 	]

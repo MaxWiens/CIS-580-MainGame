@@ -6,7 +6,6 @@ namespace MainGame.Components {
 	public class BlockPlacer : Component {
 		public bool ShouldPlaceBlock;
 		[JsonInclude] public string BlockPrefabPath;
-		public override uint Priority => 10;
 
 		public BlockPlacer(Entity entity) : base(entity) { }
 

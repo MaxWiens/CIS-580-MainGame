@@ -1,5 +1,5 @@
 ﻿namespace ECS {
-	public interface IDrawable : IPriority {
+	public interface IDrawable {
 		[MoonSharp.Interpreter.MoonSharpHidden]
 		void Draw();
 	}

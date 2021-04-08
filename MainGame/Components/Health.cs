@@ -15,7 +15,7 @@ namespace MainGame.Components {
 			if(Value <= 0) {
 				Entity.SendMessage(new Message("OnDeath"));
 				Entity.World.RemoveEntity(Entity);
-				return true;
+				return false;
 			}
 			return true;
 		}

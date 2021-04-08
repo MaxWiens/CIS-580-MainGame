@@ -20,7 +20,7 @@ namespace MainGame.Systems.UI {
 				body = s.Entity.GetComponent<Body>();
 				Point pos = (body.Position - s.Offset).ToPoint();
 				Point scale = new Point((int)(s.SourceRectangle.Width * s.Scale.X), (int)(s.SourceRectangle.Height * s.Scale.Y));
-				_game.SpriteBatch.Draw(
+				_game.UISpriteBatch.Draw(
 					texture: s.Texture,
 					destinationRectangle: new Rectangle(pos, scale),
 					sourceRectangle: s.SourceRectangle,

@@ -6,8 +6,6 @@ namespace MainGame.Components.UI {
 	[MoonSharpUserData]
 	public class Button : Component {
 		[JsonInclude] public Script ClickEvent;
-
-		public override uint Priority => 10;
 		public Button(Entity entity) : base(entity) { }
 
 		public override IComponent Clone(Entity entity) => new Button(entity) {
@@ -15,9 +13,6 @@ namespace MainGame.Components.UI {
 			};
 
 		[MessageHandler]
-		public bool OnClick(Message _) {
-			ClickEvent.Call(ClickEvent.Globals["OnClick"]);
-			return true;
-		}
+		public bool OnClick(Message message) => ClickEvent.Call(ClickEvent.Globals["OnClick"], message).Boolean;
 	}
 }

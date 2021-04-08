@@ -1,5 +1,6 @@
-﻿namespace ECS {
-	public interface ISystem : IPriority {
+﻿using System;
+namespace ECS {
+	public interface ISystem {
 		World World { get; }
 	}
 }

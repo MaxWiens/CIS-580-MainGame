@@ -5,15 +5,14 @@ namespace ECS {
 		private readonly Entity _entity;
 		public Entity Entity => _entity;
 
-		public virtual uint Priority => uint.MaxValue;
-
 		public Component(Entity entity) {
 			_entity = entity;
 		}
 		
-		public bool HandleMessage(string handlerName, Message message)
+		public bool HandleMessage(Message message)
 			=> (bool)GetType().InvokeMember(message.HandlerName, MESSAGE_FLAGS, null, this, new object[] { this, message });
 
-		public abstract IComponent Clone(Entity entity);	
+		public abstract IComponent Clone(Entity entity);
+		public IComponent Clone() => Clone(null);
 	}
 }

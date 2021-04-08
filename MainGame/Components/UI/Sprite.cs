@@ -10,6 +10,7 @@ namespace MainGame.Components.UI {
 
 		[JsonInclude] public Texture2D Texture;
 		[JsonInclude] public Vector2 Offset;
+		[JsonInclude] public Vector2 Anchor;
 		[JsonInclude] public Color Albedo = Color.White;
 		[JsonInclude] public Vector2 Scale = Vector2.One;
 		[JsonInclude] public Rectangle SourceRectangle;
@@ -22,7 +23,8 @@ namespace MainGame.Components.UI {
 				Albedo = Albedo,
 				Scale = Scale,
 				SourceRectangle = SourceRectangle,
-				SpriteEffect = SpriteEffect
+				SpriteEffect = SpriteEffect,
+				Anchor = Anchor,
 			};
 	}
 }

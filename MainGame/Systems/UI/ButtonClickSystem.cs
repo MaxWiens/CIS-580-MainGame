@@ -18,14 +18,13 @@ namespace MainGame.Systems.UI {
 		}
 
 		private void OnClick(Vector2 position) {
-			float scale = _game.PixelScale;
-			_physicsWorld.QueryAABB(Handler, new AABB(_game.ScreenToWorld(position), scale, scale));
+			_physicsWorld.QueryAABB(Handler, new AABB(_game.ScreenToWorld(position), 1, 1));
 			//Vector2 v = new Vector2(mousePos.X * _game.Resolution.X / _game.Graphics.PreferredBackBufferWidth, mousePos.Y * _game.Resolution.Y / _game.Graphics.PreferredBackBufferHeight);
 		}
 
 		private bool Handler(Fixture fixture) {
 			if(((Entity)fixture.Body.Tag).TryGetComponent(out Button b)) {
-				b.ClickEvent.Call(b.ClickEvent.Globals["OnClick"], "hello");
+				b.ClickEvent.Call(b.ClickEvent.Globals["OnClick"]);
 			}
 			return true;
 		}

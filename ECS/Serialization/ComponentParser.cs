@@ -9,6 +9,7 @@ namespace ECS.Serialization {
 
 		public static IComponent Parse(Type componentType, JsonElement json, JsonSerializerOptions options)
 			=> (IComponent)JsonSerializer.Deserialize(json.GetRawText(), componentType, options);
+		
 
 		public static IComponent Parse(Type componentType, string json, JsonSerializerOptions options) {
 			JsonDocument doc = JsonDocument.Parse(json);

@@ -7,7 +7,6 @@ using tainicom.Aether.Physics2D.Dynamics;
 namespace MainGame.Components {
 	[MoonSharpUserData]
 	public class PlayerControl : Component {
-		public override uint Priority => (uint)DefaultPriority.PlayerInput;
 
 		public PlayerControl(Entity entity) : base(entity) { }
 
@@ -21,14 +20,13 @@ namespace MainGame.Components {
 			return false;
 		}
 
-		[MessageHandler]
-		public bool OnCollision(Message message) {
-			
-			if(((Entity)((Fixture)message.Content["Other"]).Body.Tag).TryGetComponent(out Components.AI.BasicEnemyAI enemy)) {
-				Entity.World.Todos.Enqueue(() => { enemy.Entity.SendMessage(new Message("OnDamage") { Content = { { "Total", 1 } } }); });
-			}
-			return true;
-		}
+		//[MessageHandler]
+		//public bool OnCollision(Message message) {
+		//	if(((Entity)((Fixture)message.Content["Other"]).Body.Tag).TryGetComponent(out Components.AI.BasicEnemyAI enemy)) {
+		//		enemy.Entity.SendMessage(new Message("OnDamage") { Content = { { "Total", 1 } } });
+		//	}
+		//	return true;
+		//}
 
 		/*
 		[MessageHandler]

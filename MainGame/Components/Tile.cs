@@ -36,8 +36,10 @@ namespace MainGame.Components {
 		}
 
 		[MessageHandler]
-		public bool OnDeath(Message _) {
+		public bool OnDeath(Message message) {
+			Entity.World.GetSystem<ParticleSystem>().AddParticles<Particles.BlockBreakParticleGroup>(Entity.GetComponent<Body>().Position + new Microsoft.Xna.Framework.Vector2(8f,8f), 5);
 			BreakSound?.Play();
+			
 			return true;
 		}
 	}

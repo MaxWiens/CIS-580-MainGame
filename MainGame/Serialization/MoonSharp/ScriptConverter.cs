@@ -20,10 +20,9 @@ namespace MainGame.Serialization.MoonSharp {
 			UserData.RegisterType<ECS.World>();
 			UserData.RegisterType<Guid>();
 			UserData.RegisterType<List<ECS.Entity>>();
-
-			_soundEffect = UserData.CreateStatic(typeof(SoundEffect));
-			_mediaPlayer = UserData.CreateStatic(typeof(MediaPlayer));
-
+			UserData.RegisterType<Dictionary<string, object>>();
+			UserData.RegisterType<ECS.Message>();
+			
 			_game = UserData.Create(game);
 			_physicsWorld = UserData.Create(physicsWorld);
 			_ecsWorld = UserData.Create(ecsWorld);

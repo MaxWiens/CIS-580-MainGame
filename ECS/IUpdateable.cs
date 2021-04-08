@@ -1,5 +1,5 @@
 ﻿namespace ECS {
-	public interface IUpdateable : IPriority {
+	public interface IUpdateable {
 		[MoonSharp.Interpreter.MoonSharpHidden]
 		void Update(float deltaTime);
 	}
