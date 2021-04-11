@@ -27,7 +27,7 @@ namespace MainGame {
 	public class MainGame : Game {
 		private readonly JsonSerializerOptions _entitySerializerOptions;
 		private readonly JsonSerializerOptions _entityGroupSerializerOptions;
-		public const string GAME_TITLE = "Frogs of Destruction";
+		public const string GAME_TITLE = "Enter the Megadungeon";
 		public const string CONTROLLS_CONFIG_PATH = @"Assets\Controlls.json";
 		private readonly ECS.World _world;
 		private readonly PhysicsWorld _physicsWorld;
