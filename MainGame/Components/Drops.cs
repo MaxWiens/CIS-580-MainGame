@@ -8,12 +8,32 @@ namespace MainGame.Components {
 	[MoonSharpUserData]
 	public class Drops : Component {
 		[JsonInclude] public string[] Items;
-
+		private bool hasDropped;
 		public Drops(Entity entity) : base(entity) { }
 
-		[MessageHandler]
+		[MessageHandler(10)]
 		public bool OnDeath(Message message) {
-			
+			if(!hasDropped) {
+				hasDropped = true;
+				if(Entity.TryGetComponent(out Body thisBody)) {
+					foreach(string s in Items) {
+						var entities = Entity.World.CloneEntityGroup(s);
+						foreach(Entity e in entities) {
+							if(e.TryGetComponent<Body>(out Body b)) {
+								b.Position = thisBody.Position;
+							}
+							e.Enable();
+						}
+					}
+				} else {
+					foreach(string s in Items) {
+						var entities = Entity.World.CloneEntityGroup(s);
+						foreach(Entity e in entities) {
+							e.Enable();
+						}
+					}
+				}
+			}
 			return true;
 		}
 

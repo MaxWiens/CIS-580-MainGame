@@ -27,6 +27,7 @@ namespace MainGame.Systems {
 
 		SoundEffect _placeSfx;
 		SoundEffect _breakSfx;
+		private SoundEffect _slashSfx;
 		Texture2D _pixel;
 
 		private readonly MainGame _game;
@@ -37,6 +38,7 @@ namespace MainGame.Systems {
 			_physicsSystem = physicsSystem;
 			_placeSfx = content.Load<SoundEffect>(@"Sfx\place");
 			_breakSfx = content.Load<SoundEffect>(@"Sfx\break");
+			_slashSfx = content.Load<SoundEffect>(@"slash");
 			_pixel = content.Load<Texture2D>(@"Textures\pixel");
 			//_highlighter = world.MakeEntity(
 			//	new Sprite() { Texture = _pixel, Scale = new Vector2(16), SourceRectangle = new Rectangle(0, 0, 1, 1), Albedo = new Color(255, 255, 255, 25) },
@@ -70,7 +72,7 @@ namespace MainGame.Systems {
 					Body blockBody = dam.GetComponent<Body>();
 					blockBody.Position = (body.Position + _lastMoveInput*16);
 					World.GetSystem<ParticleSystem>().AddParticles<Particles.AttackParticleGroup>(blockBody.Position, 12);
-					_breakSfx.Play();
+					_slashSfx.Play();
 				} else
 				//if(_interacted && !_grid.IsCellFilled(potentialPlace)) {
 				//	Entity placedBlock = World.CloneEntityGroup(blockPlacer.BlockPrefabPath)[0];
@@ -80,8 +82,13 @@ namespace MainGame.Systems {
 				//	placedBlock.SendMessage(new Message("OnPlace"));
 				//} else 
 				
-				if(_breakActivated && _grid.GetEntityAt(potentialPlace, out Guid blockeid)) {
-					World.GetEntity(blockeid).SendMessage(new Message("OnDamage") { Content = { { "Total", 100 } } });
+				if(_breakActivated) {
+					Entity e = World.CloneEntityGroup("Assets/Prefabs/Entities/Bomb.json")[0];
+					Body b = e.GetComponent<Body>();
+					b.Position = body.Position+_lastMoveInput;
+					b.LinearDamping = 0.5f;
+					e.Enable();
+					//World.GetEntity(blockeid).SendMessage(new Message("OnDamage") { Content = { { "Total", 100 } } });
 				}
 				_interacted = false;
 				_breakActivated = false;

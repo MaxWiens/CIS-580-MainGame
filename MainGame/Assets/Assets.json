@@ -4,7 +4,7 @@
 			"Type": "Assets.TileSheet",
 			"Data": {
 				"ID": "63F821CA-B0D8-422E-B4D0-1D64DE67BAB2",
-				"Texture": "Textures\\Frog\\frog_front",
+				"Texture": "Textures\\Player\\player_forward",
 				"TileDimentions": [ 16, 16 ]
 			}
 		},
@@ -12,7 +12,7 @@
 			"Type": "Assets.TileSheet",
 			"Data": {
 				"ID": "B4EC61FA-7244-4488-AC89-B5308FF93443",
-				"Texture": "Textures\\Frog\\frog_back",
+				"Texture": "Textures\\Player\\player_back",
 				"TileDimentions": [ 16, 16 ]
 			}
 		},
@@ -20,7 +20,7 @@
 			"Type": "Assets.TileSheet",
 			"Data": {
 				"ID": "3F82A7B3-EBE1-4D74-9AFF-87A623468567",
-				"Texture": "Textures\\Frog\\frog_walk_front",
+				"Texture": "Textures\\Player\\player_walk_forward",
 				"TileDimentions": [ 16, 16 ]
 			}
 		},
@@ -28,7 +28,74 @@
 			"Type": "Assets.TileSheet",
 			"Data": {
 				"ID": "3AF8B425-82DA-49C9-AA85-25ABCB782FF5",
-				"Texture": "Textures\\Frog\\frog_walk_back",
+				"Texture": "Textures\\Player\\player_walk_back",
+				"TileDimentions": [ 16, 16 ]
+			}
+		},
+
+
+
+
+		{
+			"Type": "Assets.TileSheet",
+			"Data": {
+				"ID": "B627BD19-9065-4AB0-8638-39048E5C81B6",
+				"Texture": "Textures\\Skeleton\\skeleton_forward",
+				"TileDimentions": [ 16, 16 ]
+			}
+		},
+		{
+			"Type": "Assets.TileSheet",
+			"Data": {
+				"ID": "E7BF1DB5-1F19-439E-B251-CF5BCE1C7B61",
+				"Texture": "Textures\\Skeleton\\skeleton_back",
+				"TileDimentions": [ 16, 16 ]
+			}
+		},
+		{
+			"Type": "Assets.TileSheet",
+			"Data": {
+				"ID": "E11DE0A6-0685-48C8-8F40-5155293CBB3E",
+				"Texture": "Textures\\Skeleton\\skeleton_walk_forward",
+				"TileDimentions": [ 16, 16 ]
+			}
+		},
+		{
+			"Type": "Assets.TileSheet",
+			"Data": {
+				"ID": "8FDC7A80-9C90-4AD9-BB09-32AB8AD1EE17",
+				"Texture": "Textures\\Skeleton\\skeleton_walk_back",
+				"TileDimentions": [ 16, 16 ]
+			}
+		},
+
+
+
+
+		{
+			"Type": "Assets.TileSheet",
+			"Data": {
+				"ID": "9FB89F88-8A8E-4008-8C38-F79479F52704",
+				"Texture": "Textures/Ghost/ghost_walk_forward",
+				"TileDimentions": [ 16, 16 ]
+			}
+		},
+		{
+			"Type": "Assets.TileSheet",
+			"Data": {
+				"ID": "12E4F398-14AD-42BD-936D-62BCF185612C",
+				"Texture": "Textures/Ghost/ghost_walk_back",
+				"TileDimentions": [ 16, 16 ]
+			}
+		},
+
+
+		{
+			"Description": "Bomb Flashing",
+			"Type": "Assets.TileSheet",
+			"Data": {
+				"ID": "F3C5BE92-1687-47ED-8BE7-8C27FDB59F57",
+				"Texture": "Textures/Items/bomb",
 				"TileDimentions": [ 16, 16 ]
 			}
 		}

@@ -10,9 +10,10 @@
             "Shape": { "Type": "Rectangle", "Dimentions": [16,16], "Offset": [8,8] }
           }
         },
-        "Sprite": {"Texture": "Textures\\wood_block", "Albedo": "White", "Offset": [0,0], "Scale": 1, "SourceRectangle":[0,0,16,16]},
+        "Sprite": {"Texture": "Textures\\wall", "Albedo": "White", "Offset": [0,0], "Scale": 1, "SourceRectangle":[0,0,16,16]},
         "Health": {"Value": 1},
-        "Tile": { "PlaceSound": "Sfx\\place"},
+        "Tile": { "PlaceSound": "Sfx\\place", "BreakSound": "Sfx/break"},
+        "Drops": {"Items": []}
       }
     }
   ]

@@ -1,24 +1,27 @@
 ﻿{
-  "Entitites":[
+	"Entities":[
     {
+      "IsEnabled": true,
       "Components": {
-        "Transform2D": {},
-        "Sprite": {
-          "Texture": "Textures\\pixel",
-          "Albedo": "Black",
-          "Offset": 1.5,
-          "Scale": 3,
-          "SourceRectangle": [0,0,1,1]
+        "Sprite": {"Texture": "Textures/Items/bomb", "Albedo": [255,255,255], "Offset": [8,8], "Scale": 1, "SourceRectangle":[0,0,16,16]},
+        "Health": {"Value": 1, "DeathSound": "explosion"},
+        "Body" : {
+          "Position": [0,0],
+          "Type": "Dynamic",
+          "Fixture": {
+            "Shape": {
+              "Type": "Circle",
+              "Radius": 4
+            },
+            "IsSensor": false
+          }
         },
-        "Health": { "Value": 1 },
-        "RigidBody": { "Layer": "Item", "IsTrigger": false},
-        "CircleBounds": { "Radius": 3, "Offset": 1.5},
-        "Exploding": { 
-          "Timer": 2,
-          "ExplodesOnContact": false,
-          "ExplosionPrefabPath": ""
-        }
+        "LifeTime": { "Time": 2 },
+        "Drops": {
+          "Items":["Assets/Prefabs/Entities/BombBlast.json"]
+        },
+        "TileAnimation": {"FrameDelay": 0.0833, "FrameIdx": 0, "Asset": "F3C5BE92-1687-47ED-8BE7-8C27FDB59F57"}
       }
     }
-  ]
+	]
 }

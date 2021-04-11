@@ -1,0 +1,33 @@
+{
+	"Entities":[
+    {
+      "IsEnabled": true,
+      "Components": {
+        "Sprite": {"Texture": "Textures/Skeleton/skeleton_forward", "Albedo": [255,255,255], "Offset": [8,8], "Scale": 1, "SourceRectangle":[0,0,16,16]},
+        "Health": {"Value": 1, "HurtSound": "Sfx/break", "DeathSound": "Sfx/break"},
+        "Body" : {
+          "Position": [0,0],
+          "Type": "Dynamic",
+          "Fixture": {
+            "Shape": {
+              "Type": "Circle",
+              "Radius": 4
+            },
+            "IsSensor": false
+          }
+        },
+        "TileAnimation": {"FrameDelay": 0.0833, "FrameIdx": 0, "Asset": "B627BD19-9065-4AB0-8638-39048E5C81B6"},
+        "Mover": {
+          "FrontWalkAnimation": "E11DE0A6-0685-48C8-8F40-5155293CBB3E",
+          "BackWalkAnimation": "8FDC7A80-9C90-4AD9-BB09-32AB8AD1EE17",
+          "Front": "B627BD19-9065-4AB0-8638-39048E5C81B6",
+          "Back": "E7BF1DB5-1F19-439E-B251-CF5BCE1C7B61"
+        },
+        "Evil": {},
+        "AI.BasicEnemyAI": { "Range": 128 },
+        "DamageArea": {"Damage": 1, "IsEvil": true},
+        "BloodyDeath": {}
+      }
+    }
+	]
+}

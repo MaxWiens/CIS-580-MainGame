@@ -2,6 +2,7 @@
 using System.IO;
 using MoonSharp.Interpreter;
 using System.Collections.Generic;
+using System.Collections;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -17,7 +18,7 @@ namespace ECS {
 
 		private readonly Dictionary<Entity, IComponent> _emptyCompList = new Dictionary<Entity, IComponent>(0);
 		internal readonly Dictionary<Type, Dictionary<Entity, IComponent>> enabledComponents = new Dictionary<Type, Dictionary<Entity, IComponent>>();
-
+		private readonly Dictionary<Entity,List<IEnumerator>> _coroutines = new Dictionary<Entity, List<IEnumerator>>();
 		public event Action Reset;
 
 		private readonly Dictionary<Type, ISystem> _systems = new Dictionary<Type, ISystem>();
@@ -39,19 +40,31 @@ namespace ECS {
 		[MoonSharpHidden]
 		public void Update(float deltaTime) {
 			deltaTime *= DeltaTimeScale;
-			foreach(IUpdateable u in _updateSystems.Values)
+			foreach(IUpdateable u in _updateSystems.Values) {
 				u.Update(deltaTime);
+				ActuallyRemoveEntities();
+			}
 			_fixedUpdateTimer += deltaTime;
 			if(_fixedUpdateTimer >= _fixedUpdateTime) {
 				FixedUpdate(_fixedUpdateTime);
 				_fixedUpdateTimer -= _fixedUpdateTime;
 			}
+			foreach(var kvp in _coroutines) {
+				for(int i = kvp.Value.Count-1; i >= 0; i--) {
+					if(!kvp.Value[i].MoveNext())
+						StopCoroutine(kvp.Key, kvp.Value[i]);
+				}
+			}
 		}
 
 		[MoonSharpHidden]
 		private void FixedUpdate(float fixedDeltaTime) {
-			foreach(IFixedUpdateable fu in _fixedUpdateSystems.Values)
+			foreach(IFixedUpdateable fu in _fixedUpdateSystems.Values) {
 				fu.FixedUpdate(fixedDeltaTime);
+				ActuallyRemoveEntities();
+			}
+				
+			
 		}
 
 		[MoonSharpHidden]
@@ -93,6 +106,7 @@ namespace ECS {
 				scene = _defaultScene;
 			
 			Entity e = new Entity(this, Guid.NewGuid(), scene, name);
+			e.IsAlive = true;
 			_entities.Add(e.EID, e);
 			if(name != null)
 				_entityNames.Add(name, e);
@@ -107,6 +121,7 @@ namespace ECS {
 			if(scene == null)
 				scene = _defaultScene;
 			Entity e = new Entity(this, Guid.NewGuid(), scene, name);
+			e.IsAlive = true;
 			_entities.Add(e.EID, e);
 			if(name != null)
 				_entityNames.Add(name, e);
@@ -130,20 +145,30 @@ namespace ECS {
 
 		public bool RemoveEntity(Entity e) {
 			e.Disable();
-			if(e.EntityGroup != null) {
-				_entityGroups[e.EntityGroup].Remove(e);
-			}
-			e.RemoveAllComponents();
-			if(e.Name == "PlayerCharacter") {
-				int i = 0;
-			}
-			e.Scene.entities.Remove(e);
-			e.SendMessage(Message.DestroyMessage);
-			if(e.Name != null)
-				_entityNames.Remove(e.Name);
-			_entities.Remove(e.EID);
+			e.IsAlive = false;
+			_entitiesToRemove.Enqueue(e);
 			return true;
 		}
+
+		private Queue<Entity> _entitiesToRemove = new Queue<Entity>();
+		private void ActuallyRemoveEntities() {
+			while(_entitiesToRemove.Count > 0) {
+				Entity e = _entitiesToRemove.Dequeue();
+				e.Disable();
+				if(e.EntityGroup != null) {
+					_entityGroups[e.EntityGroup].Remove(e);
+				}
+				e.RemoveAllComponents();
+				e.Scene.entities.Remove(e);
+				e.SendMessage(Message.DestroyMessage);
+				if(e.Name != null)
+					_entityNames.Remove(e.Name);
+				_entities.Remove(e.EID);
+
+				_coroutines.Remove(e);
+			}
+		}
+
 		#endregion
 
 		#region Scenes
@@ -186,7 +211,22 @@ namespace ECS {
 			while(PopScene());
 			Reset?.Invoke();
 		}
-
 		#endregion
+
+
+		public void StartCoroutine(Entity entity, IEnumerator coroutine) {
+			if(coroutine.MoveNext()) {
+				if(!_coroutines.TryGetValue(entity, out var coroutines)) {
+					coroutines = new List<IEnumerator>();
+					_coroutines.Add(entity, coroutines);
+				}
+				coroutines.Add(coroutine);
+			}
+		}
+
+		public void StopCoroutine(Entity entity, IEnumerator coroutine) {
+			if(_coroutines.TryGetValue(entity, out var coroutines))
+				coroutines.Remove(coroutine);
+		}
 	}
 }

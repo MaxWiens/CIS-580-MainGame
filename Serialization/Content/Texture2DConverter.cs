@@ -15,7 +15,8 @@ namespace Serialization.Content {
 		}
 
 		public override Texture2D Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
-			return _contentManager.Load<Texture2D>(reader.GetString());
+			string s = reader.GetString();
+			return _contentManager.Load<Texture2D>(s);
 		}
 
 		public override void Write(Utf8JsonWriter writer, Texture2D value, JsonSerializerOptions options)

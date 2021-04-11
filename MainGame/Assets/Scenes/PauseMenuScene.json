@@ -24,7 +24,10 @@
         },
         "UI.Sprite": {"Texture": "Textures/UI/MainMenuButton", "SourceRectangle":[0,0,88,16], "Offset": [44,8]}
       }
-    },
+    }
+  ],
+
+  "backup":
     {
       "Name": "ResetButton",
       "Components": {
@@ -44,11 +47,10 @@
           }
         },
         "UI.Button": {
-          "ClickEvent": "function OnClick(arg1) ECS.RemoveAllScenes(); ECS.LoadEntityGroupFromFile('Assets/Scenes/GameplayScene.json'); ECS.DeltaTimeScale = 1 end"
+          "ClickEvent": "function OnClick(arg1) ECS.RemoveAllScenes(); ECS.LoadEntityGroupFromFile('Assets/Scenes/GameplayScene.json'); ResetScore(); ECS.DeltaTimeScale = 1 end"
         },
         "UI.Sprite": {"Texture": "Textures/UI/RestartButton", "SourceRectangle":[0,0,66,16], "Offset": [33,8]}
       }
     }
-  ]
 }
 

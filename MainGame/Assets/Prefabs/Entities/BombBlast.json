@@ -1,20 +1,26 @@
 ﻿{
-  "Entitites":[
+  "Entities":[
     {
+      "IsEnabled": false,
       "Components": {
-        "Transform2D": {},
-        "RigidBody": { "Layer": "General", "IsTrigger": true },
-        "CircleBounds": {},
-        "DamageArea": {}
-      }
-    },
-    {
-      "Components": {
-        "Transform2D": {},
-        "RigidBody": { "Layer": "General", "IsTrigger": true },
-        "CircleBounds": {},
-        "DamageArea": {}
+        "Sprite": {"Texture": "Textures\\pixel", "Albedo": [255,100,100, 50], "Offset": [24,24], "Scale": 1, "SourceRectangle":[0,0,48,48]},
+        "DamageArea": {
+          "Damage": 1,
+          "DamageTiles": true
+        },
+        "Body": { 
+          "BodyType": "Static",
+          "Fixture": {
+            "Shape": {
+              "Type": "Circle",
+              "Radius": 24
+            },
+            "IsSensor": true
+          }
+        },
+        "LifeTime":  {"Time": 0.1}
       }
     }
   ]
 }
+

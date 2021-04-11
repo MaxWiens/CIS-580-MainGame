@@ -13,7 +13,7 @@ namespace MainGame.Components {
 
 		[MessageHandler]
 		public bool OnDeath(Message _) {
-			Entity.World.GetSystem<Systems.ParticleSystem>().AddParticles<Particles.BloodParticleGroup>(Entity.GetComponent<Body>().Position, 10);
+			Entity.World.GetSystem<Systems.ParticleSystem>().AddParticles<Particles.BloodParticleGroup>(Entity.GetComponent<Body>().Position, 5);
 			return true;
 		}
 	}

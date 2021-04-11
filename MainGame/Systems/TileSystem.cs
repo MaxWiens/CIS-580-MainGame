@@ -75,9 +75,25 @@ namespace MainGame.Systems {
 				int rightSize = r.Next(CHUNK_SIZE-6, CHUNK_SIZE+1);
 				
 				if(chunkPosition != Point.Zero) {
-					Entity e = World.CloneEntityGroup("Assets\\Prefabs\\Entities\\Enemy.json")[0];
-
+					
+					
+					Entity e;
+					
+					if(Util.Rand.Float() >= 0.5f) {
+						e = World.CloneEntityGroup("Assets\\Prefabs\\Entities\\Ghost.json")[0];
+					} else {
+						e = World.CloneEntityGroup("Assets\\Prefabs\\Entities\\Skeleton.json")[0];
+					}
 					e.GetComponent<Body>().Position = chunkPosition.ToVector2() * (16f * 16f) + new Vector2(128, 128);
+
+					if(Util.Rand.Float() <= 0.1f) {
+						if(Util.Rand.Float() >= 0.5f) {
+							e = World.CloneEntityGroup("Assets\\Prefabs\\Entities\\Ghost.json")[0];
+						} else {
+							e = World.CloneEntityGroup("Assets\\Prefabs\\Entities\\Skeleton.json")[0];
+						}
+						e.GetComponent<Body>().Position = chunkPosition.ToVector2() * (16f * 16f) + new Vector2(128, 128);
+					}
 				}
 					
 
@@ -125,7 +141,7 @@ namespace MainGame.Systems {
 		}
 
 		private void CreateBrick(int x, int y, int chunkX, int chunkY, Dictionary<Point,Guid> chunk) {
-			Entity block = World.CloneEntityGroup("Assets/Prefabs/WoodBlock.json")[0];
+			Entity block = World.CloneEntityGroup("Assets/Prefabs/Wall.json")[0];
 			Body b = block.GetComponent<Body>();
 			b.Position = new Vector2(
 				((chunkX * CHUNK_SIZE) + x) * TILE_SIZE,

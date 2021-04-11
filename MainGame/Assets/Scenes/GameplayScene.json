@@ -28,7 +28,35 @@
           "Back": "B4EC61FA-7244-4488-AC89-B5308FF93443"
         },
         "ChunkLoading": {},
-        "Health": {"Value": 1}
+        "Health": {"Value": 3, "HurtSound": "hurt"}
+      }
+    },
+    {
+      "Name": "HealthBar",
+      "Components": {
+        "UI.Element": {
+          "Anchor": [0, 0],
+          "Offset": [4, 4]
+        },
+        "Body": {
+          "Position": [0,0],
+          "Type": "Static"
+        },
+        "UI.HealthBar": {}
+      }
+    },
+    {
+      "Name": "GameKillCounter",
+      "Components": {
+        "UI.Element": {
+          "Anchor": [1, 0],
+          "Offset": [-4, -4]
+        },
+        "Body": {
+          "Position": [0,0],
+          "Type": "Static"
+        },
+        "UI.KillCounter": {}
       }
     }
   ],

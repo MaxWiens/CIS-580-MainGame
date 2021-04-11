@@ -1,5 +1,6 @@
 ﻿using ECS;
 using tainicom.Aether.Physics2D.Dynamics;
+using tainicom.Aether.Physics2D.Collision;
 using MoonSharp.Interpreter;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
 using System;
@@ -18,18 +19,29 @@ namespace MainGame.Components {
 
 		[MessageHandler]
 		public bool OnEnable(Message _) {
+			OnCollision += SendCollisionMessage;
+			Enabled = true;
 			if(World == null) {
 				Entity.World.GetSystem<Systems.PhysicsSystem>().PhysicsWorld.Add(this);
 			}
-			
-			OnCollision += SendCollisionMessage;
-			Enabled = true;
+			if(FixtureList.Count > 0) {
+				FixtureList[0].GetAABB(out AABB ab1, 0);
+				AABB aab = new AABB(Position, ab1.Width, ab1.Height);
+				Entity.World.GetSystem<Systems.PhysicsSystem>().PhysicsWorld.QueryAABB(EnabledCallback, aab);
+			}
+			return true;
+		}
+
+		private bool EnabledCallback(Fixture fixture) {
+			if(fixture.Body != this) {
+				Entity.World.GetSystem<Systems.PhysicsSystem>().AddTodo(() => { Entity.SendMessage(new Message("OnCollision") { Content = { { "Sender", FixtureList[0] }, { "Other", fixture } } }); });
+			}
 			return true;
 		}
 
 		[MoonSharpHidden]
 		private bool SendCollisionMessage(Fixture sender, Fixture other, Contact contact) {
-			Entity.World.GetSystem<Systems.PhysicsSystem>().AddTodo(() => { Entity.SendMessage(new Message("OnCollision") { Content = { { "Sender", sender }, { "Other", other }, { "Contact", contact } } }); });
+			Entity.World.GetSystem<Systems.PhysicsSystem>().AddTodo(() => { Entity.SendMessage(new Message("OnCollision") { Content = { { "Sender", sender }, { "Other", other }} }); });
 			
 			return true;
 		}

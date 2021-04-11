@@ -20,7 +20,7 @@
           }
         },
         "UI.Button": {
-          "ClickEvent": "function OnClick(message) ECS.PopScene(); ECS.LoadEntityGroupFromFile('Assets/Scenes/GameplayScene.json'); return false end"
+          "ClickEvent": "function OnClick(message) ECS.PopScene(); ECS.LoadEntityGroupFromFile('Assets/Scenes/GameplayScene.json'); ResetScore(); return false end"
         },
         "UI.Sprite": {"Texture": "Textures/UI/StartButton", "SourceRectangle":[0,0,48,16], "Offset": [24,8]}
       }
@@ -88,27 +88,17 @@
       }
     },
     {
+      "Name": "KillCounter",
       "Components": {
         "UI.Element": {
-          "Anchor": [0, 0],
-          "Offset": [0, 0]
+          "Anchor": [1, 0],
+          "Offset": [-4, -4]
         },
         "Body": {
+          "Position": [0,0],
           "Type": "Static"
         },
-        "UI.Sprite": {"Texture": "Textures/UI/ArrowButton", "SourceRectangle":[0,0,16,16], "Offset": [8,8], "Scale": 1}
-      }
-    },
-    {
-      "Components": {
-        "UI.Element": {
-          "Anchor": [1, 1],
-          "Offset": [0, 0]
-        },
-        "Body": {
-          "Type": "Static"
-        },
-        "UI.Sprite": {"Texture": "Textures/UI/ArrowButton", "SourceRectangle":[0,0,16,16], "Offset": [8,8], "Scale": 1}
+        "UI.KillCounter": {}
       }
     }
   ],

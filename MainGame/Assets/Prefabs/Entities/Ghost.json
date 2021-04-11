@@ -1,0 +1,32 @@
+{
+	"Entities":[
+    {
+      "IsEnabled": true,
+      "Components": {
+        "Sprite": {"Texture": "Textures/Ghost/ghost_walk_forward", "Albedo": [255,255,255], "Offset": [8,8], "Scale": 1, "SourceRectangle":[0,0,16,16]},
+        "Health": {"Value": 1, "HurtSound": "Sfx/place", "DeathSound": "Sfx/place"},
+        "Body" : {
+          "Position": [0,0],
+          "Type": "Dynamic",
+          "Fixture": {
+            "Shape": {
+              "Type": "Circle",
+              "Radius": 4
+            },
+            "IsSensor": true
+          }
+        },
+        "TileAnimation": {"FrameDelay": 0.0833, "FrameIdx": 0, "Asset": "9FB89F88-8A8E-4008-8C38-F79479F52704"},
+        "Mover": {
+          "FrontWalkAnimation": "9FB89F88-8A8E-4008-8C38-F79479F52704",
+          "BackWalkAnimation": "12E4F398-14AD-42BD-936D-62BCF185612C",
+          "Front": "9FB89F88-8A8E-4008-8C38-F79479F52704",
+          "Back": "12E4F398-14AD-42BD-936D-62BCF185612C"
+        },
+        "Evil": {},
+        "AI.BasicEnemyAI": { "Range": 128 },
+        "DamageArea": {"Damage": 1, "IsEvil": true}
+      }
+    }
+	]
+}

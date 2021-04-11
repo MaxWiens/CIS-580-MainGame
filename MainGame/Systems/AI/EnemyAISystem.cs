@@ -33,7 +33,7 @@ namespace MainGame.Systems.AI {
 							enemy.WonderTimer = ((float)_r.NextDouble() * 2f) + 0.25f;
 							enemy.WonderDirection = new Vector2(MathF.Cos(newAngle), MathF.Sin(newAngle));
 						}
-						body.LinearVelocity = 50f * enemy.WonderDirection;
+						body.LinearVelocity = 25f * enemy.WonderDirection;
 						break;
 					case EnemyState.Follow:
 						enemy.WonderTimer = 0;

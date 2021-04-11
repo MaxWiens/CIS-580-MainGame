@@ -14,7 +14,7 @@ namespace MainGame.Systems {
 		private readonly Dictionary<Type, ParticleGroup> _particleGroups = new Dictionary<Type,ParticleGroup>();
 
 		public ParticleSystem(World world, MainGame game) : base(world) {
-			AddParticleGroup(new BlockBreakParticleGroup(game.SpriteBatch, game.Content.Load<Texture2D>("Textures/wood_block")));
+			AddParticleGroup(new BlockBreakParticleGroup(game.SpriteBatch, game.Content.Load<Texture2D>("Textures/pixel")));
 			AddParticleGroup(new BloodParticleGroup(game.SpriteBatch, game.Content.Load<Texture2D>("Textures/pixel")));
 			AddParticleGroup(new AttackParticleGroup(game.SpriteBatch, game.Content.Load<Texture2D>("Textures/pixel")));
 		}

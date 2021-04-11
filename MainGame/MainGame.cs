@@ -113,7 +113,7 @@ namespace MainGame {
 			_world.AddSystem(new ParticleSystem(_world, this));
 
 			_world.AddSystem(new UI.ElementRepositionSystem(_world, this));
-			
+			_world.AddSystem(new UI.HealthBarSystem(_world, this));
 
 			// debug Systems
 #if DEBUG
@@ -136,7 +136,7 @@ namespace MainGame {
 
 			Matrix m = Matrix.CreateTranslation((MainCamera.Resolution.X*0.5f) - MainCamera.Position.X, (MainCamera.Resolution.Y * 0.5f) - MainCamera.Position.Y, 0f);
 			Matrix scaleMatrix = Matrix.CreateScale(_scale, _scale, 1f);
-			GraphicsDevice.Clear(new Color(0x2d, 0x9c, 0x42));
+			GraphicsDevice.Clear(Color.Black);
 			SpriteBatch.Begin(blendState: BlendState.AlphaBlend, samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack, transformMatrix: m * scaleMatrix);
 			UISpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: scaleMatrix);
 			_world.Draw();

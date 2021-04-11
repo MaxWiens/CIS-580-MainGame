@@ -11,9 +11,11 @@ namespace MainGame.Serialization.MoonSharp {
 		private readonly DynValue _physicsWorld;
 		private readonly DynValue _ecsWorld;
 		private readonly DynValue _soundEffect;
+		private readonly ECS.World world;
 		private readonly DynValue _mediaPlayer;
 		private readonly SoundEffect _defaultSoundEffect;
 		public ScriptConverter(MainGame game, tainicom.Aether.Physics2D.Dynamics.World physicsWorld, ECS.World ecsWorld) {
+			world = ecsWorld;
 			_defaultSoundEffect = game.Content.Load<SoundEffect>(@"Sfx\place");
 			UserData.RegisterType<MainGame>();
 			UserData.RegisterType<tainicom.Aether.Physics2D.Dynamics.World>();
@@ -33,6 +35,7 @@ namespace MainGame.Serialization.MoonSharp {
 			s.Globals["SetVolume"] = (Action<float>)SetVolume;
 			s.Globals["GetVolume"] = (Func<float>)GetVolume;
 			s.Globals["PlayTestSound"] = (Action)PlayTestSound;
+			s.Globals["ResetScore"] = (Action)ResetScore;
 			s.Globals["Game"] = _game;
 			s.Globals["ECS"] = _ecsWorld;
 			s.Globals["Physics"] = _physicsWorld;
@@ -60,6 +63,10 @@ namespace MainGame.Serialization.MoonSharp {
 
 		private void PlayTestSound() {
 			_defaultSoundEffect.Play();
+		}
+
+		private void ResetScore() {
+			world.GetSystem<Systems.UI.HealthBarSystem>().KillCount = 0;
 		}
 	}
 }

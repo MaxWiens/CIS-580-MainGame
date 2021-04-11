@@ -35,6 +35,15 @@ namespace MainGame.Components {
 			return true;
 		}
 
+		[MessageHandler(10)]
+		public bool OnDamage(Message message) {
+			if(message.Content.TryGetValue("DamageTiles", out object isTileDamaging)) {
+				if((bool)isTileDamaging)
+					return true;
+			}
+			return false;
+		}
+
 		[MessageHandler]
 		public bool OnDeath(Message message) {
 			Entity.World.GetSystem<ParticleSystem>().AddParticles<Particles.BlockBreakParticleGroup>(Entity.GetComponent<Body>().Position + new Microsoft.Xna.Framework.Vector2(8f,8f), 5);

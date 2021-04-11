@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using MoonSharp.Interpreter;
 using System.Reflection;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace ECS {
 
 		private bool _isEnabled = false;
 		public bool IsEnabled => _isEnabled;
+		internal bool IsAlive = false;
 		
 		internal Entity(World world, Guid eid, Scene scene, string name) {
 			EID = eid;
@@ -93,7 +95,7 @@ namespace ECS {
 		}
 
 		public void Enable() {
-			if(!_isEnabled) {
+			if(IsAlive && !_isEnabled) {
 				_isEnabled = true;
 				foreach(var kvp in _components) {
 					if(!World.enabledComponents.TryGetValue(kvp.Key, out var map)) {
@@ -118,7 +120,7 @@ namespace ECS {
 		}
 		
 		public bool SendMessage(Message message) {
-			if(_isEnabled && _messageHandles.TryGetValue(message.HandlerName, out SortedDictionary<PriorityHandler, MessageHandler> handlers)){
+			if(IsAlive && _isEnabled && _messageHandles.TryGetValue(message.HandlerName, out SortedDictionary<PriorityHandler, MessageHandler> handlers)){
 				foreach(var handler in handlers.Values) {
 					if(!handler(message)) return false;
 				}
@@ -143,5 +145,7 @@ namespace ECS {
 
 			public int CompareTo(PriorityHandler other) => _component==other._component ? 0 : _priority.CompareTo(other._priority);
 		}
+
+		public void StartCoroutine(IEnumerator coroutine) => World.StartCoroutine(this, coroutine);
 	}
 }
