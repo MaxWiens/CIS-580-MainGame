@@ -38,8 +38,6 @@ namespace MainGame {
 		public SpriteBatch SpriteBatch;
 		public SpriteBatch UISpriteBatch;
 
-		private RenderTarget2D _target;
-
 		public MainGame() : base() {
 			
 			Content.RootDirectory = "Content";
@@ -114,6 +112,8 @@ namespace MainGame {
 
 			_world.AddSystem(new UI.ElementRepositionSystem(_world, this));
 			_world.AddSystem(new UI.HealthBarSystem(_world, this));
+
+			_world.AddSystem(new Systems.AI.BossAISystem(_world));
 
 			// debug Systems
 #if DEBUG

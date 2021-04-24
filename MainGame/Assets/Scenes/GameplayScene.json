@@ -46,7 +46,6 @@
       }
     },
     {
-      "Name": "GameKillCounter",
       "Components": {
         "UI.Element": {
           "Anchor": [1, 0],
@@ -56,14 +55,12 @@
           "Position": [0,0],
           "Type": "Static"
         },
-        "UI.KillCounter": {}
+        "UI.SkullCounter": {}
       }
     }
   ],
   "backup": [
     {
-      
-
       "EID": "#Camera",
       "Name": "MainCamera",
       "IsEnabled": true,

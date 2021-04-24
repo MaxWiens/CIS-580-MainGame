@@ -21,11 +21,5 @@ namespace MainGame.Components.AI {
 		public override IComponent Clone(Entity entity) => new BasicEnemyAI(entity) { 
 			Range = Range
 		};
-
-		[MessageHandler(1)]
-		public bool OnDeath(Message message) {
-			Entity.World.GetSystem<Systems.UI.HealthBarSystem>().KillCount++;
-			return true;
-		}
 	}
 }

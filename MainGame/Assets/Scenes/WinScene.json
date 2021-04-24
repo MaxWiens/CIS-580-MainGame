@@ -1,0 +1,20 @@
+﻿{
+  "Scene": "InfoMenu",
+  "Entities": [
+    {
+      "Components": {
+        "UI.Element": {
+          "Anchor": [0.5, 0.5],
+          "Offset": [0,0]
+        },
+        "Body": {
+          "Position": [0,0],
+          "Type": "Static"
+        },
+        "UI.Sprite": {"Texture": "Textures/UI/Win", "SourceRectangle":[0,0,256,256], "Offset": [128,128]},
+        "UI.AnyKeyContinue": {"Reset": true, "NextScene": "Assets/Scenes/MainMenuScene.json"}
+      }
+    }
+  ]
+}
+

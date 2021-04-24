@@ -20,7 +20,7 @@
           }
         },
         "UI.Button": {
-          "ClickEvent": "function OnClick(message) ECS.PopScene(); ECS.LoadEntityGroupFromFile('Assets/Scenes/GameplayScene.json'); ResetScore(); return false end"
+          "ClickEvent": "function OnClick(message) ECS.PopScene(); ECS.LoadEntityGroupFromFile('Assets/Scenes/InfoScene.json'); ResetScore(); return false end"
         },
         "UI.Sprite": {"Texture": "Textures/UI/StartButton", "SourceRectangle":[0,0,48,16], "Offset": [24,8]}
       }

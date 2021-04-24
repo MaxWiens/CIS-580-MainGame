@@ -160,7 +160,7 @@ namespace MainGame.Systems {
 				return true;
 			} else {
 				// load chunk to delete entity
-				throw new NotImplementedException();
+				//throw new NotImplementedException();
 			}
 			return false;
 		}

@@ -98,6 +98,16 @@
 				"Texture": "Textures/Items/bomb",
 				"TileDimentions": [ 16, 16 ]
 			}
+		},
+
+		{
+			"Description": "Big Skull",
+			"Type": "Assets.TileSheet",
+			"Data": {
+				"ID": "52DDF6BC-5DE7-4220-8B06-FC71D1F096DC",
+				"Texture": "Textures/big_skull",
+				"TileDimentions": [ 32, 32 ]
+			}
 		}
 	]
 }

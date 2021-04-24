@@ -26,7 +26,8 @@
         "Evil": {},
         "AI.BasicEnemyAI": { "Range": 128 },
         "DamageArea": {"Damage": 1, "IsEvil": true},
-        "BloodyDeath": {}
+        "BloodyDeath": {},
+        "KillAdder": { "IsSkeleton": true }
       }
     }
 	]

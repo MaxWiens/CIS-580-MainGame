@@ -37,6 +37,18 @@
 /processorParam:TextureFormat=Color
 /build:../Assets/Textures/ball.png;Textures/ball.png
 
+#begin ../Assets/Textures/big_skull.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Assets/Textures/big_skull.png;Textures/big_skull.png
+
 #begin ../Assets/Textures/circle.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -277,6 +289,18 @@
 /processorParam:TextureFormat=Color
 /build:../Assets/Textures/Skeleton/skeleton_walk_forward.png;Textures/Skeleton/skeleton_walk_forward.png
 
+#begin ../Assets/Textures/skull.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Assets/Textures/skull.png;Textures/skull.png
+
 #begin ../Assets/Textures/Tiles/farmland.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -312,6 +336,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:../Assets/Textures/UI/ArrowButton.png;Textures/UI/ArrowButton.png
+
+#begin ../Assets/Textures/UI/HowToPlay.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Assets/Textures/UI/HowToPlay.png;Textures/UI/HowToPlay.png
 
 #begin ../Assets/Textures/UI/MainMenuButton.png
 /importer:TextureImporter
@@ -361,6 +397,18 @@
 /processorParam:TextureFormat=Color
 /build:../Assets/Textures/UI/Volume.png;Textures/UI/Volume.png
 
+#begin ../Assets/Textures/UI/Win.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Assets/Textures/UI/Win.png;Textures/UI/Win.png
+
 #begin ../Assets/Textures/wall.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -390,6 +438,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:explosion.wav
+
+#begin growl.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:growl.wav
 
 #begin hurt.wav
 /importer:WavImporter

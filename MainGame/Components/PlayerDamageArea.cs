@@ -13,8 +13,9 @@ namespace MainGame.Components {
 
 		[MessageHandler]
 		public bool OnCollision(Message message) {
-			if(((Entity)((Fixture)message.Content["Other"]).Body.Tag).TryGetComponent(out Components.AI.BasicEnemyAI enemy)) {
-				enemy.Entity.SendMessage(new Message("OnDamage") { Content = { { "Total", Damage } } });
+			Entity e = ((Entity)((Fixture)message.Content["Other"]).Body.Tag);
+			if(e.TryGetComponent(out Components.AI.BasicEnemyAI _) || e.TryGetComponent(out Components.AI.Boss _)) {
+				e.SendMessage(new Message("OnDamage") { Content = { { "Total", Damage } } });
 			}
 			return true;
 		}

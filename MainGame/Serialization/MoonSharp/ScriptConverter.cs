@@ -66,7 +66,7 @@ namespace MainGame.Serialization.MoonSharp {
 		}
 
 		private void ResetScore() {
-			world.GetSystem<Systems.UI.HealthBarSystem>().KillCount = 0;
+			world.GetSystem<Systems.UI.HealthBarSystem>().ResetCount();
 		}
 	}
 }

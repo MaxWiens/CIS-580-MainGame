@@ -1,0 +1,27 @@
+{
+	"Entities":[
+    {
+      "IsEnabled": true,
+      "Components": {
+        "Sprite": {"Texture": "Textures/big_skull", "Albedo": [255,255,255], "Offset": [16,16], "Scale": 1, "SourceRectangle":[0,0,32,32]},
+        "Health": {"Value": 3, "HurtSound": "growl", "DeathSound": "growl"},
+        "Body" : {
+          "Position": [0,0],
+          "Type": "Dynamic",
+          "Fixture": {
+            "Shape": {
+              "Type": "Circle",
+              "Radius": 8
+            },
+            "IsSensor": false
+          }
+        },
+        "TileAnimation": {"FrameDelay": 0.0833, "FrameIdx": 0, "Asset": "52DDF6BC-5DE7-4220-8B06-FC71D1F096DC"},
+        "Evil": {},
+        "AI.Boss": { "Growl": "growl" },
+        "DamageArea": {"Damage": 1, "DamageTiles": true},
+        "KillAdder": { "IsSkeleton": true }
+      }
+    }
+	]
+}

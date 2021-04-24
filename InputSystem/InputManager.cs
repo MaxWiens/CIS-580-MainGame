@@ -15,6 +15,8 @@ namespace InputSystem {
 			}
 		};
 
+		public static event Action AnyKey;
+
 		public static event Action<Vector2> MousePressed;
 
 		public static void AddListener(string actionName, Action<Vector2> inputAction) {
@@ -22,7 +24,6 @@ namespace InputSystem {
 				action.ValueChanged += inputAction;
 			}
 		}
-
 		public static void RemoveListener(string actionName, Action<Vector2> inputAction) {
 			if(_actions.TryGetValue(actionName, out InputAction action)) {
 				action.ValueChanged -= inputAction;
@@ -34,6 +35,11 @@ namespace InputSystem {
 		}
 		public static void Update() {
 			InputState state = new InputState(Keyboard.GetState(), Mouse.GetState(), GamePad.GetState(0));
+			
+			if(AnyKey != null && !_prevState.Equals(state) && (state.GetKeyboardPressed(_prevState.Keyboard) || state.GetMousePressed(_prevState.Mouse))) {
+				AnyKey();
+			}
+
 			foreach(InputAction action in _actions.Values) {
 				action.Update(state);
 			}
@@ -110,7 +116,6 @@ namespace InputSystem {
 					ValueChanged(value);
 				_previousValue = value;
 			}
-
 		}
 	}
 }
